@@ -57,10 +57,11 @@ The site runs without any other variables. Without email configuration, `/contac
 | `server.js` | Production entry point. Reads `PORT`, listens on `0.0.0.0`, and shuts down cleanly on `SIGTERM`/`SIGINT` |
 | `src/app.js` | Builds the Express app (routes, views, static files, 404 and error handling) without starting a listener, so tests can use it directly |
 | `src/config.js` | Port parsing and validation |
-| `src/content/home.js` | Homepage content: navigation, services overview, project placeholders, and principles |
+| `src/content/home.js` | Homepage content: navigation, services overview, and the hero sticker tags |
+| `src/content/stack.js` | Homepage technology section: the four tool groups, how each is used, project mappings, and the separate "Tools I build with" list |
 | `src/content/services.js` | `/services` content: introduction, the three service areas (audience, problems, engagement, illustrative example), and the process steps |
 | `views/services.ejs` | Services page |
-| `src/content/about.js` | `/about` content: the owner-approved copy, portrait details (files, dimensions, `sizes`), and the LinkedIn and GitHub links |
+| `src/content/about.js` | `/about` content: the approved heading and "How I work" copy, the introduction and three-part "My story" section (reworded from the owner's bio), portrait details, and the LinkedIn and GitHub links |
 | `views/about.ejs` | About page |
 | `public/images/` | Portrait in WebP at 400, 800, and 1200px, plus an 800px JPEG fallback. Resized from the owner's photo without retouching; metadata stripped |
 | `src/content/projects.js` | Case-study content. Only entries marked `published: true` are rendered. Each has the approved contribution wording, links, copy, and screenshot details |
@@ -72,20 +73,22 @@ The site runs without any other variables. Without email configuration, `/contac
 | `public/js/contact.js` | Optional enhancement for inline feedback. The form works fully without it |
 | `views/` | EJS templates. `partials/header.ejs` and `partials/footer.ejs` are shared by every page |
 | `public/` | The **only** directory served as static files |
-| `public/css/styles.css` | The whole visual system: brand tokens, typography, layout, components, and reduced-motion rules |
-| `public/js/site.js` | Mobile menu enhancement. Without it, the navigation links stay visible and usable |
-| `public/fonts/` | Self-hosted Space Grotesk and DM Sans (variable woff2, latin and latin-ext) with their SIL Open Font License files |
-| `public/brand/` | AG brand assets as pure vector SVG paths: `ag-monogram.svg`, `ag-logo-horizontal.svg`, and `-reversed` versions for dark backgrounds |
-| `public/favicon.svg` | Simplified AG favicon, legible at 16–48px |
+| `public/css/styles.css` | The whole visual system in the selected "Cool & savvy" design: palette tokens, typography, layout, components for every page, and the motion system with reduced-motion rules |
+| `public/js/site.js` | Optional enhancements: scroll reveals, the ticker's pause control, and the technology-section tabs. Without it, all content stays visible, the ticker stays still, and every technology group is shown |
+| `public/fonts/` | Self-hosted Space Grotesk and DM Sans (variable woff2, latin and latin-ext) and Playfair Display (variable woff2, latin subset), with their SIL Open Font License files |
+| `public/brand/` | The earlier AG monogram assets, kept intact but **not used** by the current design. The final logo is pending |
+| `public/favicon.svg` | Favicon matching the Savvy wordmark: a bone "ag" with a coral full stop on an ink circle, as vector paths outlined from Space Grotesk Bold (no font at runtime) |
+| `public/apple-touch-icon.png` | 180×180 home-screen icon for iPhone and iPad, rendered from the favicon |
+| `docs/design-previews/` | Internal design previews (not served by the app). `savvy.html` and its screenshots are the approved reference for the current design. Run `node docs/design-previews/serve.mjs` to view them |
 | `test/` | Tests that make real HTTP requests to the app |
 
-**Brand assets:** the AG monogram and name are outlined vector paths. The letterforms were converted from Playfair Display (SIL Open Font License 1.1) glyph outlines, so the logo loads no font. Use the standard files on light backgrounds and the `-reversed` files on dark ones. Colors: charcoal or cream letters, a deep teal or gold flourish, and a gold sparkle.
+**Branding:** the header uses the Savvy design's wordmark, built in HTML and CSS: a bone circle with "ag", then "amber goding" with a coral full stop. The favicon and Apple touch icon match it. The earlier AG monogram was rejected; its files remain in `public/brand/` but are unused.
 
-Fonts come from Google Fonts' official distribution, and the licenses from the [google/fonts](https://github.com/google/fonts) repository. Italic serif accents use the system Georgia font, falling back to Times New Roman and then the generic `serif`. No fonts or scripts load from third-party servers.
+Fonts come from Google Fonts' official distribution, and the licenses from the [google/fonts](https://github.com/google/fonts) repository. Playfair Display is a Latin subset of the variable font made with fontTools. As in the approved preview, its italics are the browser's oblique rendering. No fonts or scripts load from third-party servers.
 
 Routes:
 
-- `GET /`: homepage (sections `#work`, `#services`, `#about`, `#contact`)
+- `GET /`: homepage (sections `#work`, `#services`, `#stack`, `#about`, `#contact`)
 - `GET /services`: Services page (sections `#application-development`, `#ai-integration`, `#workflow-automation`, `#process`)
 - `GET /about`: About page (introduction with portrait and professional links, background, "How I work", contact invitation)
 - `GET /projects/:slug`: case study for a published project (`src/content/projects.js`). Currently `/projects/reentry-resource-extractor`, `/projects/catering-concierge`, and `/projects/huntsomewhere`. Any other slug, including unpublished candidates, returns the standard 404 page.
@@ -102,7 +105,38 @@ Railway builds Node apps with [Railpack](https://railpack.com/languages/node):
 - **Build:** there is no `build` script, so no build step runs.
 - **Start:** Railpack runs the `start` script, `npm start`.
 - **Port:** Railway provides `PORT`, and the server binds to `0.0.0.0` as Railway's public networking requires.
-- **Health check:** `/healthz` can be set as the Railway health-check path.
+- **Health check:** `/healthz` returns `{"status":"ok"}` with `Cache-Control: no-store`. Set it as the Railway health-check path.
+- **Proxy awareness:** on Railway (detected through `RAILWAY_ENVIRONMENT_ID`), contact rate limiting reads the client IP from the edge's `X-Real-IP`. The contact form's same-origin check accepts the edge's `X-Forwarded-Host`, so the Railway domain, `ambergoding.com`, and `www` all work without extra settings.
+- **Security headers:** every response sends `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, and `X-Frame-Options: DENY`, and omits `X-Powered-By`.
+- **Shutdown:** `SIGTERM` closes the server cleanly, with a 10-second fallback, so redeploys don't cut requests off abruptly.
+
+### Deployment readiness (checked 2026-11-12)
+
+- **Dependencies:** `npm ls --omit=dev` is clean (`express` 5.3.0, `ejs` 7.0.2, matching `package-lock.json`), and `npm audit --omit=dev` found 0 vulnerabilities.
+- **Tests:** `npm test` passes with email disabled or mocked.
+- **Railway-like smoke test:** `npm start` with `PORT`, `NODE_ENV=production`, and `RAILWAY_ENVIRONMENT_ID` set.
+  - Every page and asset returned 200; unknown paths returned 404.
+  - `/.env`, `/package.json`, and `/src/app.js` returned 404.
+  - `/healthz` and the security headers were present.
+  - The startup log names missing email variables without printing values.
+- **Not done:** an actual Railway deployment. It needs the owner's approval.
+
+### Deploy checklist (owner, in the Railway dashboard)
+
+1. Create a service from the GitHub repository and deploy the `main` branch. Railpack detects Node 24 from `engines.node`.
+2. Under **Variables**, set:
+   - `RESEND_API_KEY`;
+   - `CONTACT_TO_EMAIL`;
+   - `CONTACT_FROM_EMAIL` (an address on the verified `mail.ambergoding.com` domain);
+   - `CONTACT_FORM_SECRET` (32+ random characters; see `.env.example`).
+
+   Don't set `PORT`, because Railway provides it. Never paste these values into chat, commits, or logs.
+3. Under **Settings**, set the health-check path to `/healthz`.
+4. Generate a Railway domain and confirm:
+   - the startup log says `Contact form: email delivery configured.`;
+   - every page loads;
+   - a real test inquiry arrives with the correct Reply-To.
+5. Custom domains (`ambergoding.com` and `www`) need a decision on which one is canonical, plus DNS records at Spaceship. Check that Spaceship supports the record Railway needs for the root domain.
 
 Deployment, paid plans, custom domains, and DNS changes require the owner's approval and have not been done.
 
@@ -142,7 +176,7 @@ Real values belong in Railway's service variables or a local `.env` file, which 
 
 **Milestone 1 (application foundation):** Express server with validated `PORT`, `0.0.0.0` binding, and graceful shutdown; EJS partials; static files served only from `public/`; `/healthz`; HTML 404 page; safe error handling; tests.
 
-**Milestone 2 (visual foundation and homepage):**
+**Milestone 2 (visual foundation and homepage; its visual design is superseded by "Cool & savvy", below):**
 
 - Self-hosted fonts and a shared visual system built from the approved palette
 - Header with the AG logo (uppercase serif monogram and spaced name; see "Brand assets"), in-page navigation (Work, Services, About, Contact), and a mobile menu button. The button has the correct `aria-expanded` state, closes with Escape, returns focus, and falls back to visible links without JavaScript.
@@ -158,7 +192,7 @@ Real values belong in Railway's service variables or a local `.env` file, which 
 
 **Services page (committed in `7b3fbaf`):** `/services` covers the three service areas. For each: who it could help, the problems it addresses, what an engagement could include, and an illustrative example clearly marked as not client work. It also has a four-step process and links to `/contact`. The main navigation's Services link now goes to `/services`; the homepage keeps its `#services` overview, which links to the page. Services and About are approved as separate pages.
 
-**About page (committed in `ddbba93`):** `/about` uses the owner-approved copy, portrait, and LinkedIn and GitHub links (recorded in AGENTS.md under Decisions).
+**About page (first committed in `ddbba93`):** `/about` shows the portrait and LinkedIn and GitHub links, the approved heading and "How I work" copy, and a headed, three-part "My story" section (the path, the mindset, the craft). That section is reworded from the owner's own bio and replaces the earlier background paragraphs (AGENTS.md, Decisions).
 - **Portrait:** responsive WebP sources with a JPEG fallback, intrinsic dimensions, and alt text "Portrait of Amber Goding". It is not lazy-loaded because it sits near the top of the page.
 - **Navigation:** the main navigation's About link now goes to `/about` and is marked as the current page there.
 - **Homepage:** the `#about` teaser stays and links to the page ("More about Amber").
@@ -206,16 +240,39 @@ Real values belong in Railway's service variables or a local `.env` file, which 
   - Case-study titles have a lower minimum size, so "HuntSomewhere" fits at 320px without breaking mid-word.
 - **Homepage:** the third slot (formerly the Application placeholder) is this project. One development placeholder remains.
 
-**Visual presentation is provisional.** The palette and AG branding are approved; the overall styling still needs the owner's final approval in a dedicated design review before launch.
+**Selected design, "Cool & savvy" (implemented, not committed):** the owner selected the Savvy preview, and it is now implemented across every page (AGENTS.md, Decisions).
+- **Homepage,** matching `docs/design-previews/screenshots/savvy-desktop.webp` and `savvy-phone.webp`:
+  - sticker tags, the oversized "Make complex / feel simple." hero, and the portrait intro;
+  - the coral ticker (with a pause button);
+  - the three projects with tilted screenshots;
+  - bone services cards;
+  - the new technology section;
+  - the About section with the large portrait and "Hi, I'm Amber" sticker;
+  - the coral contact invitation.
+- **Other pages:** Services, About, Contact, the three case studies, and the error pages use the same palette, type, rounded controls, card treatments, and section contrast. Copy, contribution statements, claims, screenshots, and demonstration labels are unchanged.
+- **Technology section** (`#stack`, after Services):
+  - four groups (Interfaces, Data, AI & automation, Development & delivery), each with its tools, how they are used, and links to the case studies that use them;
+  - a separate "Tools I build with" block for Claude Code and Codex;
+  - with JavaScript: an accessible tab set (click, touch, arrow keys, Home and End). On phones it is a 2×2 grid, one column below 352px. Without JavaScript, all four groups are shown.
+- **Motion:**
+  - a staggered hero entrance (about 0.5s);
+  - gentle scroll reveals, which only hide content after the script confirms motion is allowed;
+  - project hovers: image scale, untilt, title colour, and arrow travel;
+  - 180ms button and navigation transitions;
+  - smooth anchor scrolling;
+  - a panel and chip entrance when switching technology groups.
+  - All of it is disabled under `prefers-reduced-motion`. The ticker only moves once its pause button is active.
+- **Navigation:** the pill stays visible on every width, as in the phone reference. There is no hidden menu, so the old menu toggle was removed.
+- **Visual review:** the owner's final visual review is still pending.
 
 ### Temporary content (must be replaced or confirmed before launch)
 
-- **Hero wording** (provisional, from the visual reference): "Human insight. Technical possibility.", "Make complex feel simple.", "Useful applications. Thoughtful AI. Connected workflows. Built around people.", "Designed with intention. Built to be used."
-- **Hero artwork labels:** "Idea", "Reality", "The space between idea & execution"
-- **Selected work:** the first three slots are the approved Reentry Resource Extractor, Catering Concierge, and HuntSomewhere. The last slot is a development placeholder, labeled on the page, with concept art rather than screenshots, no links, and invented headings. They are defined in `src/content/home.js`.
-- **Work introduction:** "Less friction. More possibility.", the paragraph below it (reworded when the first real project arrived), and the "More projects in development" note
+- **Hero wording:** "Make complex feel simple." and the sticker tags "AI, used thoughtfully" and "Decisions, explained" (drawn from the approved positioning)
+- **Technology section wording:** the heading "What I build with." and its introduction (tool lists and usage are evidence-based, but the wording is new)
+- **Selected work:** the three approved projects, Reentry Resource Extractor, Catering Concierge, and HuntSomewhere. The development placeholder was removed.
+- **Work introduction:** "Less friction. More possibility."
 - **Services:** the heading "Practical tools for real work." and the three capability descriptions
-- **Homepage About teaser:** the heading "Curiosity meets follow-through.", the two introductory sentences, and the three principles. These are drawn from the approved positioning. The `/about` page copy itself is approved and not temporary.
+- **Homepage About section:** uses approved `/about` copy (the heading, a quoted sentence from "How I work", and its first paragraph) with the "Hi, I'm Amber" sticker. The pairing is new.
 - **Contact:** the heading "Let's make it happen." and its supporting sentence, on the homepage, `/contact`, and the closing invitation on `/about`
 - **Services page:** all wording in `src/content/services.js` is provisional, including the three illustrative example scenarios (home cleaning, tutoring, and property maintenance), which are hypothetical by design
 
@@ -228,7 +285,8 @@ Real values belong in Railway's service variables or a local `.env` file, which 
 - Owner review of the Services page wording and the homepage About teaser
 - Decide whether to include a résumé
 - Contact in production: set the Railway variables and confirm a real inquiry sent from the deployed site arrives with the correct Reply-To. The local check is already done (owner-reported).
-- Dedicated design review of the overall visual presentation
+- Owner's final visual review of the implemented "Cool & savvy" design
+- Final logo confirmation (the "ag." wordmark and matching favicon are in place)
 - Social/Open Graph metadata, `robots.txt`, and a sitemap
 - Manual checks on real phones and with a screen reader
 - Railway deployment, the `ambergoding.com` and `www` domains, and HTTPS. DNS is at Spaceship; check that it supports the apex record Railway needs.

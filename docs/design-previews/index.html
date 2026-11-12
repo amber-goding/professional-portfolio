@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design directions | Internal preview</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="../../public/favicon.svg" type="image/svg+xml">
+<style>
+@font-face { font-family: "DM Sans"; font-style: normal; font-weight: 400 700; font-display: swap; src: url("../../public/fonts/dm-sans-latin.woff2") format("woff2"); }
+@font-face { font-family: "Space Grotesk"; font-style: normal; font-weight: 400 700; font-display: swap; src: url("../../public/fonts/space-grotesk-latin.woff2") format("woff2"); }
+:root { --charcoal: #151a1c; --deep-teal: #176b66; --turquoise: #35d6cb; --cream: #faf3e7; --gold: #e5b869; --muted: #b9c9c6; --line: rgb(250 243 231 / .14); }
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--charcoal); color: var(--cream); font: 400 1rem/1.6 "DM Sans", system-ui, sans-serif; }
+h1, h2, h3, p, ul { margin: 0; }
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--turquoise); outline-offset: 4px; }
+.wrap { width: min(100% - 2 * clamp(1rem, 4vw, 3rem), 96rem); margin-inline: auto; }
+header { padding-block: clamp(2rem, 5vw, 3.5rem) 2rem; border-bottom: 1px solid var(--line); }
+header img { width: 13rem; height: auto; }
+h1 { margin-top: 1.75rem; font: 600 clamp(2.2rem, 5vw, 3.75rem)/1.05 "Space Grotesk", sans-serif; letter-spacing: -.03em; }
+.intro { margin-top: 1rem; max-width: 46rem; color: var(--muted); }
+.note { margin-top: 1rem; padding: .9rem 1.1rem; border: 1px dashed rgb(229 184 105 / .6); border-radius: 8px; max-width: 46rem; color: var(--muted); font-size: .9375rem; }
+.note code { color: var(--cream); }
+.grid { display: grid; gap: 2rem; padding-block: 2.5rem 4rem; }
+.direction { display: grid; gap: 1.25rem; align-content: start; padding: 1.5rem; border: 1px solid var(--line); border-radius: 14px; background: #1d2629; }
+.direction h2 { font: 600 1.6rem/1.15 "Space Grotesk", sans-serif; }
+.direction h2 span { color: var(--gold); margin-right: .4rem; }
+.direction ul { padding-left: 1.1rem; color: var(--muted); }
+.direction li + li { margin-top: .35rem; }
+.open { justify-self: start; display: inline-flex; align-items: center; gap: .6rem; min-height: 48px; padding: .7rem 1.2rem; border-radius: 4px; background: var(--cream); color: var(--charcoal); font-weight: 700; text-decoration: none; }
+.open:hover { background: var(--turquoise); }
+.shots { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 1fr); gap: .75rem; align-items: start; }
+.shot { display: block; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: #0f1416; }
+.shot img { width: 100%; height: 26rem; object-fit: cover; object-position: top; }
+.shot-label { display: block; padding: .4rem .6rem; font-size: .8125rem; color: var(--muted); border-top: 1px solid var(--line); }
+.rec { padding: 1.75rem; margin-bottom: 4rem; border-radius: 14px; background: var(--deep-teal); }
+.rec h2 { font: 600 1.6rem/1.2 "Space Grotesk", sans-serif; }
+.rec p { margin-top: .75rem; max-width: 60rem; }
+.round { margin-top: 1rem; padding-top: 2.5rem; border-top: 1px solid var(--line); font: 600 clamp(1.8rem, 4vw, 2.75rem)/1.1 "Space Grotesk", sans-serif; letter-spacing: -.02em; }
+.round span { display: block; margin-top: .4rem; font: 400 1rem "DM Sans", sans-serif; color: var(--muted); letter-spacing: 0; }
+@media (min-width: 72rem) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <img src="../../public/brand/ag-logo-horizontal-reversed.svg" alt="Amber Goding" width="208" height="37">
+    <h1>Seven visual directions</h1>
+    <p class="intro">Internal design previews for choosing the portfolio’s visual direction. Round 1 keeps the approved palette and AG monogram files. Round 2 explores new palettes and new marks. All seven use Amber’s unretouched portrait, existing approved copy, and the three real projects with their genuine screenshots. None of them replaces the current site.</p>
+    <p class="note">Open the previews through the local preview server so the fonts load: run <code>node docs/design-previews/serve.mjs</code> from the repository root, then visit <code>http://localhost:4400/</code>. Case-study and contact buttons in the previews point to the existing pages in the local app at <code>localhost:3000</code>; the previews contain no forms and send nothing.</p>
+  </div>
+</header>
+<main class="wrap">
+  <div class="grid">
+    <section class="direction" aria-labelledby="d1">
+      <h2 id="d1"><span>1</span>Editorial</h2>
+      <ul>
+        <li>Cream pages with a centered magazine masthead and the full horizontal logo</li>
+        <li>Playfair Display headlines (the monogram’s own typeface) with teal italic accents</li>
+        <li>Numbered project rows that alternate sides, framed like printed plates</li>
+        <li>A charcoal services spread; calm, generous spacing throughout</li>
+      </ul>
+      <a class="open" href="editorial.html">Open the Editorial preview <span aria-hidden="true">→</span></a>
+      <div class="shots">
+        <a class="shot" href="screenshots/editorial-desktop.webp"><img src="screenshots/editorial-desktop.webp" alt="Editorial direction, desktop: cream masthead with the AG logo, a large serif headline, and numbered project rows." width="1200" height="4388"><span class="shot-label">Desktop, full page</span></a>
+        <a class="shot" href="screenshots/editorial-phone.webp"><img src="screenshots/editorial-phone.webp" alt="Editorial direction on a phone." width="390" height="6221"><span class="shot-label">Phone</span></a>
+      </div>
+    </section>
+    <section class="direction" aria-labelledby="d2">
+      <h2 id="d2"><span>2</span>Modern studio</h2>
+      <ul>
+        <li>Charcoal base with a sticky header and a turquoise Contact pill</li>
+        <li>Hero focal point: the three real screenshots fanned over a large AG monogram</li>
+        <li>Bold Space Grotesk type; bento project grid with large previews</li>
+        <li>Deep-teal services band and a full-width turquoise contact panel</li>
+      </ul>
+      <a class="open" href="studio.html">Open the Modern studio preview <span aria-hidden="true">→</span></a>
+      <div class="shots">
+        <a class="shot" href="screenshots/studio-desktop.webp"><img src="screenshots/studio-desktop.webp" alt="Modern studio direction, desktop: charcoal hero with fanned project screenshots and a bento grid of projects." width="1200" height="4121"><span class="shot-label">Desktop, full page</span></a>
+        <a class="shot" href="screenshots/studio-phone.webp"><img src="screenshots/studio-phone.webp" alt="Modern studio direction on a phone." width="390" height="6153"><span class="shot-label">Phone</span></a>
+      </div>
+    </section>
+    <section class="direction" aria-labelledby="d3">
+      <h2 id="d3"><span>3</span>Warm professional</h2>
+      <ul>
+        <li>Amber’s portrait leads the hero beside the approved About heading</li>
+        <li>Rounded, airy cards on cream and white; Playfair headings with DM Sans</li>
+        <li>Three equal project cards, a deep-teal services panel, and a “How I work” quote from the approved copy</li>
+        <li>The most personal and approachable of the three</li>
+      </ul>
+      <a class="open" href="warm.html">Open the Warm professional preview <span aria-hidden="true">→</span></a>
+      <div class="shots">
+        <a class="shot" href="screenshots/warm-desktop.webp"><img src="screenshots/warm-desktop.webp" alt="Warm professional direction, desktop: portrait in an arched frame beside the headline, with rounded project cards below." width="1200" height="3757"><span class="shot-label">Desktop, full page</span></a>
+        <a class="shot" href="screenshots/warm-phone.webp"><img src="screenshots/warm-phone.webp" alt="Warm professional direction on a phone." width="390" height="6599"><span class="shot-label">Phone</span></a>
+      </div>
+    </section>
+  </div>
+  <h2 class="round">Round 2: four new directions <span>New palettes and new marks (exploratory only)</span></h2>
+  <div class="grid grid-4">
+    <section class="direction" aria-labelledby="d4">
+      <h2 id="d4"><span>4</span>Futuristic</h2>
+      <ul>
+        <li>Near-black grid with cyan, violet, and lime; a hexagonal AG mark</li>
+        <li>Monospace interface labels and HUD corner frames</li>
+        <li>A terminal panel listing the real projects and working principles</li>
+        <li>Projects as “modules” with factual readouts: type, stack, status</li>
+      </ul>
+      <a class="open" href="futuristic.html">Open the Futuristic preview <span aria-hidden="true">→</span></a>
+      <div class="shots">
+        <a class="shot" href="screenshots/futuristic-desktop.webp"><img src="screenshots/futuristic-desktop.webp" alt="Futuristic direction, desktop: dark grid, large cyan headline, and a terminal panel." width="1200" height="3371"><span class="shot-label">Desktop, full page</span></a>
+        <a class="shot" href="screenshots/futuristic-phone.webp"><img src="screenshots/futuristic-phone.webp" alt="Futuristic direction on a phone." width="390" height="6008"><span class="shot-label">Phone</span></a>
+      </div>
+    </section>
+    <section class="direction" aria-labelledby="d5">
+      <h2 id="d5"><span>5</span>Cool &amp; savvy</h2>
+      <ul>
+        <li>Deep ink and bone with an electric coral accent and lavender highlights</li>
+        <li>Massive headline, sticker tags, and a lowercase “ag.” wordmark</li>
+        <li>A coral services ticker (with a pause button), tilted project screenshots</li>
+        <li>Chunky outlined service cards and a full-bleed coral contact section</li>
+      </ul>
+      <a class="open" href="savvy.html">Open the Cool &amp; savvy preview <span aria-hidden="true">→</span></a>
+      <div class="shots">
+        <a class="shot" href="screenshots/savvy-desktop.webp"><img src="screenshots/savvy-desktop.webp" alt="Cool and savvy direction, desktop: huge headline with coral italic accent and a coral ticker band." width="1200" height="4042"><span class="shot-label">Desktop, full page</span></a>
+        <a class="shot" href="screenshots/savvy-phone.webp"><img src="screenshots/savvy-phone.webp" alt="Cool and savvy direction on a phone." width="390" height="5828"><span class="shot-label">Phone</span></a>
+      </div>
+    </section>
+    <section class="direction" aria-labelledby="d6">
+      <h2 id="d6"><span>6</span>Professional with flair</h2>
+      <ul>
+        <li>Warm paper with forest green, tangerine, and butter yellow</li>
+        <li>A round “AG” seal with lettering around the edge; a hand-drawn underline in the headline</li>
+        <li>Project cards tilted like taped snapshots; bold colored service blocks</li>
+        <li>Personal and confident without losing polish</li>
+      </ul>
+      <a class="open" href="flair.html">Open the Professional with flair preview <span aria-hidden="true">→</span></a>
+      <div class="shots">
+        <a class="shot" href="screenshots/flair-desktop.webp"><img src="screenshots/flair-desktop.webp" alt="Professional with flair direction, desktop: serif headline with an orange hand-drawn underline beside the portrait." width="1200" height="3544"><span class="shot-label">Desktop, full page</span></a>
+        <a class="shot" href="screenshots/flair-phone.webp"><img src="screenshots/flair-phone.webp" alt="Professional with flair direction on a phone." width="390" height="6234"><span class="shot-label">Phone</span></a>
+      </div>
+    </section>
+    <section class="direction" aria-labelledby="d7">
+      <h2 id="d7"><span>7</span>Swiss modern</h2>
+      <ul>
+        <li>Black, warm white, and one signal red; an “A/G” block mark</li>
+        <li>Strict 12-column grid, giant section numerals, heavy rules</li>
+        <li>Projects as an index table with area, stack, and screenshot</li>
+        <li>The most restrained and typographic of the seven</li>
+      </ul>
+      <a class="open" href="swiss.html">Open the Swiss modern preview <span aria-hidden="true">→</span></a>
+      <div class="shots">
+        <a class="shot" href="screenshots/swiss-desktop.webp"><img src="screenshots/swiss-desktop.webp" alt="Swiss modern direction, desktop: huge black headline with a red period and a project index table." width="1200" height="3547"><span class="shot-label">Desktop, full page</span></a>
+        <a class="shot" href="screenshots/swiss-phone.webp"><img src="screenshots/swiss-phone.webp" alt="Swiss modern direction on a phone." width="390" height="5393"><span class="shot-label">Phone</span></a>
+      </div>
+    </section>
+  </div>
+  <section class="rec" aria-labelledby="rec">
+    <h2 id="rec">Recommendations</h2>
+    <p><strong>Overall: Professional with flair (6).</strong> It has the most personality while staying clearly professional, so it suits employers and small-business clients alike. The seal, the hand-drawn underline, and the colored service blocks make it memorable, and the real portrait and projects stay front and center. Cool &amp; savvy’s oversized hero type could be borrowed if you want more punch.</p>
+    <p><strong>From round 1: Modern studio (2), with Editorial touches.</strong> It puts working software first and stays closest to the current approved palette and monogram.</p>
+    <p>These are recommendations only. New palettes and marks in round 2 are exploratory; nothing changes in the production site until you choose.</p>
+  </section>
+</main>
+</body>
+</html>

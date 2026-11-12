@@ -6,7 +6,7 @@ export const servicesIntro = {
   heading: { lead: 'Useful software,', accent: 'built around your work.' },
   lede:
     'I help small businesses, freelancers, and teams turn everyday problems into working tools: applications people can use, AI applied where it genuinely helps, and automations that take repetitive steps off your plate.',
-  note: 'Every project starts with understanding how the work happens today and aims to end with something you can run, understand, and maintain.',
+  note: 'Every project starts with how the work happens today and aims to leave you with something you can run, understand, and maintain.',
 };
 
 export const serviceDetails = [
@@ -44,7 +44,7 @@ export const serviceDetails = [
     contactLabel: 'Talk about AI integration',
     summary: 'AI applied where it genuinely helps, with clear limits and people in the loop.',
     buildingBlocks:
-      'Large language model APIs, structured outputs checked before they are used, search across your own documents, and human review steps.',
+      'Large language model APIs, structured outputs that are checked before use, and human review steps.',
     audience: [
       'Organizations that handle a lot of written information, such as forms, emails, or documents',
       'Teams curious about AI but unsure where it fits',

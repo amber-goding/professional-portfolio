@@ -55,7 +55,7 @@ describe('application routes', () => {
       assert.match(html, /<title>[^<]*Amber Goding[^<]*<\/title>/);
       assert.match(html, /<meta name="description" content="[^"]{50,}">/);
       assert.match(html, /<meta name="viewport" content="width=device-width, initial-scale=1">/);
-      assert.match(html, new RegExp(`&copy; ${new Date().getFullYear()} Amber Goding`));
+      assert.match(html, new RegExp(`&copy; ${new Date().getFullYear()} amber goding`));
       assert.doesNotMatch(html, /<%|%>/);
     });
 
@@ -90,15 +90,14 @@ describe('application routes', () => {
       assert.match(teaser[0], /<a class="button-text" href="\/about">More about Amber/);
     });
 
-    it('has a real menu button wired to the navigation', () => {
-      const button = html.match(/<button class="nav-toggle"[^>]*>/);
-      assert.ok(button, 'menu button is present');
-      assert.match(button[0], /type="button"/);
-      assert.match(button[0], /aria-expanded="false"/);
-      assert.match(button[0], /aria-controls="site-nav"/);
-      // Hidden until JavaScript enhances it, so links stay usable without JS.
-      assert.match(button[0], /\shidden/);
-      assert.ok(ids().has('site-nav'));
+    it('keeps every navigation link visible in the pill, with no hidden menu', () => {
+      // The Savvy design shows the full navigation pill on phones too.
+      assert.doesNotMatch(html, /class="nav-toggle"/);
+      const nav = html.match(/<nav class="site-nav" id="site-nav" aria-label="Main">([\s\S]*?)<\/nav>/);
+      assert.ok(nav, 'navigation landmark is present');
+      assert.doesNotMatch(nav[0], /\shidden/);
+      assert.equal((nav[1].match(/<a class="nav-link/g) ?? []).length, 4);
+      assert.match(nav[1], /<a class="nav-link nav-cta" href="\/contact">Let’s talk<\/a>/);
     });
 
     it('has no empty, placeholder, or broken in-page links', () => {
@@ -119,30 +118,33 @@ describe('application routes', () => {
     });
 
     it('gives the linked header logo an accessible name', () => {
-      const brand = html.match(/<a class="brand" href="\/">([\s\S]*?)<\/a>/);
-      assert.ok(brand, 'header logo links home');
-      assert.match(brand[1], /<img[^>]+src="\/brand\/ag-logo-horizontal-reversed\.svg"[^>]+alt="Amber Goding, home"/);
+      // Provisional Savvy wordmark; the final logo is pending (AGENTS.md).
+      const brand = html.match(/<a class="brand" href="\/" aria-label="Amber Goding, home">([\s\S]*?)<\/a>/);
+      assert.ok(brand, 'header wordmark links home with an accessible name');
+      assert.match(brand[1], /<span class="brand-ag" aria-hidden="true">ag<\/span>/);
+      assert.match(brand[1], /amber goding<span class="brand-dot">\.<\/span>/);
     });
 
-    it('gives every image an alt attribute and hides decorative monograms', () => {
+    it('gives every image an alt attribute and shows the real portrait in the hero and About section', () => {
       const images = [...html.matchAll(/<img\b[^>]*>/g)].map((m) => m[0]);
       assert.ok(images.length > 0);
       for (const img of images) {
         assert.match(img, /\salt="[^"]*"/, `image has alt: ${img}`);
       }
-      const decorative = images.filter((img) => /ag-monogram/.test(img));
-      assert.ok(decorative.length >= 1);
-      for (const img of decorative) {
-        assert.match(img, /\salt=""/, `decorative monogram is hidden: ${img}`);
-      }
+      const portraits = images.filter((img) => /amber-goding-portrait-/.test(img));
+      assert.equal(portraits.length, 2);
+      for (const img of portraits) assert.match(img, /\salt="Portrait of Amber Goding"/);
     });
 
     it('no longer renders the retired lowercase text monogram', () => {
       assert.doesNotMatch(html, /a<span>g<\/span>/);
     });
 
-    it('keeps decorative hero artwork out of the accessibility tree', () => {
-      assert.match(html, /<div class="hero-art" aria-hidden="true">/);
+    it('keeps decorative stickers and the moving ticker text out of the accessibility tree', () => {
+      assert.match(html, /<ul class="stickers" role="list" aria-hidden="true">/);
+      assert.match(html, /<div class="ticker-track" aria-hidden="true">/);
+      // The pause control is revealed by site.js, which also wires it up.
+      assert.match(html, /<button class="ticker-toggle" type="button" aria-pressed="false" data-ticker-toggle hidden>Pause motion<\/button>/);
     });
 
     it('invites contact through the contact page without exposing any email address', () => {
@@ -152,10 +154,12 @@ describe('application routes', () => {
       assert.doesNotMatch(html, /[\w.+-]+@[\w-]+\.[\w.]+/, 'no email address appears in the page');
     });
 
-    it('shows the published projects first, in order, and keeps the other slots as unlinked placeholders', () => {
+    it('shows the three published projects in order, with no development placeholder', () => {
       const projects = [...html.matchAll(/<article class="project-card[^"]*"[\s\S]*?<\/article>/g)].map((m) => m[0]);
-      assert.equal(projects.length, 4);
-      const [reentry, catering, hunt, ...placeholders] = projects;
+      assert.equal(projects.length, 3);
+      const [reentry, catering, hunt] = projects;
+      assert.doesNotMatch(html, /Development placeholder|not an application screenshot/i);
+      assert.match(catering, /Screenshot shows the app’s fictional sample data\./);
       assert.match(hunt, /<a class="project-link" href="\/projects\/huntsomewhere">HuntSomewhere/);
       assert.match(hunt, /<img[^>]+src="\/images\/projects\/huntsomewhere\/public-areas-desktop-1600\.jpg"[^>]+alt="[^"]{20,}"/);
       assert.doesNotMatch(hunt, /Development placeholder|not an application screenshot/i);
@@ -165,12 +169,6 @@ describe('application routes', () => {
       assert.match(catering, /<img[^>]+src="\/images\/projects\/catering-concierge\/dashboard-sample-desktop-1600\.jpg"[^>]+alt="[^"]*fictional[^"]*"/);
       for (const featured of [reentry, catering]) {
         assert.doesNotMatch(featured, /Development placeholder|not an application screenshot/i);
-      }
-      assert.equal(placeholders.length, 1);
-      for (const project of placeholders) {
-        assert.match(project, /Development placeholder/);
-        assert.match(project, /not an application screenshot/i);
-        assert.doesNotMatch(project, /<a[\s>]|<button[\s>]/);
       }
     });
 
@@ -205,8 +203,8 @@ describe('application routes', () => {
   });
 
   const publicAssets = [
-    ['/css/styles.css', /^text\/css/, /--charcoal: #151a1c;/],
-    ['/js/site.js', /^(text|application)\/javascript/, /aria-expanded/],
+    ['/css/styles.css', /^text\/css/, /--coral: #ff5f45;/],
+    ['/js/site.js', /^(text|application)\/javascript/, /aria-selected/],
     ['/favicon.svg', /^image\/svg\+xml/],
     ['/brand/ag-monogram.svg', /^image\/svg\+xml/],
     ['/brand/ag-monogram-reversed.svg', /^image\/svg\+xml/],
@@ -216,6 +214,8 @@ describe('application routes', () => {
     ['/fonts/space-grotesk-latin-ext.woff2', /^font\/woff2/],
     ['/fonts/dm-sans-latin.woff2', /^font\/woff2/],
     ['/fonts/dm-sans-latin-ext.woff2', /^font\/woff2/],
+    ['/fonts/playfair-display-latin.woff2', /^font\/woff2/],
+    ['/fonts/PlayfairDisplay-OFL.txt', /^text\/plain/, /SIL Open Font License/],
     ['/fonts/SpaceGrotesk-OFL.txt', /^text\/plain/, /SIL Open Font License/],
     ['/fonts/DMSans-OFL.txt', /^text\/plain/, /SIL Open Font License/],
   ];
@@ -249,7 +249,7 @@ describe('application routes', () => {
   it('references only font files that exist', async () => {
     const css = await (await fetch(`${baseUrl}/css/styles.css`)).text();
     const fontUrls = [...css.matchAll(/url\("([^"]+\.woff2)"\)/g)].map((m) => m[1]);
-    assert.equal(fontUrls.length, 4);
+    assert.equal(fontUrls.length, 5);
     for (const url of fontUrls) {
       assert.equal((await fetch(`${baseUrl}${url}`)).status, 200, url);
     }
@@ -258,6 +258,31 @@ describe('application routes', () => {
   it('does not expose the X-Powered-By header', async () => {
     const res = await fetch(`${baseUrl}/`);
     assert.equal(res.headers.get('x-powered-by'), null);
+  });
+
+  it('sends baseline security headers on pages, assets, and JSON', async () => {
+    for (const path of ['/', '/css/styles.css', '/healthz', '/does-not-exist']) {
+      const res = await fetch(`${baseUrl}${path}`);
+      assert.equal(res.headers.get('x-content-type-options'), 'nosniff', path);
+      assert.equal(res.headers.get('referrer-policy'), 'strict-origin-when-cross-origin', path);
+      assert.equal(res.headers.get('x-frame-options'), 'DENY', path);
+    }
+  });
+
+  it('serves the favicon and Apple touch icon in the Savvy style', async () => {
+    const html = await (await fetch(`${baseUrl}/`)).text();
+    assert.match(html, /<link rel="icon" href="\/favicon\.svg" type="image\/svg\+xml">/);
+    assert.match(html, /<link rel="apple-touch-icon" href="\/apple-touch-icon\.png">/);
+    const svg = await (await fetch(`${baseUrl}/favicon.svg`)).text();
+    assert.match(svg, /fill="#0E0E12"/, 'ink circle');
+    assert.match(svg, /fill="#F2EDE4"/, 'bone letters');
+    assert.match(svg, /fill="#FF5F45"/, 'coral dot');
+    const png = await fetch(`${baseUrl}/apple-touch-icon.png`);
+    assert.equal(png.status, 200);
+    assert.match(png.headers.get('content-type'), /^image\/png/);
+    const bytes = Buffer.from(await png.arrayBuffer());
+    assert.equal(bytes.readUInt32BE(16), 180, 'width');
+    assert.equal(bytes.readUInt32BE(20), 180, 'height');
   });
 
   const privatePaths = [

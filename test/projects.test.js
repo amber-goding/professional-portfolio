@@ -134,7 +134,7 @@ describe('/projects/reentry-resource-extractor', () => {
     assert.match(text, /only confirms that a quote appears in the retrieved text/);
     assert.match(text, /does not crawl a whole website/i);
     assert.match(text, /Nothing is saved, exported, or published/);
-    assert.match(text, /do not show a live extraction run/);
+    assert.match(text, /sample data rather than a real extraction/);
   });
 
   it('makes no unsupported claims', () => {
@@ -231,6 +231,13 @@ describe('project routing', () => {
   before(async () => ({ server, baseUrl } = await startServer()));
   after(() => new Promise((resolve) => server.close(resolve)));
 
+  it('shows no internal verification notes on any published case study', async () => {
+    for (const { slug } of publishedProjects) {
+      const page = await (await fetch(`${baseUrl}/projects/${slug}`)).text();
+      assert.doesNotMatch(page, /This write-up is based on|class="scope-note"|checked on 2026|captured on 2026/, slug);
+    }
+  });
+
   it('returns the standard 404 page for unknown and unpublished slugs', async () => {
     for (const path of ['/projects', '/projects/', '/projects/does-not-exist', '/projects/ever-after-planner', '/projects/HuntSomewhere', '/projects/huntsomewhere/extra', '/projects/Reentry-Resource-Extractor', '/projects/reentry-resource-extractor/extra', '/projects/Catering-Concierge', '/projects/catering-concierge/extra']) {
       const res = await fetch(`${baseUrl}${path}`);
@@ -253,11 +260,11 @@ describe('project routing', () => {
     }
   });
 
-  it('links the first three cards to their case studies, in order, and leaves the last unlinked', async () => {
+  it('links the three homepage cards to their case studies, in order', async () => {
     const home = await (await fetch(`${baseUrl}/`)).text();
     const cards = [...home.matchAll(/<article class="project-card[^"]*"[\s\S]*?<\/article>/g)].map((m) => m[0]);
     const hrefs = cards.map((card) => card.match(/<a class="project-link" href="([^"]+)">/)?.[1] ?? null);
-    assert.deepEqual(hrefs, [`/projects/${APPROVED.slug}`, `/projects/${CATERING.slug}`, `/projects/${HUNT.slug}`, null]);
+    assert.deepEqual(hrefs, [`/projects/${APPROVED.slug}`, `/projects/${CATERING.slug}`, `/projects/${HUNT.slug}`]);
     for (const [index, href] of hrefs.slice(0, 3).entries()) {
       assert.equal((await fetch(`${baseUrl}${href}`)).status, 200, href);
       for (const [, src] of cards[index].matchAll(/(?:src|srcset)="([^"\s,]+)/g)) {
@@ -305,7 +312,7 @@ describe('/projects/huntsomewhere', () => {
     assert.doesNotMatch(html, /target="_blank"/);
   });
 
-  it('describes link access, county-only matching, and the untested AI step accurately', () => {
+  it('describes link access, county-only matching, and the AI-free demonstration trip accurately', () => {
     const text = textOf(main);
     assert.match(text, /Anyone who has (that|a trip’s) link can view/);
     assert.doesNotMatch(text, /private link|private by design|secure link/i, 'saved trips are not described as private');
@@ -313,7 +320,7 @@ describe('/projects/huntsomewhere', () => {
     assert.doesNotMatch(text, /can’t be overspent|spending cap|budget cap/i);
     assert.match(text, /doesn’t establish hunting access, eligibility, seasons, or suitability for a species or method/);
     assert.match(text, /six curated wildlife management areas in four counties/i);
-    assert.match(text, /described here from the source code|reviewed in the source but not run/);
+    assert.match(text, /fictional example entered through the manual form, with no AI involved/);
   });
 
   it('keeps planned features out of the implemented scope', () => {
@@ -429,8 +436,8 @@ describe('/projects/catering-concierge', () => {
     assert.match(limitations, /hasn’t been tested live/);
   });
 
-  it('separates historical project checks from checks made for this case study', () => {
-    assert.match(textOf(main), /project’s own records note a live Zapier test[^.]*;[^.]*wasn’t repeated for this case study/);
+  it('carries no internal verification notes', () => {
+    assert.doesNotMatch(main, /This write-up is based on|class="scope-note"|wasn’t repeated for this case study/);
   });
 
   it('makes no unsupported claims or schedule references', () => {

@@ -10,15 +10,12 @@ const noEmail = async () => {
   throw new Error('about tests must not call the email provider');
 };
 
-// The owner-approved copy (2026-11-12), written out here independently of
-// src/content/about.js so any drift from the approved wording fails a test.
+// Owner-approved wording (2026-11-12), written out here independently of
+// src/content/about.js. The heading and "How I work" are locked verbatim; the
+// story (reworded from the owner's bio) is checked by structure and key phrases.
 const APPROVED = {
   heading: 'Thoughtful tools start with understanding people.',
-  paragraphs: [
-    'I’m Amber Goding, an application and automation builder who enjoys turning complicated problems into tools that make everyday work easier.',
-    'My background includes customer-facing work, training, and team coordination. Those experiences shaped how I approach development: listen carefully, understand what someone needs, organize the details, and follow through. They also made me interested in the processes behind the work—where information gets lost, which steps repeat, and what could work better.',
-    'Software development brings together the things I enjoy: creative thinking, practical problem-solving, and understanding how systems connect. My experience spans frontend interfaces, databases, APIs, and backend functionality, developed through structured coursework, independent study, and hands-on projects.',
-    'I build with technologies including JavaScript, React, Next.js, and Tailwind CSS, alongside tools such as Prisma, Neon, and Railway. I also work with AI integrations and workflow automation, using tools including the OpenAI API and Zapier.',
+  howIWork: [
     'I start by asking questions and clarifying the problem before suggesting a solution. From there, I break the work into manageable steps, communicate progress, and explain the decisions along the way.',
     'I welcome feedback because a useful application needs to make sense to the people using it. When I include AI, I consider where it can help, where its limits matter, and where a person should remain involved.',
     'I’m interested in opportunities to contribute to a development team, build practical applications, and help businesses simplify repetitive work. Whether it’s a clearer interface, easier access to information, or a better-connected workflow, I want the result to be something people can use with confidence.',
@@ -63,7 +60,7 @@ describe('/about', () => {
 
   it('has page-specific metadata', () => {
     assert.match(html, /<title>About Amber \| Amber Goding<\/title>/);
-    assert.match(html, /<meta name="description" content="Amber Goding is an application and automation builder[^"]{20,}">/);
+    assert.match(html, /<meta name="description" content="Amber Goding is a full-stack developer and AI-augmented builder[^"]{20,}">/);
     assert.match(html, /<meta name="viewport" content="width=device-width, initial-scale=1">/);
   });
 
@@ -76,14 +73,32 @@ describe('/about', () => {
     assert.equal((html.match(/aria-current="page"/g) ?? []).length, 1);
   });
 
-  it('renders the approved copy exactly, in order, with "How I work" as the section heading', () => {
+  it('introduces Amber with her role and tells her story in a headed, three-part section', () => {
     const main = html.match(/<main[\s\S]*<\/main>/)[0];
-    const contact = main.indexOf('class="section contact"');
-    const paragraphs = [...main.slice(0, contact).matchAll(/<p(?: class="page-lede")?>([\s\S]*?)<\/p>/g)].map((m) => textOf(m[1]));
-    assert.deepEqual(paragraphs, APPROVED.paragraphs);
+    assert.match(textOf(main.match(/<p class="page-lede">([\s\S]*?)<\/p>/)[1]), /^I’m Amber Goding, a full-stack developer and AI-augmented builder/);
+    const story = main.match(/<section class="section about-story" aria-labelledby="story-heading">[\s\S]*?<\/section>/)?.[0];
+    assert.ok(story, 'story section is labelled by its heading');
+    assert.match(story, /<p class="kicker">My story<\/p>/);
+    assert.match(story, /<h2 id="story-heading">[^<]+<br> <em>[^<]+<\/em><\/h2>/);
+    const chapters = [...story.matchAll(/<li class="story-card"[^>]*>[\s\S]*?<h3>([^<]+)<\/h3>\s*<p>([^<]+)<\/p>/g)].map((m) => [m[1], m[2]]);
+    assert.deepEqual(chapters.map(([title]) => title), ['The path', 'The mindset', 'The craft']);
+    const storyText = chapters.map(([, text]) => text).join(' ');
+    assert.match(storyText, /second chance/);
+    assert.match(storyText, /resourceful, adaptable/);
+    assert.match(storyText, /logic and creativity/);
+    assert.match(storyText, /a little magic/);
+  });
+
+  it('keeps the approved "How I work" copy and a logical heading order', () => {
+    const main = html.match(/<main[\s\S]*<\/main>/)[0];
+    const approach = main.match(/<section class="section section--cream about-approach"[\s\S]*?<\/section>/)[0];
+    const paragraphs = [...approach.matchAll(/<p>([\s\S]*?)<\/p>/g)].map((m) => textOf(m[1]));
+    assert.deepEqual(paragraphs, APPROVED.howIWork);
     const headings = [...main.matchAll(/<h([1-6])[^>]*>([\s\S]*?)<\/h\1>/g)].map((m) => `h${m[1]} ${textOf(m[2])}`);
-    assert.deepEqual(headings, [`h1 ${APPROVED.heading}`, 'h2 How I work', 'h2 Let’s make it happen.']);
-    assert.ok(main.indexOf('How I work') > main.indexOf(APPROVED.paragraphs[3]), '"How I work" follows the background copy');
+    assert.equal(headings[0], `h1 ${APPROVED.heading}`);
+    assert.deepEqual(headings.slice(1).map((h) => h.slice(0, 2)), ['h2', 'h3', 'h3', 'h3', 'h2', 'h2']);
+    assert.ok(headings.includes('h2 How I work'));
+    assert.equal(headings.at(-1), 'h2 Let’s make it happen.');
   });
 
   it('shows the portrait with alt text, intrinsic dimensions, and responsive sources', () => {
@@ -95,7 +110,7 @@ describe('/about', () => {
     const source = html.match(/<source type="image\/webp" srcset="([^"]+)" sizes="([^"]+)">/);
     assert.ok(source, 'WebP sources are offered');
     assert.equal(source[1], '/images/amber-goding-portrait-400.webp 400w, /images/amber-goding-portrait-800.webp 800w, /images/amber-goding-portrait-1200.webp 1200w');
-    assert.equal(source[2], '(min-width: 56rem) 28rem, 22rem');
+    assert.equal(source[2], '(min-width: 56rem) 28rem, 90vw');
   });
 
   it('serves every portrait file at its declared size, square, with no embedded metadata', async () => {
@@ -127,8 +142,8 @@ describe('/about', () => {
     assert.ok(list, 'profile links are grouped and labelled');
     const links = [...list[1].matchAll(/<a[^>]+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)].map((m) => [m[1], textOf(m[2].replace(/<span aria-hidden="true">[^<]*<\/span>/, ''))]);
     assert.deepEqual(links, [
-      ['https://www.linkedin.com/in/amber-goding/', 'LinkedIn profile'],
-      ['https://github.com/amber-goding', 'GitHub profile'],
+      ['https://www.linkedin.com/in/amber-goding/', 'LinkedIn'],
+      ['https://github.com/amber-goding', 'GitHub'],
     ]);
   });
 

@@ -5,7 +5,7 @@ export const navigation = [
   { href: '/#work', label: 'Work' },
   { href: '/services', label: 'Services' },
   { href: '/about', label: 'About' },
-  { href: '/contact', label: 'Contact', cta: true },
+  { href: '/contact', label: 'Let’s talk', cta: true },
 ];
 
 // Capability descriptions only, with no client results or claimed experience.
@@ -27,17 +27,6 @@ export const services = [
   },
 ];
 
-// DEVELOPMENT PLACEHOLDERS. These are not real projects. Published projects
-// (src/content/projects.js) fill the first slots on the homepage, and these
-// fill the rest until each is replaced by a verified project. Placeholders
-// must never link anywhere or describe features.
-export const projectPlaceholders = [
-  { category: 'AI integration', heading: 'Clarity from complexity.', variant: 'signal' },
-];
-
-// Working principles drawn directly from the approved positioning.
-export const principles = [
-  { title: 'Start with the real problem', text: 'Useful tools begin with how people actually work.' },
-  { title: 'Explain the decisions', text: 'Clear reasoning, so you always know what was built and why.' },
-  { title: 'Use AI thoughtfully', text: 'Applied where it helps, with its limits stated plainly.' },
-];
+// Hero sticker tags (Savvy design), drawn from the approved positioning:
+// "explains decisions clearly, and uses AI thoughtfully". Decorative only.
+export const heroStickers = ['AI, used thoughtfully', 'Decisions, explained'];

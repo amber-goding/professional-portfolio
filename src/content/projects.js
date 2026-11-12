@@ -19,7 +19,7 @@ const reentryStartScreen = {
   width: 1600,
   height: 1000,
   alt: 'Start screen of the Reentry Resource Extractor: the title, a short description, and a three-step pathway labelled Retrieve, Extract, and Review, with the form for a program website address beginning below.',
-  caption: 'The start screen of the deployed application, captured on 2026-11-12: the three-step pathway and the form that takes a public website address.',
+  caption: 'The start screen of the deployed application: the three-step pathway and the form that takes a public web address.',
 };
 
 export const projects = [
@@ -35,7 +35,7 @@ export const projects = [
       'Turns one public reentry-program web page into a structured draft listing. The model is instructed to use only the page’s text, the server keeps a value only when its quoted evidence appears in that text, and a person reviews every field.',
     audience:
       'Built for managers of transitional housing, halfway houses, and reentry programs who need complete and correct listings assembled from information that already sits on their public websites.',
-    status: 'Deployed on Railway. Analyzes one page at a time; reviewed values are not saved.',
+    status: 'Deployed on Railway. Analyzes one page at a time; reviewed values aren’t saved.',
     stackSummary: 'JavaScript with Vite, a Node.js server, cheerio, and the OpenAI Responses API, deployed on Railway.',
     // Approved by the owner on 2026-11-12. Do not edit.
     contribution:
@@ -53,8 +53,8 @@ export const projects = [
     problem: {
       heading: { lead: 'Scattered details,', accent: 'real consequences.' },
       paragraphs: [
-        'Reentry program listings are hard to create well. The details that matter most to someone leaving incarceration, such as eligibility, cost, length of stay, substance-use and medication policies, and how to apply, are usually scattered across a program’s public website rather than organized in one place. Directory listings end up incomplete, inconsistent, or out of date.',
-        'The obvious shortcut, asking an AI model to summarize the site, creates a worse problem: invented or misread details presented as fact. For this audience a wrong policy or phone number has real consequences, so the project treats incorrect program information being mistaken for fact as the main failure to design against. The tool takes on the tedious part, finding and organizing the details, without removing the person who is accountable for them.',
+        'Reentry program listings are hard to get right. The details that matter most to someone leaving incarceration (eligibility, cost, length of stay, substance-use and medication policies, how to apply) are usually scattered across a program’s website instead of gathered in one place. Directory listings end up incomplete, inconsistent, or out of date.',
+        'The obvious shortcut, asking an AI model to summarize the site, creates a worse problem: invented or misread details presented as fact. For this audience, a wrong policy or phone number has real consequences, so that is the failure the whole design works against. The tool handles the tedious part, finding and organizing the details, and leaves the person accountable for them in charge.',
       ],
     },
     workflow: {
@@ -62,15 +62,15 @@ export const projects = [
       steps: [
         {
           title: 'Retrieve',
-          text: 'The manager enters the address of one public web page. The server fetches it, refuses private and internal addresses, limits the page size and the number of redirects, and reduces the HTML to readable text, which is shown back to the manager before anything else happens.',
+          text: 'The manager enters the address of one public web page. The server fetches it, refuses private and internal addresses, limits the page size and redirects, and reduces the HTML to readable text, which the manager sees before anything else happens.',
         },
         {
           title: 'Extract',
-          text: 'That text goes to the OpenAI Responses API with a strict JSON schema covering 21 listing fields, from program name and contact details to eligibility, cost, length of stay, and the application process. The instructions tell the model to use only the supplied text, to treat it as untrusted content rather than commands, and not to guess. Fields the model reports as not found, and values whose evidence quote can’t be matched in the page text, are shown as Not Found.',
+          text: 'That text goes to the OpenAI Responses API with a strict JSON schema covering 21 listing fields, from program name and contact details to eligibility, cost, length of stay, and how to apply. The model is told to use only that text, to treat it as content rather than commands, and not to guess. Anything it reports as missing, and any value whose evidence quote can’t be found in the page, is shown as Not Found.',
         },
         {
           title: 'Review',
-          text: 'Each field shows the AI result, the quoted source evidence, and a separate manager-reviewed value. The manager confirms, edits, or clears every field, and its status moves from Unreviewed to Confirmed or Edited. The statuses show which fields a person has checked and which are still unreviewed.',
+          text: 'Each field shows the AI result, the quoted evidence, and a separate manager-reviewed value. The manager confirms, edits, or clears each one, and its status moves from Unreviewed to Confirmed or Edited, so it’s always clear what a person has checked.',
         },
       ],
     },
@@ -79,7 +79,7 @@ export const projects = [
       items: [
         {
           title: 'Evidence has to match the page',
-          text: 'The server accepts a value as found only when the quote the model returns as evidence appears verbatim, after whitespace normalization, in the retrieved text. Otherwise the field is downgraded to Not Found. This rejects evidence quotes that do not appear in the retrieved text. A matching quote can still accompany an incorrect interpretation, so every field requires human review.',
+          text: 'The server accepts a value as found only when the model’s evidence quote appears word for word (ignoring spacing) in the retrieved text; otherwise the field becomes Not Found. This rejects evidence quotes that do not appear in the retrieved text. A matching quote can still accompany an incorrect interpretation, so every field requires human review.',
         },
         {
           title: 'A strict schema instead of free text',
@@ -87,7 +87,7 @@ export const projects = [
         },
         {
           title: 'Page text is data, not instructions',
-          text: 'The retrieved content is passed to the model as source material with explicit instructions to ignore any commands it contains, to reduce the risk from prompt-injection text embedded in a page. These instructions lower that risk; they don’t eliminate it.',
+          text: 'Retrieved content reaches the model as source material, with instructions to ignore any commands inside it. That lowers the risk from prompt-injection text hidden in a page; it doesn’t eliminate it.',
         },
         {
           title: 'Only public pages, with fetch limits',
@@ -95,19 +95,19 @@ export const projects = [
         },
         {
           title: 'The AI result and the human value stay apart',
-          text: 'The interface keeps the AI result and its evidence read-only and gives each field its own manager-reviewed value with an explicit status. What the model said and what the person decided are never blurred into one.',
+          text: 'The AI result and its evidence stay read-only, and each field gets its own manager-reviewed value with an explicit status. What the model said and what the person decided never blur together.',
         },
         {
           title: 'Secrets stay on the server',
-          text: 'The OpenAI key is read only from the server’s environment and never reaches the browser. If it isn’t configured, the app says so plainly instead of failing silently.',
+          text: 'The OpenAI key lives only in the server’s environment and never reaches the browser. If it’s missing, the app says so plainly instead of failing silently.',
         },
       ],
     },
     review: {
       heading: { lead: 'The person has', accent: 'the last word.' },
       paragraphs: [
-        'The review screen is where the design shows. Every field carries two badges: a review status (Unreviewed, Confirmed, or Edited) and whether the AI found it at all. Found values appear beside the quote the model cited, which the server has matched in the page text; Not Found fields say so and show no evidence.',
-        'The screenshots below use the application’s built-in development sample results, which exist to exercise the interface without analyzing a website. They are labelled as sample data in the app itself, and no extraction was run to produce them.',
+        'This is where the design shows. Every field carries two badges: its review status (Unreviewed, Confirmed, or Edited) and whether the AI found it at all. Found values sit beside the quote the model cited, matched by the server in the page text; Not Found fields say so and show no evidence.',
+        'The screenshots below use the app’s built-in sample results, a feature for testing the interface without analyzing a website, so they show sample data rather than a real extraction.',
       ],
     },
     scope: {
@@ -118,17 +118,15 @@ export const projects = [
         'Per-field review with Unreviewed, Confirmed, and Edited states, keeping the AI result separate from the reviewed value',
         'Clear messages for configuration, retrieval, size, timeout, refusal, and invalid-response failures',
         'Development sample results for checking the interface without an AI call',
-        'Production configuration for Railway',
+        'Deployment on Railway',
       ],
       limitations: [
         'It analyzes one page at a time. It does not crawl a whole website or follow links.',
         'Nothing is saved, exported, or published. Reviewed values live only in the current browser session.',
         'There are no accounts, and the AI step needs an API key configured on the server.',
         'Evidence matching only confirms that a quote appears in the retrieved text. It can’t tell whether the extracted value or its interpretation is correct; that remains the reviewer’s job.',
-        'Checks so far have been manual; the repository has no automated test suite yet.',
+        'Testing so far has been manual; there’s no automated test suite yet.',
       ],
-      verification:
-        'This write-up is based on the project’s source code and its deployed interface. The start screen and the review interface with development sample data were captured from the live application on 2026-11-12. The screenshots do not show a live extraction run.',
     },
     technologies: [
       { name: 'JavaScript and Vite', detail: 'A framework-free interface written in plain JavaScript and bundled with Vite.' },
@@ -185,7 +183,7 @@ const cateringDashboard = {
   height: 1000,
   sample: true,
   alt: 'The Catering Concierge dashboard on a desktop screen. A demonstration-mode banner states that its inquiries, names, and figures are fictional. The sidebar lists Dashboard, Inquiries marked Limited, and Email, Menu, Quotes, Events, and Settings marked Planned. Summary cards and an inquiry pipeline are labelled Sample and Fictional.',
-  caption: 'The deployed dashboard, viewable without signing in. Everything on it is fictional sample data, and the sidebar marks each module as Limited or Planned. Imported inquiries appear on the separate Inquiries page, which requires sign-in and isn’t shown.',
+  caption: 'The deployed dashboard, open to anyone. Everything on it is fictional sample data, and the sidebar marks each module as Limited or Planned. Imported inquiries live on the sign-in-only Inquiries page.',
 };
 
 projects.push({
@@ -197,7 +195,7 @@ projects.push({
   description:
     'Case study: Catering Concierge brings catering inquiries, prepared and reviewed in Zapier, into a restaurant-scoped review screen through an authenticated, duplicate-aware import endpoint.',
   tagline:
-    'A catering operations app for independent restaurants. Its working pilot connects a Zapier workflow to the app: Zapier packages each inquiry with an AI-written review, an authenticated endpoint stores it once for the configured restaurant, and signed-in owners read their restaurant’s inquiries in one place.',
+    'A catering operations app for independent restaurants. Its working pilot links Zapier to the app: Zapier pairs each inquiry with an AI-written review, an authenticated endpoint stores it once for the configured restaurant, and signed-in owners read their inquiries in one place.',
   audience:
     'Built for independent restaurants that receive catering requests through several channels and need one place to see what has come in.',
   status:
@@ -220,8 +218,8 @@ projects.push({
   problem: {
     heading: { lead: 'Many channels,', accent: 'one kitchen.' },
     paragraphs: [
-      'Catering requests reach an independent restaurant through different routes: email, website forms, and conversations someone types up later. Each arrives in its own format, with the event date, headcount, and dietary needs buried in free text, and each has to be found, read, and checked for missing details before anyone can respond.',
-      'Catering Concierge is planned as a complete catering workflow, from first contact to a confirmed event. The first working piece is intake: moving inquiries out of the tools where they arrive and into one place, attached to the right restaurant, without creating duplicates, and designed so each owner reads only their own restaurant’s inquiries.',
+      'Catering requests reach an independent restaurant by different routes: email, website forms, and conversations someone types up later. Each arrives in its own format, with the date, headcount, and dietary needs buried in free text, and each has to be found, read, and checked for gaps before anyone can reply.',
+      'Catering Concierge is planned as a full catering workflow, from first contact to a confirmed event. The first working piece is intake: pulling inquiries out of the tools where they land and into one place, attached to the right restaurant, without duplicates, and designed so each owner sees only their own restaurant’s inquiries.',
     ],
   },
   workflow: {
@@ -229,11 +227,11 @@ projects.push({
     steps: [
       {
         title: 'Prepare in Zapier',
-        text: 'A published Zap watches a Zapier table of fictional pilot inquiries. For each new record, an AI by Zapier step writes a review of the request, and a code step packages the record ID, the original message, and that review as JSON. The AI step runs inside Zapier; the application itself calls no AI service.',
+        text: 'A published Zap watches a Zapier table of fictional pilot inquiries. For each new record, an AI by Zapier step writes a review, and a code step packages the record ID, the original message, and the review as JSON. The AI runs inside Zapier; the application itself calls no AI service.',
       },
       {
         title: 'Deliver to the app',
-        text: 'Zapier sends the JSON to the application’s import endpoint with a bearer token. The server checks its own configuration, the token, the content type, the size, and the exact fields before it touches the database, then stores the inquiry for the restaurant named in server configuration, labelled as demonstration data.',
+        text: 'Zapier posts the JSON to the app’s import endpoint with a bearer token. Before touching the database, the server checks its configuration, the token, the content type, the size, and the exact fields. It then stores the inquiry for the restaurant set in server configuration, labelled as demonstration data.',
       },
       {
         title: 'Review in one place',
@@ -254,7 +252,7 @@ projects.push({
       },
       {
         title: 'One record, one inquiry',
-        text: 'A repeat delivery of the same Zapier record returns the existing inquiry instead of creating another or overwriting it. A unique database index on the restaurant, table, and record ID backs this up: if two deliveries arrive together, the database rejects the second and the endpoint returns the first. Simultaneous deliveries are covered by automated tests against a simulated database rather than a live test.',
+        text: 'A repeat delivery of the same Zapier record returns the existing inquiry instead of creating another or overwriting it. A unique database index on the restaurant, table, and record ID backs this up: if two deliveries arrive together, the database rejects the second and the endpoint returns the first. Automated tests cover simultaneous deliveries using a simulated database.',
       },
       {
         title: 'Restaurant scope comes from the session',
@@ -274,8 +272,8 @@ projects.push({
     label: 'The interface',
     heading: { lead: 'What’s public,', accent: 'what’s behind sign-in.' },
     paragraphs: [
-      'The dashboard and the planned module pages can be viewed without an account. Sign-in uses Google, and the sign-in page says plainly what signing in does today: it confirms identity, lets the owner set up one restaurant, and gives access to that restaurant’s imported inquiries.',
-      'The Inquiries screen itself requires a restaurant account, so it isn’t pictured here. The screenshots were taken from the deployed application while signed out, and the dashboard images show its built-in fictional sample data.',
+      'The dashboard and planned module pages are open to anyone. Sign-in uses Google, and the sign-in page says plainly what signing in does today: confirm identity, set up one restaurant, and read that restaurant’s imported inquiries.',
+      'The Inquiries screen requires a restaurant account, so it isn’t pictured here. The dashboard images show the app’s built-in fictional sample data.',
     ],
   },
   scope: {
@@ -285,7 +283,7 @@ projects.push({
       'An authenticated Zapier import endpoint with payload validation, a size limit, and duplicate handling',
       'A restaurant-scoped, read-only Inquiries screen showing each original request with its Zapier AI review',
       'A dashboard and pipeline preview built on clearly labelled fictional sample data',
-      'A health endpoint and production configuration for Railway',
+      'A health endpoint and a Railway deployment',
       'Automated tests for the sign-in wiring, restaurant setup, the import endpoint, and inquiry reads, using a simulated database where needed',
     ],
     limitations: [
@@ -297,8 +295,6 @@ projects.push({
       'Entering an inquiry by hand is in development and isn’t part of the deployed version.',
       'Restaurant scoping and simultaneous duplicate deliveries are covered by automated tests against a simulated database. Separation between two real restaurant accounts hasn’t been tested live.',
     ],
-    verification:
-      'This write-up is based on the project’s committed source code and its deployed interface. The screenshots were captured from the live application on 2026-11-12 while signed out, without submitting anything. The project’s own records note a live Zapier test in which a first delivery was accepted and a repeat returned the same inquiry as a duplicate; that check wasn’t repeated for this case study.',
   },
   technologies: [
     { name: 'Next.js and React', detail: 'App Router pages with server-side data loading, written in TypeScript.' },
@@ -320,7 +316,7 @@ projects.push({
         height: 1000,
         sizes: '(min-width: 90rem) 54rem, (min-width: 56rem) 60vw, 100vw',
         alt: 'The Catering Concierge sign-in page on a desktop screen, with a Continue with Google button and a panel titled What signing in does today that lists identity confirmation through Google, seven-day sessions, no Gmail access, and setting up one restaurant to read its imported pilot inquiries.',
-        caption: 'The deployed sign-in page, captured signed out. It explains what signing in does today, including that it doesn’t connect Gmail.',
+        caption: 'The deployed sign-in page, which explains what signing in does today, including that it doesn’t connect Gmail.',
       },
       {
         base: `${cateringImages}/dashboard-sample-phone`,
@@ -353,7 +349,7 @@ projects.push({
   description:
     'Case study: HuntSomewhere turns a hunter’s trip description into editable search preferences, saves them in PostgreSQL behind a unique link, and lists curated Maryland public areas that match by county, with official sources and clear limits.',
   tagline:
-    'A trip planner for hunters in Maryland. Describe a trip or set preferences by hand, review and edit them, save the trip to a unique link, and see which curated public wildlife management areas fall in the counties you chose, each with its official source and a clear note on what hasn’t been confirmed.',
+    'A trip planner for Maryland hunters. Describe a trip or set preferences by hand, edit them, save the trip to a unique link, and see which curated public wildlife management areas fall in your counties, each with its official source and a clear note on what isn’t confirmed.',
   audience:
     'Built for Maryland hunters who want a quicker start on where to look, without being told that a place is open or legal to hunt when the data doesn’t say so.',
   status:
@@ -384,7 +380,7 @@ projects.push({
     heading: { lead: 'Where to look,', accent: 'and what’s really known.' },
     paragraphs: [
       'Planning a hunt in Maryland means piecing together where public land is, which county it’s in, what you’re after, and how you’ll hunt, from sources that weren’t built to answer those questions together. Public ownership records say who owns a parcel, not whether hunting is allowed there, which species are present, or when seasons run.',
-      'HuntSomewhere’s longer-term goal is a hub connecting hunters with public areas and willing private landowners. The working version takes on the first step: turning a hunter’s intentions into clear search preferences and pointing to public areas in the right counties, while stating plainly what the data doesn’t establish.',
+      'HuntSomewhere’s long-term goal is a hub that connects hunters with public areas and willing private landowners. The working version tackles the first step: turning a hunter’s plans into clear search preferences and pointing to public areas in the right counties, while being upfront about what the data doesn’t establish.',
     ],
   },
   workflow: {
@@ -392,11 +388,11 @@ projects.push({
     steps: [
       {
         title: 'Describe or set preferences',
-        text: 'A hunter can write a short description, up to 300 characters, and ask the AI step to suggest counties, species, methods, and dates. Or they can skip AI entirely and choose the same options from lists. The description is sent for that one request and isn’t stored.',
+        text: 'A hunter can write a short description (up to 300 characters) and let the AI step suggest counties, species, methods, and dates, or skip AI entirely and pick the same options from lists. The description is used for that one request and isn’t stored.',
       },
       {
         title: 'Review and save',
-        text: 'Every preference appears as a choice the hunter can remove or add to. Saving validates the selections on the server and stores them in PostgreSQL under a randomly generated link. Anyone who has that link can view the trip; it isn’t protected by an account.',
+        text: 'Each preference shows up as a choice the hunter can remove or add to. Saving validates the selections on the server and stores them in PostgreSQL under a randomly generated link. Anyone who has that link can view the trip; it isn’t protected by an account.',
       },
       {
         title: 'Discover public areas',
@@ -429,8 +425,7 @@ projects.push({
     label: 'The interface',
     heading: { lead: 'A demonstration trip,', accent: 'start to finish.' },
     paragraphs: [
-      'These screens come from the deployed application. The trip shown was created for this case study through the manual form, with Garrett County, white-tailed deer, vertical bow, and two November dates. It contains no personal information, and no AI request was made. Garrett County returns the two curated areas the source places there.',
-      'The AI suggestion step is described here from the source code. It wasn’t exercised for this case study, so no AI result is pictured.',
+      'The trip shown is a fictional example entered through the manual form, with no AI involved: Garrett County, white-tailed deer, vertical bow, and two November dates. Garrett County returns the two curated areas the source places there.',
     ],
   },
   scope: {
@@ -449,10 +444,7 @@ projects.push({
       'Coverage is six areas in four counties, not a statewide inventory.',
       'Matching uses county only. It doesn’t establish hunting access, eligibility, seasons, or suitability for a species or method.',
       'Maps, private-land listings, access requests, permission documents, and messaging are planned, not built.',
-      'Automated checks for the planner and the area data exist in the repository; they weren’t re-run for this case study.',
     ],
-    verification:
-      'This write-up is based on the project’s committed source code and its deployed interface, checked on 2026-11-12. The public pages were viewed, and one fictional demonstration trip was saved through the manual form and its county results confirmed. The AI suggestion step was reviewed in the source but not run.',
   },
   technologies: [
     { name: 'Next.js and React', detail: 'App Router pages and server actions, written in TypeScript.' },

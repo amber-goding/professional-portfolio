@@ -3,7 +3,8 @@ import { fileURLToPath } from 'node:url';
 import express from 'express';
 import { createContactRouter } from './contact/router.js';
 import { aboutPage, portrait, profileLinks } from './content/about.js';
-import { navigation, principles, projectPlaceholders, services } from './content/home.js';
+import { heroStickers, navigation, services } from './content/home.js';
+import { buildTools, stackGroups, stackIntro } from './content/stack.js';
 import { findPublishedProject, publishedProjects } from './content/projects.js';
 import { processSteps, serviceDetails, servicesIntro } from './content/services.js';
 
@@ -11,7 +12,7 @@ const projectRoot = fileURLToPath(new URL('..', import.meta.url));
 
 export const site = {
   name: 'Amber Goding',
-  role: 'Application & Automation Builder',
+  role: 'Full-Stack Developer & AI-Augmented Builder',
   description:
     'Amber Goding builds practical applications, AI integrations, and workflow automation that turn real-world problems into useful tools.',
 };
@@ -49,6 +50,16 @@ export function createApp({
     next();
   });
 
+  // Baseline security headers for every response (pages, assets, and JSON).
+  app.use((req, res, next) => {
+    res.set({
+      'X-Content-Type-Options': 'nosniff',
+      'Referrer-Policy': 'strict-origin-when-cross-origin',
+      'X-Frame-Options': 'DENY',
+    });
+    next();
+  });
+
   // Only the public directory is served as static files. Dotfiles are ignored.
   app.use(
     express.static(path.join(projectRoot, 'public'), {
@@ -63,8 +74,11 @@ export function createApp({
       description: site.description,
       services,
       featuredProjects: publishedProjects,
-      projectPlaceholders,
-      principles,
+      heroStickers,
+      stackIntro,
+      stackGroups,
+      buildTools,
+      projectTitles: Object.fromEntries(publishedProjects.map((project) => [project.slug, project.title])),
     });
   });
 
@@ -97,7 +111,7 @@ export function createApp({
     res.render('about', {
       title: `${aboutPage.title} | ${site.name}`,
       description:
-        'Amber Goding is an application and automation builder who turns complicated problems into tools that make everyday work easier.',
+        'Amber Goding is a full-stack developer and AI-augmented builder who brings ideas to life with technology. Her story, how she works, and where to find her.',
       about: aboutPage,
       portrait,
       profileLinks,

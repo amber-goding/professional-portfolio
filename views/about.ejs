@@ -20,20 +20,31 @@
       </div>
     </section>
 
-    <section class="section about-story" aria-label="Background">
+    <section class="section about-story" aria-labelledby="story-heading">
       <div class="wrap">
-        <div class="about-story-copy">
-          <% about.background.forEach((paragraph) => { %>
-          <p><%= paragraph %></p>
-          <% }) %>
+        <div class="story-head" data-reveal>
+          <p class="kicker"><%= about.story.kicker %></p>
+          <h2 id="story-heading"><%= about.story.heading.lead %><br> <em><%= about.story.heading.accent %></em></h2>
         </div>
+        <ol class="story-grid" role="list">
+          <% about.story.chapters.forEach((chapter, index) => { %>
+          <li class="story-card" data-reveal>
+            <span class="story-num" aria-hidden="true"><%= String(index + 1).padStart(2, '0') %></span>
+            <h3><%= chapter.title %></h3>
+            <p><%= chapter.text %></p>
+          </li>
+          <% }) %>
+        </ol>
       </div>
     </section>
 
     <section class="section section--cream about-approach" aria-labelledby="how-i-work-heading">
       <div class="wrap about-approach-layout">
-        <h2 id="how-i-work-heading"><%= about.howIWork.heading %></h2>
-        <div class="about-approach-copy">
+        <div data-reveal>
+          <p class="kicker"><%= about.howIWork.kicker %></p>
+          <h2 id="how-i-work-heading"><%= about.howIWork.heading %></h2>
+        </div>
+        <div class="about-approach-copy" data-reveal>
           <% about.howIWork.paragraphs.forEach((paragraph) => { %>
           <p><%= paragraph %></p>
           <% }) %>
@@ -47,7 +58,7 @@
         <h2 class="contact-title" id="about-contact-heading">Let’s make it <em>happen.</em></h2>
         <div class="contact-row">
           <p>Tell me about the problem you’re trying to solve, the workflow you want to simplify, or the idea you want to build.</p>
-          <a class="contact-cta" href="/contact">Send a message <span aria-hidden="true">→</span></a>
+          <a class="contact-cta" href="/contact">Start a conversation <span aria-hidden="true">→</span></a>
         </div>
       </div>
     </section>

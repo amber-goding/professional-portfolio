@@ -752,3 +752,150 @@ Then record an internal planning section in the portfolio README and recommend 3
   - Homepage card: Tab plus Enter opens the HuntSomewhere case study.
 - **Card image clicks:** at 375/768/1440, a click on each card image lands on its link (scratchpad `card-probe.mjs`). The main script's earlier "false" readings came from cards it hadn't scrolled into view.
 - **Not verified:** the live AI suggestion step (deliberately not run); the no-results and multi-county states; the repository's check scripts (not re-run); Safari/Firefox, real devices, screen readers. The demonstration trip remains in the HuntSomewhere database.
+
+**Outcome:** The user committed the HuntSomewhere case study as `8d07055` ("Add HuntSomewhere case study and third project card"). Push status not recorded.
+
+### 17. Three visual directions (local design previews only)
+
+**Asked:** Create three meaningfully different visual directions so Amber can choose before any production styling changes:
+- **Editorial;**
+- **Modern studio;**
+- **Warm professional.**
+
+Each keeps the approved palette, AG monogram and logo files, the unretouched portrait, approved positioning and contribution statements, and the three real projects with genuine screenshots.
+- **Each homepage preview shows:** header, hero with CTAs, three project cards (no fourth placeholder), services overview, About preview with portrait, and a contact invitation to the existing form.
+- **Format:** desktop and phone views, plus a comparison index.
+- **Not allowed:** forms, email, AI, data changes, production route/template/CSS/contact/env changes, other repositories, dependencies, commit. Missing reference files were to be reported, not assumed.
+
+**References:** both were available and reviewed.
+- `teal-cream-gold-studio.html`: structure and headings.
+- The brand-board PNG. Borrowed its Playfair Display (the monogram's source face), spaced uppercase name lockups, hairline rules, and sparkle; **not** its blush and rose-gold palette.
+
+**Done (all inside `docs/design-previews/`, outside `public/`):**
+- **`editorial.html`:**
+  - cream magazine masthead with the full horizontal logo;
+  - Playfair Display headlines with deep-teal italics, a numbered "contents" strip;
+  - alternating numbered project rows in framed plates;
+  - a charcoal services spread with roman numerals;
+  - a framed portrait, and a centered serif contact invitation.
+- **`studio.html`:**
+  - charcoal base, sticky header with a turquoise Contact pill;
+  - hero focal point: the three real screenshots fanned over a large reversed monogram, with a load animation;
+  - Space Grotesk display type;
+  - a bento project grid (wide first card);
+  - a deep-teal services band with outlined numerals;
+  - a portrait with turquoise corner brackets, and a full-width turquoise contact panel.
+- **`warm.html`:**
+  - Amber's portrait leads the hero in an arched frame beside the approved About heading ("Thoughtful tools start with understanding people.");
+  - rounded cream and white cards, Playfair headings with DM Sans;
+  - a deep-teal services panel;
+  - a "How I work" pull quote using approved copy, with a small portrait avatar;
+  - a rounded white contact panel.
+- **Shared behavior across the three:**
+  - **Copy:** existing and approved only (homepage, Services, About, case-study card summaries). Hero lines reuse existing site wording. Catering's sample-data screenshot carries a note. No invented claims.
+  - **Contact:** every contact element is a link to `localhost:3000/contact`, labelled "Preview element". There are no forms.
+  - **Motion:** load animations and an IntersectionObserver reveal, only under `prefers-reduced-motion: no-preference`. Content stays visible without JavaScript.
+  - **Accessibility:** skip link, visible focus.
+- **`index.html`:** a side-by-side comparison, with desktop and phone screenshots per direction, distinguishing notes, links, and a recommendation.
+- **`serve.mjs`:** a dependency-free local server on port 4400. It serves only `docs/design-previews/` and `public/`, GET only, with dotfiles refused, so fonts load (file:// blocks them).
+- **`fonts/PlayfairDisplay-wght.ttf` + `PlayfairDisplay-OFL.txt`:** copied for the previews only. Adopting it in production would be a separate decision.
+- **`screenshots/*.webp`:** desktop (1200px wide) and phone (390px) full-page captures, 180–216 KB each.
+
+**Verification (scratchpad `design-check.mjs` and `design-recheck.mjs`, headless Chrome):**
+- **Server boundary:** previews and `public/` assets return 200. `/.env`, `/src/app.js`, `/package.json`, `/README.md`, and `..` traversal attempts return 404.
+- **Requests:** all went to the local server; zero non-GET.
+- **All three directions:**
+  - At 320/390/768/1024/1440: no horizontal overflow, no mid-word heading breaks, no text under 12px, all images loaded and in bounds, no distorted images (after one fix), no forms or buttons, one h1 each.
+  - Keyboard: 16 Tab stops each, all focus-visible with outlines of 2px or more.
+  - Reduced motion: zero running animations, all reveal sections visible, `scroll-behavior: auto`.
+  - Without JavaScript: all sections visible, no overflow.
+- **Contrast, after fixes:** no failures. The lowest small-text ratio is 4.68:1 (Studio). Warm's large gold heading accent is 3.42:1, which passes the 3:1 large-text minimum.
+- **Fixes found during checks:**
+  - Studio: the gold section number on the teal band was 3.42:1, so it's now cream.
+  - Warm: the panel chip was 3.87:1, so it now has a darker background. Section chips stretched to the full width, so they now align to start. The monogram badge was distorted, so it now has a fixed aspect ratio and no flex shrink.
+  - Warm: the arched portrait first cropped the square photo; it was changed to show the full photo.
+- **Comparison index:** no overflow at 390/1440, and every preview link and screenshot returned 200.
+- **Production untouched:** `git status` shows only `docs/design-previews/` and this file; `npm test` re-run.
+- **Not verified:** Safari/Firefox, real devices, screen readers. The `localhost:3000` links only work while the app is running. The previews use Chrome's local-file font restrictions as the reason for the server; opening them directly from disk shows fallback fonts.
+
+**Recommendation given:** Modern studio as the base, because it puts real projects first and is closest to the approved reference, with two Editorial touches: Playfair headings and calmer project rows on the Work page. Awaiting Amber's choice.
+
+### 18. Implement the selected "Cool & savvy" design
+
+**Asked:** Implement the selected Savvy design (`docs/design-previews/savvy.html` and its desktop and phone screenshots) across the Express/EJS app.
+- **Fidelity:** match the homepage closely and carry the design through every page. Savvy's palette and typography replace the old palette. Use Savvy's wordmark provisionally; the final logo and favicon are pending.
+- **Content:** keep approved copy, claims, screenshots, demonstration captions, and the portrait. Keep the three projects in order and remove the placeholder.
+- **Motion:** a cohesive system that respects reduced motion, with an accessible ticker pause.
+- **New section:** an interactive "Tech stack & tools" section after Services. Use evidence-based groups, distinguish Zapier AI from direct OpenAI calls, name Resend as this site's contact system, and keep Claude-style assistants separate. It must work by keyboard and touch and without JavaScript.
+- **Contact and privacy:** keep contact behavior and privacy intact.
+- **Verification:** tests, plus browser checks against the references.
+- **Not allowed:** no commit, push, deploy, real email, or paid AI.
+
+**Done:**
+- **Fonts:** Playfair Display, subset to Latin woff2 with fontTools (51 KB, `public/fonts/playfair-display-latin.woff2`, with its OFL), because Savvy's italic accents depend on it.
+- **New `src/content/stack.js`:**
+  - **Interfaces:** HTML, CSS, JavaScript, TypeScript, React, Next.js, Tailwind CSS.
+  - **Data:** PostgreSQL, Neon, Prisma (Catering, Hunt only).
+  - **AI & automation:** OpenAI API (direct, in Reentry and Hunt) and Zapier (AI by Zapier, in Catering; the app makes no AI calls).
+  - **Development & delivery:** GitHub, Node.js, Vite, Railway, Resend (this portfolio's contact form).
+  - **Tools I build with:** Claude Code and Codex, kept separate.
+  - Every mapping was checked against the inventory and case studies. No ratings.
+- **`home.js`:** the nav label is now "Let's talk" (still `/contact`). Placeholders and principles were replaced by the hero sticker tags.
+- **`app.js`:** passes the stack data and project titles to the homepage.
+- **Templates:**
+  - **`header.ejs`:** the provisional "ag." wordmark (`aria-label="Amber Goding, home"`), a nav pill with no toggle, a Playfair preload, and theme colour `#0E0E12`.
+  - **`footer.ejs`:** the Savvy footer.
+  - **`index.ejs`,** rebuilt to the Savvy composition:
+    - stickers, the oversized hero with the portrait intro, and the ticker with a hidden-until-JS pause button;
+    - three projects (stretched title links, tilted screenshots, a sample-data note on Catering);
+    - bone services cards;
+    - the stack section: tabs hidden until JS, and four labelled panels shown without JS;
+    - About with the large portrait and sticker;
+    - the coral contact section.
+  - **Other pages:** same markup; the visual change comes from the CSS.
+- **`styles.css`:** rewritten from scratch in the Savvy language for every page and state (contact form errors, alerts, and success included). The motion system:
+  - a staggered hero entrance at about 520ms;
+  - scroll reveals, only after JS adds `.motion-ready`;
+  - project hover: image scale 1.03, untilt, coral title, arrow travel;
+  - 180ms control transitions and smooth anchor scrolling;
+  - a technology panel entrance with staggered chips.
+  - All of it is off under reduced motion. The ticker animates only after JS enables its pause control (`.is-live`).
+- **`site.js`,** rewritten: reveals, the ticker toggle (`aria-pressed`), and accessible tabs (roles; roving tabindex; arrow, Home, and End keys; panels as tab stops). The old menu code was removed.
+- **Tests:**
+  - **`app.test.js`,** updated:
+    - footer wordmark;
+    - nav pill with no toggle;
+    - brand `aria-label`;
+    - portraits in the hero and About;
+    - stickers and ticker `aria-hidden`, with a hidden pause button;
+    - three projects and no placeholder;
+    - the CSS and JS markers;
+    - five fonts, plus the Playfair asset and license.
+  - **`projects.test.js`:** three linked cards.
+  - **New `test/stack.test.js`,** 7 tests: section order, four static panels, exact tool lists and mappings, valid case-study links, Zapier vs OpenAI, Resend, a separate assistants block, no ratings.
+- **Docs:**
+  - **AGENTS.md:** current status (`8d07055` latest commit); the Savvy design and palette table replacing the old branding; a provisional wordmark with the logo and favicon pending; design expectations, including motion rules; technology-section rules; a decision entry.
+  - **README:** layout rows, routes, design status, temporary content, and remaining items.
+
+**Redirections and fixes found by browser checks:**
+- The 320px tab labels overflowed and "Development" broke mid-word at phone widths. Phone tab sizing was tightened, with one column below 375px. A dedicated probe checked 14 widths for breaks and overflow.
+- Reentry's "consequences." broke at 1024, so the intro-column h2 scale was reduced.
+- The hero stickers lost their tilt because of animation specificity; the sticker selector was raised.
+- The nav pill stretched at 390, unlike the reference; it now stretches only below 384px.
+- The field-error text inherited grey from the panel; the selector was raised.
+- A no-JS moving ticker had no pause; it now animates only after JS enables the control.
+
+**Verification:**
+- `npm test`: 180 tests, 179 passed, 0 failed, 1 skipped (Windows SIGTERM). Email is disabled or mocked.
+- **Headless Chrome (scratchpad `savvy-impl-check.mjs`), 8 pages × 5 widths (320, 375, 768, 1024, 1440):**
+  - no overflow, no mid-word heading breaks, no text under 12px, all images loaded and undistorted, one h1 each;
+  - no contrast failures (lowest 4.77:1).
+- **Homepage:**
+  - all 21 Tab stops focus-visible;
+  - tabs: click, ArrowRight, wrap, End, and Home all correct, and Tab moves into the panel;
+  - ticker pauses with `aria-pressed`;
+  - reduced motion: zero animations, all reveals visible, pause hidden;
+  - no-JS: tabs hidden, four panels shown, nothing hidden, ticker static, four nav links.
+- **Homepage screenshots** at 1440 and 390 were compared with the Savvy references and matched after the fixes above.
+- **Contact:** rendered with placeholder settings. One no-JS POST with a too-short message showed the error summary and field error and kept the values, with requests to localhost only and no email sent.
+- **Not verified:** Safari, Firefox, real devices, and screen readers.

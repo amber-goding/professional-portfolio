@@ -1,20 +1,35 @@
-// Content for /about. The page title, headings, body copy, portrait, and
-// professional links were approved by the owner on 2026-11-12. Change them only
-// with the owner's approval, and don't add claims or anecdotes. The closing
-// contact invitation reuses the homepage wording, which is still provisional
-// (see README "Temporary content").
+// Content for /about.
+// - The page title, heading, portrait, professional links, and "How I work"
+//   copy were approved by the owner on 2026-11-12.
+// - The introduction and "My story" section are reworded, with the owner's
+//   approval, from her own bio (2026-11-12). Don't add claims or anecdotes.
+// The closing contact invitation reuses the homepage wording.
 
 export const aboutPage = {
   title: 'About Amber',
   heading: { lead: 'Thoughtful tools start with', accent: 'understanding people.' },
   intro:
-    'I’m Amber Goding, an application and automation builder who enjoys turning complicated problems into tools that make everyday work easier.',
-  background: [
-    'My background includes customer-facing work, training, and team coordination. Those experiences shaped how I approach development: listen carefully, understand what someone needs, organize the details, and follow through. They also made me interested in the processes behind the work—where information gets lost, which steps repeat, and what could work better.',
-    'Software development brings together the things I enjoy: creative thinking, practical problem-solving, and understanding how systems connect. My experience spans frontend interfaces, databases, APIs, and backend functionality, developed through structured coursework, independent study, and hands-on projects.',
-    'I build with technologies including JavaScript, React, Next.js, and Tailwind CSS, alongside tools such as Prisma, Neon, and Railway. I also work with AI integrations and workflow automation, using tools including the OpenAI API and Zapier.',
-  ],
+    'I’m Amber Goding, a full-stack developer and AI-augmented builder who loves bringing ideas to life with technology.',
+  story: {
+    kicker: 'My story',
+    heading: { lead: 'Not the usual route.', accent: 'The right one.' },
+    chapters: [
+      {
+        title: 'The path',
+        text: 'My way into technology wasn’t a straight line. I gave myself a second chance, started something entirely new, and kept discovering I was capable of more than I’d imagined.',
+      },
+      {
+        title: 'The mindset',
+        text: 'That path shaped how I take on problems: resourceful, adaptable, quick to take initiative, and willing to look at things from a different angle.',
+      },
+      {
+        title: 'The craft',
+        text: 'Great software brings together logic and creativity, function and experience, technology and human understanding. I take the engineering seriously, and I still leave room for imagination, experimentation, and a little magic.',
+      },
+    ],
+  },
   howIWork: {
+    kicker: 'Approach',
     heading: 'How I work',
     paragraphs: [
       'I start by asking questions and clarifying the problem before suggesting a solution. From there, I break the work into manageable steps, communicate progress, and explain the decisions along the way.',
@@ -33,11 +48,11 @@ export const portrait = {
   fallback: '/images/amber-goding-portrait-800.jpg',
   webp: [400, 800, 1200].map((w) => ({ src: `/images/amber-goding-portrait-${w}.webp`, width: w })),
   // Matches the rendered width in styles.css (.about-portrait).
-  sizes: '(min-width: 56rem) 28rem, 22rem',
+  sizes: '(min-width: 56rem) 28rem, 90vw',
 };
 
 // Supplied by the owner. Used as links only; their contents were not reviewed.
 export const profileLinks = [
-  { label: 'LinkedIn profile', href: 'https://www.linkedin.com/in/amber-goding/' },
-  { label: 'GitHub profile', href: 'https://github.com/amber-goding' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/amber-goding/' },
+  { label: 'GitHub', href: 'https://github.com/amber-goding' },
 ];

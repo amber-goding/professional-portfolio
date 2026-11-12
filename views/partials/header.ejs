@@ -5,28 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><%= title %></title>
   <meta name="description" content="<%= description %>">
-  <meta name="theme-color" content="#151A1C">
+  <meta name="theme-color" content="#0E0E12">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/playfair-display-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/styles.css">
   <script src="/js/site.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to main content</a>
-  <header class="site-header" data-site-header>
+  <header class="site-header" id="top">
     <div class="site-header-inner">
-      <a class="brand" href="/">
-        <img class="brand-logo" src="/brand/ag-logo-horizontal-reversed.svg" alt="<%= site.name %>, home" width="254" height="45">
+      <%# Wordmark from the approved Savvy design; the favicon matches it (AGENTS.md). %>
+      <a class="brand" href="/" aria-label="<%= site.name %>, home">
+        <span class="brand-ag" aria-hidden="true">ag</span>
+        <span class="brand-name" aria-hidden="true">amber goding<span class="brand-dot">.</span></span>
       </a>
-      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>
-        <span class="nav-toggle-label">Menu</span>
-        <span class="nav-toggle-icon" aria-hidden="true"><span></span></span>
-      </button>
       <nav class="site-nav" id="site-nav" aria-label="Main">
         <ul class="site-nav-list" role="list">
           <% navigation.forEach((item) => { %>
-          <li><a class="<%= item.cta ? 'nav-link nav-cta' : 'nav-link' %>" href="<%= item.href %>"<% if (item.href === currentPath) { %> aria-current="page"<% } %>><%= item.label %><% if (item.cta) { %> <span class="nav-cta-arrow" aria-hidden="true">↗</span><% } %></a></li>
+          <li><a class="<%= item.cta ? 'nav-link nav-cta' : 'nav-link' %>" href="<%= item.href %>"<% if (item.href === currentPath) { %> aria-current="page"<% } %>><%= item.label %></a></li>
           <% }) %>
         </ul>
       </nav>

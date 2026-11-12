@@ -7,15 +7,21 @@ Shared instructions for AI coding agents working in this repository. This file i
 Amber Goding’s professional portfolio and services website showcases her application development, AI integration, and workflow automation capabilities. It serves employers, prospective clients, and collaborators. It will be the long-term professional site at **ambergoding.com**.
 
 **Current status (2026-11-12):**
-- **Committed:** Milestone 1, the foundation (`f527181`); Milestone 2, the homepage, visual system, and AG branding (`c305a46`); the private contact form with Resend delivery (`d1582eb`); the `/services` page (`7b3fbaf`); the `/about` page (`ddbba93`); the internal portfolio project inventory (`a010517`); the Reentry Resource Extractor case study with its accuracy correction (`562168a`); and the Catering Concierge case study (`2d02143`, the latest commit at the start of the HuntSomewhere task).
+- **Committed:** Milestone 1, the foundation (`f527181`); Milestone 2, the homepage, visual system, and AG branding (`c305a46`); the private contact form with Resend delivery (`d1582eb`); the `/services` page (`7b3fbaf`); the `/about` page (`ddbba93`); the internal portfolio project inventory (`a010517`); the Reentry Resource Extractor case study with its accuracy correction (`562168a`); the Catering Concierge case study (`2d02143`); and the HuntSomewhere case study (`8d07055`, the latest commit at the start of the Savvy implementation).
 - **Contact email, verified locally (owner-reported manual checks, not automated):**
   - The owner created a Resend account and verified the sending domain `mail.ambergoding.com` through Spaceship DNS.
   - A real inquiry submitted through the local contact form arrived in the owner's Gmail inbox, and its Reply-To pointed to the visitor address entered in the form.
 - **Still unverified:** email delivery from Railway (production variables, the deployed environment) and the deployment itself. Nothing has been deployed.
-- **Implemented, not committed:** the third case study, `/projects/huntsomewhere`, its homepage card (third slot), and the internal review record `docs/huntsomewhere-case-study-draft.md`. Homepage order: Reentry Resource Extractor, Catering Concierge, HuntSomewhere, then one development placeholder.
+- **Implemented, not committed:**
+  - The selected **"Cool & savvy" design** across every page, plus the homepage technology section and the motion system (see Design below).
+  - The internal design previews in `docs/design-previews/`.
+  - Homepage order: Reentry Resource Extractor, Catering Concierge, HuntSomewhere. The development placeholder has been removed.
 - Temporary content is listed in README.md under "Temporary content". Paid plans, further DNS changes, and deployment are **not approved**; see [Pending decisions](#pending-decisions).
 
-**Visual presentation is provisional.** The current website styling has **not** received the owner's final approval. The approved palette and the AG branding direction stand, but the overall visual presentation needs another dedicated design review before launch. Until then, don't make unrelated visual changes while working on other tasks.
+**Design: "Cool & savvy" is the selected direction (2026-11-12).** The owner chose it from the design previews.
+- **What governs:** `docs/design-previews/savvy.html` with its screenshots `docs/design-previews/screenshots/savvy-desktop.webp` and `savvy-phone.webp`. These take precedence over older visual instructions (the teal-cream-gold reference and the earlier palette).
+- **Final review still pending:** the owner's final visual review of the implemented site, and confirmation of the "ag." wordmark as the final logo (see [Pending decisions](#pending-decisions)). The favicon already matches the wordmark.
+- **Scope discipline:** don't make unrelated visual changes while working on other tasks.
 
 **Commands:** `npm ci` (install), `npm start` (run), `npm run dev` (watch mode), `npm test` (all tests), `node --test test/<file>.test.js` (one file). See [README.md](README.md) for setup and the project layout.
 
@@ -23,32 +29,52 @@ Amber Goding’s professional portfolio and services website showcases her appli
 
 **Audience:** employers hiring developers or AI application builders; small businesses, freelancers, and service providers looking for practical applications and automation; potential collaborators.
 
-**Positioning:** a practical application and automation builder who turns real-world problems into useful tools, explains decisions clearly, and uses AI thoughtfully.
+**Positioning:** a full-stack developer and AI-augmented builder (the owner's own wording, from her bio, 2026-11-12) who turns real-world problems into useful tools, explains decisions clearly, and uses AI thoughtfully. Service areas stay application development, AI integration, and workflow automation.
 
 **Pages:** Home/Portfolio, Services, About, Contact, and one case-study page per project. **Services (`/services`) and About are approved as separate pages**, not optional extras. The homepage keeps its short overview sections as well.
 
-**Branding:** the website palette below is approved. The logo direction is the **uppercase AG monogram** (revised 2026-11-12; it replaces the earlier lowercase "ag"):
-- An elegant, intertwined uppercase A and G in high-contrast serif letterforms, with a refined sweeping flourish and a small, restrained four-point sparkle, plus a spacious, editorial uppercase name treatment ("AMBER GODING").
-- Character comes from the brand board at `C:\Users\amber\AppData\Local\Temp\codex-clipboard-690df169-133b-4aa3-8366-1b9a3d45c2b0.png`. Use only its logo character, **not** its blush-pink palette. Logo colors come from the website palette: cream or charcoal letters, a gold flourish on dark backgrounds or deep teal on light, and a gold sparkle.
-- Assets are pure vector paths in `public/brand/` (`ag-monogram.svg`, `ag-logo-horizontal.svg`, each with a `-reversed` version for dark backgrounds) and `public/favicon.svg`, which is simplified: heavier letters, a short gold swash, and no sparkle. Letterforms were converted from Playfair Display glyph outlines (SIL OFL 1.1), so no font loads at runtime. Use these files rather than re-creating the monogram in text.
-- A linked logo needs an accessible name, such as `alt="Amber Goding, home"`. Decorative monogram placements use `alt=""` inside `aria-hidden` artwork.
+**Design and palette ("Cool & savvy", selected 2026-11-12):** match `docs/design-previews/savvy.html` and its two screenshots.
+- **What to keep:**
+  - the oversized Space Grotesk hero with italic Playfair accents;
+  - rounded navigation and buttons;
+  - sticker tags;
+  - the coral ticker;
+  - tilted project screenshots with outlined numerals;
+  - bone services cards with hard ink shadows;
+  - the portrait in the hero intro and the About section;
+  - contrasting dark, bone, and coral sections;
+  - the full-width coral contact invitation.
+- **Supersedes:** the previous charcoal, teal, turquoise, cream, and gold palette, and the teal-cream-gold reference.
 
-| Token | Hex |
-| --- | --- |
-| Charcoal | `#151A1C` |
-| Deep teal | `#176B66` |
-| Turquoise | `#35D6CB` |
-| Warm cream | `#FAF3E7` |
-| Amber-gold (restrained accents) | `#E5B869` |
+| Token | Hex | Use |
+| --- | --- | --- |
+| Ink | `#0E0E12` | Page background |
+| Ink 2 | `#17171D` | Raised dark surfaces, technology section |
+| Bone | `#F2EDE4` | Text on dark, light sections |
+| Coral | `#FF5F45` | Signature accent on dark, fills (ink text on coral) |
+| Coral dark | `#B3321E` | Coral text on bone |
+| Lilac | `#B9A8FF` | Secondary accent on dark |
+| Violet | `#5A3FD1` | Lilac's counterpart on bone |
+| Muted / muted bone | `#A9A6B2` / `#55525C` | Secondary text on dark / on bone |
 
-**Visual reference:** `C:\Users\amber\.codex\visualizations\2026\11\12\01a1cdb7-7b83-78b0-8957-5e063041aa15\teal-cream-gold-studio.html`. It is a visual concept, not production code. Keep its identity and bold direction (its lowercase "ag" monogram is superseded by the uppercase AG monogram above): the sculptural ribbon art in the hero, oversized Space Grotesk headlines with italic serif accents, a charcoal base, a deep-teal service band, a cream about section, and amber-gold details. Its wording and project illustrations are provisional. Its 6–9px label sizes are too small for production and must be raised to readable sizes.
+- **Type:** Space Grotesk (display), DM Sans (body), Playfair Display (italic accents). All are self-hosted, under the SIL OFL.
+- **Branding (provisional):** the site uses the Savvy preview's wordmark: a bone circle with a lowercase "ag", then "amber goding" with a coral full stop. It's built in HTML and CSS, and the brand link carries `aria-label="Amber Goding, home"`.
+  - The intertwined AG monogram was rejected, and no animated replacement has been selected.
+  - **Favicon:** `public/favicon.svg` (with `public/apple-touch-icon.png`) matches the wordmark: a bone "ag" and coral full stop on an ink circle, as vector paths. Confirming the wordmark as the final logo is still pending. The `public/brand/` files stay intact and unused.
 
 **Design expectations:**
 - Distinctive, polished, professional presentation with bold typography, strong visual focal points, and thoughtful layouts.
 - Fully responsive across phones, tablets, and desktops.
-- Smooth, purposeful transitions that respect `prefers-reduced-motion`.
+- Smooth, purposeful transitions that respect `prefers-reduced-motion`. Use transform and opacity: about 150–250ms for small interactions and 350–600ms for entrances, with short travel. Content stays visible if JavaScript fails. No scroll hijacking, custom cursors, or loading gates.
 - Accessible navigation, full keyboard operation, visible focus states, readable contrast (WCAG AA), and a clear content hierarchy.
 - No unnecessary animation, dependencies, complexity, or unrelated features.
+
+**Technology section (homepage):** content lives in `src/content/stack.js`. Every tool and project mapping must be backed by repository evidence.
+- **Groups:** Interfaces, Data, AI & automation, Development & delivery.
+- **Zapier vs OpenAI:** Zapier's AI review (Catering Concierge) stays distinct from the direct OpenAI API calls (Reentry Resource Extractor, HuntSomewhere).
+- **Resend** is identified as this portfolio's contact system.
+- **AI development assistants** (Claude Code, Codex) appear only in the separate "Tools I build with" block, never as technologies in the applications.
+- **No claims:** no ratings, percentages, or experience claims.
 
 ## Functional requirements
 
@@ -102,7 +128,10 @@ Amber Goding’s professional portfolio and services website showcases her appli
 
 These are proposed or open items. They are **not approved** until they are recorded under Decisions.
 
-- Final visual presentation (dedicated design review required before launch). The current styling is provisional and needs the owner's final approval.
+- Final visual review of the implemented "Cool & savvy" design across all pages.
+- **Final logo confirmation.**
+  - The site uses Savvy's "ag." wordmark, and the favicon now matches it (owner request, 2026-11-12).
+  - The rejected AG monogram files remain unused in `public/brand/`.
 - Which host is canonical for the site (apex or `www`). DNS for `ambergoding.com` is hosted at Spaceship (owner-reported). Whether Spaceship supports the CNAME flattening or ALIAS record Railway needs for the apex hasn't been checked.
 - Railway plan.
 - Whether to feature a fourth project. Reentry Resource Extractor, Catering Concierge, and HuntSomewhere are approved; Ever After Planner is not. The internal inventory in README.md recommends a set, but it isn't approved.
@@ -164,3 +193,19 @@ Approved decisions, dated. Add new entries at the end.
     - The planner with the demonstration options, captioned "Demonstration input".
     - The demonstration trip and its county results, captioned "Demonstration trip".
   - Ever After Planner remains **unapproved**. Styling remains provisional.
+- 2026-11-12: **"Cool & savvy" selected as the site design**, from the internal design previews.
+  - **References:** `docs/design-previews/savvy.html` plus `savvy-desktop.webp` and `savvy-phone.webp`. They take precedence over older visual instructions.
+  - **Palette and type:** Savvy's palette and typography replace the charcoal, teal, turquoise, cream, and gold palette.
+  - **Implemented** across the homepage, Services, About, Contact, all three case studies, shared navigation, footer, and error pages, with:
+    - a homepage technology section (after Services, before About);
+    - a cohesive motion system that respects reduced motion.
+  - **Logo:** the intertwined AG monogram was rejected and no animated replacement was selected. Savvy's "ag." wordmark is used provisionally; the final logo and favicon remain pending.
+  - **Portrait:** Amber's portrait appears in the homepage hero and About section, and on `/about`.
+  - **Still to do:** the owner's final visual review.
+- 2026-11-12: **Owner-requested refinements to the Savvy site.**
+  - **Favicon:** replaced to match the wordmark. A bone "ag" with a coral full stop on an ink circle, as pure vector paths outlined from Space Grotesk Bold, plus a 180×180 `apple-touch-icon.png`. The `public/brand/` files are untouched.
+  - **About bio:** replaced with the owner's own bio, reworded to the site's voice. It's now a headed "My story" section with three chapters (the path, the mindset, the craft) and no added claims. The approved heading and "How I work" copy are unchanged.
+  - **Role wording:** "Full-Stack Developer & AI-Augmented Builder" (from the bio) is used site-wide: titles, footer, homepage and About introductions, and descriptions.
+  - **Case studies:** public verification notes ("This write-up is based on…") were removed. Sample-data and demonstration labels remain on screenshots; the verification evidence stays in README and these Decisions.
+  - **Copy pass:** every page was reviewed for clarity. One unsupported capability ("search across your own documents") was removed from the AI integration building blocks.
+  - **Deployment readiness:** baseline security headers were added, and a deploy checklist recorded in README. Deployment itself still needs approval.

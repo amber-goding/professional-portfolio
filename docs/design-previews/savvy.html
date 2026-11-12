@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Direction 5 · Cool &amp; savvy | Design preview</title>
+<meta name="robots" content="noindex">
+<style>
+@font-face { font-family: "Space Grotesk"; font-style: normal; font-weight: 400 700; font-display: swap; src: url("../../public/fonts/space-grotesk-latin.woff2") format("woff2"); }
+@font-face { font-family: "DM Sans"; font-style: normal; font-weight: 400 700; font-display: swap; src: url("../../public/fonts/dm-sans-latin.woff2") format("woff2"); }
+@font-face { font-family: "Playfair Display"; font-style: normal; font-weight: 400 900; font-display: swap; src: url("fonts/PlayfairDisplay-wght.ttf") format("truetype"); }
+
+/* New exploratory palette */
+:root {
+  --ink: #0e0e12; --ink-2: #17171d; --bone: #f2ede4; --coral: #ff5f45; --lilac: #b9a8ff; --muted: #a9a6b2; --muted-bone: #55525c;
+  --line: rgb(242 237 228 / .14);
+  --display: "Space Grotesk", system-ui, sans-serif;
+  --body: "DM Sans", system-ui, sans-serif;
+  --serif: "Playfair Display", Georgia, serif;
+  --gutter: clamp(1rem, 4.5vw, 4rem); --max: 92rem;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--ink); color: var(--bone); font: 400 1.0625rem/1.6 var(--body); overflow-wrap: break-word; overflow-x: clip; }
+h1, h2, h3, p, ul, ol, figure, blockquote { margin: 0; }
+ul[role="list"], ol[role="list"] { list-style: none; padding: 0; }
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; }
+em { font-family: var(--serif); font-style: italic; font-weight: 500; letter-spacing: -.01em; }
+:focus-visible { outline: 2px solid var(--lilac); outline-offset: 4px; }
+.light :focus-visible, .coral-bg :focus-visible { outline-color: var(--ink); }
+.wrap { width: min(100% - 2 * var(--gutter), var(--max)); margin-inline: auto; }
+.skip { position: absolute; left: 1rem; top: -4rem; padding: .6rem 1rem; background: var(--coral); color: var(--ink); z-index: 20; }
+.skip:focus { top: 1rem; }
+
+.preview-bar { background: var(--ink-2); color: var(--muted); font-size: .8125rem; border-bottom: 1px solid var(--line); }
+.preview-bar .wrap { display: flex; flex-wrap: wrap; gap: .25rem 1.25rem; justify-content: space-between; padding-block: .55rem; }
+.preview-bar a { color: var(--coral); text-underline-offset: .2em; }
+
+/* Header */
+.site-header .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1.5rem; padding-block: 1.1rem; }
+.wordmark { display: inline-flex; align-items: baseline; gap: .6rem; text-decoration: none; }
+.wordmark .ag { display: inline-grid; place-items: center; width: 2.6rem; height: 2.6rem; border-radius: 50%; background: var(--bone); color: var(--ink); font: 700 1.05rem/1 var(--display); letter-spacing: -.04em; align-self: center; }
+.wordmark .name { font: 700 1.25rem var(--display); letter-spacing: -.04em; }
+.wordmark .dot { color: var(--coral); }
+.navpill { display: flex; flex-wrap: wrap; gap: .25rem; padding: .3rem; border: 1px solid var(--line); border-radius: 999px; background: rgb(242 237 228 / .04); }
+.navpill a { display: inline-flex; align-items: center; min-height: 40px; padding: .35rem .9rem; border-radius: 999px; font-weight: 600; font-size: .9375rem; text-decoration: none; color: var(--muted); }
+.navpill a:hover { background: rgb(242 237 228 / .08); color: var(--bone); }
+.navpill a.hot { background: var(--coral); color: var(--ink); }
+
+/* Hero */
+.hero { position: relative; padding-block: clamp(2.5rem, 6vw, 5rem) clamp(3rem, 6vw, 5rem); }
+.hero h1 { font: 700 clamp(3.2rem, 13vw, 12.5rem)/.86 var(--display); letter-spacing: -.065em; }
+.hero h1 em { color: var(--coral); letter-spacing: -.04em; }
+.hero-row { display: grid; gap: 2rem; margin-top: clamp(2rem, 4vw, 3rem); align-items: end; }
+.intro { display: flex; gap: 1rem; align-items: center; max-width: 36rem; }
+.intro img { flex: none; width: 4.5rem; height: 4.5rem; border-radius: 50%; border: 2px solid var(--coral); }
+.intro p { color: var(--muted); }
+.intro strong { color: var(--bone); }
+.actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+.btn { display: inline-flex; align-items: center; gap: .75rem; min-height: 52px; padding: .8rem 1.5rem; border-radius: 999px; background: var(--bone); color: var(--ink); font-weight: 700; text-decoration: none; transition: transform .2s, background-color .2s; }
+.btn:hover { background: var(--coral); transform: rotate(-2deg) scale(1.03); }
+.btn-line { display: inline-flex; align-items: center; min-height: 52px; padding: .8rem 1.5rem; border-radius: 999px; border: 1.5px solid var(--bone); font-weight: 700; text-decoration: none; }
+.btn-line:hover { border-color: var(--lilac); color: var(--lilac); }
+.stickers { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.75rem; }
+.sticker { padding: .45rem .95rem; border-radius: 999px; font-weight: 700; font-size: .875rem; box-shadow: 0 10px 24px rgb(0 0 0 / .35); }
+.sticker.s1 { background: var(--lilac); color: var(--ink); transform: rotate(6deg); }
+.sticker.s2 { background: var(--bone); color: var(--ink); transform: rotate(-4deg); }
+
+/* Ticker */
+.ticker { display: flex; align-items: center; gap: 1rem; background: var(--coral); color: var(--ink); overflow: hidden; border-block: 2px solid var(--ink); }
+.ticker-track { display: flex; flex: 1; min-width: 0; overflow: hidden; }
+.ticker-move { display: flex; flex: none; gap: 2.5rem; padding: .9rem 1.25rem; font: 700 clamp(1.1rem, 2.4vw, 1.75rem) var(--display); letter-spacing: -.02em; white-space: nowrap; }
+.ticker-move span::after { content: "✺"; margin-left: 2.5rem; }
+.ticker button { flex: none; margin-right: .75rem; min-height: 40px; padding: .3rem .9rem; border: 2px solid var(--ink); border-radius: 999px; background: transparent; color: var(--ink); font: 700 .8125rem var(--body); cursor: pointer; }
+
+/* Sections */
+section[id] { scroll-margin-top: 1rem; }
+.section { padding-block: clamp(4rem, 8vw, 7.5rem); }
+.kicker { font: 700 .875rem var(--body); letter-spacing: .14em; text-transform: uppercase; color: var(--coral); }
+.section h2 { margin-top: .75rem; font: 700 clamp(2.4rem, 7vw, 6rem)/.92 var(--display); letter-spacing: -.055em; }
+.section h2 em { color: var(--lilac); }
+
+/* Work */
+.work-list { margin-top: clamp(2.5rem, 5vw, 4rem); display: grid; gap: clamp(2.5rem, 5vw, 4rem); }
+.work-item { position: relative; display: grid; gap: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+.work-num { font: 700 clamp(3.5rem, 8vw, 6.5rem)/.8 var(--display); color: transparent; -webkit-text-stroke: 1.5px var(--muted); }
+.work-copy { display: grid; gap: .8rem; align-content: start; }
+.work-copy .chip { justify-self: start; padding: .3rem .8rem; border-radius: 999px; background: rgb(185 168 255 / .16); color: var(--lilac); font-size: .875rem; font-weight: 700; }
+.work-copy h3 { font: 700 clamp(2rem, 4vw, 3.4rem)/.98 var(--display); letter-spacing: -.045em; }
+.work-copy p { color: var(--muted); max-width: 34rem; }
+.work-copy a { font-weight: 700; color: var(--coral); text-decoration: none; }
+.work-copy a::after { content: ""; position: absolute; inset: 0; }
+.work-item:hover .work-copy a, .work-copy a:focus-visible { text-decoration: underline; text-underline-offset: .3em; }
+.work-shot { border-radius: 18px; overflow: hidden; border: 1px solid var(--line); transform: rotate(1.5deg); transition: transform .35s; box-shadow: 0 30px 60px rgb(0 0 0 / .45); }
+.work-item:nth-child(even) .work-shot { transform: rotate(-1.5deg); }
+.work-item:hover .work-shot { transform: rotate(0) scale(1.01); }
+.work-shot img { width: 100%; aspect-ratio: 8 / 5; object-fit: cover; object-position: left top; }
+.work-note { font-size: .875rem; color: var(--muted); }
+
+/* Services (light) */
+.light { background: var(--bone); color: var(--ink); }
+.light .kicker { color: #b3321e; }
+.light h2 em { color: #5a3fd1; }
+.svc-grid { margin-top: clamp(2.5rem, 5vw, 3.5rem); display: grid; gap: 1rem; }
+.svc { display: grid; gap: .6rem; padding: 1.75rem; border-radius: 22px; background: #fff; border: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--ink); transition: transform .2s, box-shadow .2s; }
+.svc:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--ink); }
+.svc h3 { font: 700 1.6rem/1.1 var(--display); letter-spacing: -.03em; }
+.svc p { color: var(--muted-bone); }
+.svc .n { font: 700 .875rem var(--display); color: #b3321e; }
+.light .more { display: inline-flex; min-height: 48px; align-items: center; margin-top: 2rem; font-weight: 700; text-underline-offset: .3em; }
+
+/* About */
+.about { display: grid; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+.about-photo { position: relative; width: min(100%, 30rem); }
+.about-photo img { width: 100%; aspect-ratio: 1; border-radius: 28px; }
+.about-photo .sticker { position: absolute; right: -.5rem; bottom: 1.25rem; }
+.about blockquote { font: 500 italic clamp(1.6rem, 3.4vw, 2.6rem)/1.2 var(--serif); }
+.about blockquote span { color: var(--coral); }
+.about p.body { margin-top: 1.25rem; color: var(--muted); max-width: 34rem; }
+.about .more { display: inline-flex; min-height: 48px; align-items: center; margin-top: 1rem; font-weight: 700; color: var(--coral); text-underline-offset: .3em; }
+
+/* Contact */
+.coral-bg { background: var(--coral); color: var(--ink); }
+.coral-bg .kicker { color: var(--ink); }
+.coral-bg h2 { font-size: clamp(3rem, 12vw, 11rem); }
+.coral-bg h2 em { color: var(--ink); }
+.coral-bg .row { display: grid; gap: 1.5rem; margin-top: 2rem; align-items: end; }
+.coral-bg p { max-width: 34rem; font-size: 1.125rem; }
+.btn-ink { justify-self: start; display: inline-flex; align-items: center; gap: .75rem; min-height: 56px; padding: .9rem 1.75rem; border-radius: 999px; background: var(--ink); color: var(--bone); font-weight: 700; text-decoration: none; }
+.btn-ink:hover { background: #2a2a33; }
+.coral-bg small { display: block; margin-top: .75rem; font-size: .8125rem; }
+footer { color: var(--muted); font-size: .875rem; }
+footer .wrap { display: flex; flex-wrap: wrap; gap: .5rem 2rem; justify-content: space-between; align-items: center; padding-block: 1.5rem; }
+
+@media (min-width: 56rem) {
+  .hero-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .work-item { grid-template-columns: 8rem minmax(0, 1fr) minmax(0, 1.15fr); column-gap: clamp(1.5rem, 3vw, 3rem); align-items: center; }
+  .svc-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .about { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); }
+  .coral-bg .row { grid-template-columns: minmax(0, 1fr) auto; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+  .hero h1 { animation: slam .9s cubic-bezier(.2,.8,.2,1) both; }
+  .sticker.s1 { animation: pop .6s .5s cubic-bezier(.3,1.6,.5,1) both; } .sticker.s2 { animation: pop .6s .65s cubic-bezier(.3,1.6,.5,1) both; }
+  .ticker-move { animation: scroll 28s linear infinite; }
+  .ticker.paused .ticker-move { animation-play-state: paused; }
+  .ticker:hover .ticker-move { animation-play-state: paused; }
+  .reveal-ready [data-reveal] { opacity: 0; transform: translateY(30px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
+  .reveal-ready [data-reveal].is-in { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) { .ticker button { display: none; } }
+@keyframes slam { from { opacity: 0; transform: translateY(40px) skewY(3deg); } to { opacity: 1; transform: none; } }
+@keyframes pop { from { opacity: 0; scale: .6; } to { opacity: 1; scale: 1; } }
+@keyframes scroll { to { transform: translateX(-100%); } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<div class="preview-bar" role="note" aria-label="Design preview">
+  <div class="wrap"><span><strong>Design preview</strong> · Direction 5: Cool &amp; savvy · New exploratory palette and wordmark · Not the live site.</span><a href="index.html">Compare all directions</a></div>
+</div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="wordmark" href="#top" aria-label="Amber Goding, home"><span class="ag" aria-hidden="true">ag</span><span class="name" aria-hidden="true">amber goding<span class="dot">.</span></span></a>
+    <nav aria-label="Main">
+      <ul class="navpill" role="list">
+        <li><a href="#work">Work</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a class="hot" href="#contact">Let’s talk</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" id="top" aria-labelledby="hero-heading">
+    <div class="wrap">
+      <div class="stickers" aria-hidden="true"><span class="sticker s1">AI, used thoughtfully</span><span class="sticker s2">Decisions, explained</span></div>
+      <h1 id="hero-heading">Make complex<br><em>feel simple.</em></h1>
+      <div class="hero-row">
+        <div class="intro"><img src="../../public/images/amber-goding-portrait-400.webp" alt="Portrait of Amber Goding" width="400" height="400"><p><strong>I’m Amber Goding,</strong> an application and automation builder. I turn real-world problems into useful tools, explain my decisions clearly, and use AI thoughtfully.</p></div>
+        <div class="actions"><a class="btn" href="#work">See the work <span aria-hidden="true">↘</span></a><a class="btn-line" href="#contact">Start a conversation</a></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ticker" data-ticker>
+    <div class="ticker-track" aria-hidden="true">
+      <div class="ticker-move"><span>Application development</span><span>AI integration</span><span>Workflow automation</span><span>Application development</span><span>AI integration</span><span>Workflow automation</span></div>
+      <div class="ticker-move"><span>Application development</span><span>AI integration</span><span>Workflow automation</span><span>Application development</span><span>AI integration</span><span>Workflow automation</span></div>
+    </div>
+    <button type="button" aria-pressed="false" data-ticker-toggle>Pause motion</button>
+  </div>
+
+  <section class="section" id="work" aria-labelledby="work-heading">
+    <div class="wrap">
+      <p class="kicker">Selected work</p>
+      <h2 id="work-heading">Less friction. <em>More possibility.</em></h2>
+      <ol class="work-list" role="list">
+        <li class="work-item" data-reveal>
+          <span class="work-num" aria-hidden="true">01</span>
+          <div class="work-copy"><span class="chip">AI integration</span><h3>Reentry Resource Extractor</h3><p>Turns a public reentry-program web page into a draft listing. The model is instructed to use only the page’s text, the server checks that each evidence quote appears on the page, and a person reviews every field.</p><a href="http://localhost:3000/projects/reentry-resource-extractor">Read the case study →</a></div>
+          <div class="work-shot"><img src="../../public/images/projects/reentry-resource-extractor/start-screen-1600.webp" srcset="../../public/images/projects/reentry-resource-extractor/start-screen-800.webp 800w, ../../public/images/projects/reentry-resource-extractor/start-screen-1600.webp 1600w" sizes="(min-width: 56rem) 45vw, 100vw" alt="Start screen of the Reentry Resource Extractor with its Retrieve, Extract, and Review pathway." width="1600" height="1000" loading="lazy"></div>
+        </li>
+        <li class="work-item" data-reveal>
+          <span class="work-num" aria-hidden="true">02</span>
+          <div class="work-copy"><span class="chip">Workflow automation</span><h3>Catering Concierge</h3><p>Connects a Zapier workflow to a restaurant app: Zapier prepares each catering inquiry with an AI review, an authenticated endpoint stores it once for the configured restaurant, and signed-in owners review it in one place.</p><p class="work-note">Screenshot shows the app’s fictional sample data.</p><a href="http://localhost:3000/projects/catering-concierge">Read the case study →</a></div>
+          <div class="work-shot"><img src="../../public/images/projects/catering-concierge/dashboard-sample-desktop-1600.webp" srcset="../../public/images/projects/catering-concierge/dashboard-sample-desktop-800.webp 800w, ../../public/images/projects/catering-concierge/dashboard-sample-desktop-1600.webp 1600w" sizes="(min-width: 56rem) 45vw, 100vw" alt="Catering Concierge dashboard showing labelled fictional sample data and modules marked Limited or Planned." width="1600" height="1000" loading="lazy"></div>
+        </li>
+        <li class="work-item" data-reveal>
+          <span class="work-num" aria-hidden="true">03</span>
+          <div class="work-copy"><span class="chip">Application development</span><h3>HuntSomewhere</h3><p>A trip planner for Maryland hunters: describe or set trip preferences, edit them, save the trip to a unique link, and see curated public wildlife management areas in matching counties, each with its official source and a note on what isn’t confirmed.</p><a href="http://localhost:3000/projects/huntsomewhere">Read the case study →</a></div>
+          <div class="work-shot"><img src="../../public/images/projects/huntsomewhere/public-areas-desktop-1600.webp" srcset="../../public/images/projects/huntsomewhere/public-areas-desktop-800.webp 800w, ../../public/images/projects/huntsomewhere/public-areas-desktop-1600.webp 1600w" sizes="(min-width: 56rem) 45vw, 100vw" alt="HuntSomewhere public areas page listing curated wildlife management areas, each marked Not confirmed by HuntSomewhere." width="1600" height="1000" loading="lazy"></div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section light" id="services" aria-labelledby="services-heading">
+    <div class="wrap">
+      <p class="kicker">Services</p>
+      <h2 id="services-heading">Practical tools <em>for real work.</em></h2>
+      <ul class="svc-grid" role="list" data-reveal>
+        <li class="svc"><span class="n">01 /</span><h3>Application development</h3><p>Web applications designed around the people who use them, from the first problem statement and data model to a working tool.</p></li>
+        <li class="svc"><span class="n">02 /</span><h3>AI integration</h3><p>AI used where it genuinely helps, such as extracting, summarizing, and organizing information, with clear limits and human review built in.</p></li>
+        <li class="svc"><span class="n">03 /</span><h3>Workflow automation</h3><p>Connecting the tools and steps behind repetitive work so information moves where it needs to go with less manual effort.</p></li>
+      </ul>
+      <a class="more" href="http://localhost:3000/services">Explore services in detail →</a>
+    </div>
+  </section>
+
+  <section class="section" id="about" aria-labelledby="about-heading">
+    <div class="wrap about" data-reveal>
+      <div class="about-photo"><img src="../../public/images/amber-goding-portrait-800.webp" srcset="../../public/images/amber-goding-portrait-400.webp 400w, ../../public/images/amber-goding-portrait-800.webp 800w, ../../public/images/amber-goding-portrait-1200.webp 1200w" sizes="(min-width: 56rem) 30rem, 90vw" alt="Portrait of Amber Goding" width="800" height="800" loading="lazy"><span class="sticker s1" aria-hidden="true">Hi, I’m Amber</span></div>
+      <div>
+        <p class="kicker">About</p>
+        <h2 id="about-heading" style="font-size:clamp(2rem,4.5vw,3.5rem)">Thoughtful tools start with <em>understanding people.</em></h2>
+        <blockquote style="margin-top:1.5rem"><p>“I welcome feedback because a useful application needs to make sense to <span>the people using it.</span>”</p></blockquote>
+        <p class="body">I start by asking questions and clarifying the problem before suggesting a solution. From there, I break the work into manageable steps, communicate progress, and explain the decisions along the way.</p>
+        <a class="more" href="http://localhost:3000/about">More about Amber →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section coral-bg" id="contact" aria-labelledby="contact-heading">
+    <div class="wrap" data-reveal>
+      <p class="kicker">Have something in mind?</p>
+      <h2 id="contact-heading">Let’s make it <em>happen.</em></h2>
+      <div class="row">
+        <p>Tell me about the problem you’re trying to solve, the workflow you want to simplify, or the idea you want to build.</p>
+        <div><a class="btn-ink" href="http://localhost:3000/contact">Start a conversation →</a><small>Preview element: opens the existing contact form in the local app.</small></div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer><div class="wrap"><span>© 2026 amber goding<span style="color:var(--coral)">.</span></span><span>Application &amp; automation builder</span><a href="#top">Back to top ↑</a></div></footer>
+<script>
+const ticker = document.querySelector('[data-ticker]');
+const toggle = document.querySelector('[data-ticker-toggle]');
+toggle.addEventListener('click', () => {
+  const paused = ticker.classList.toggle('paused');
+  toggle.setAttribute('aria-pressed', String(paused));
+  toggle.textContent = paused ? 'Play motion' : 'Pause motion';
+});
+if ('IntersectionObserver' in window && matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+  document.documentElement.classList.add('reveal-ready');
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' });
+  document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
+}
+</script>
+</body>
+</html>

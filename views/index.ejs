@@ -1,102 +1,50 @@
 <%- include('partials/header') %>
     <section class="hero" aria-labelledby="hero-heading">
-      <div class="hero-grid" aria-hidden="true"></div>
-      <div class="wrap hero-inner">
-        <p class="hero-kicker"><span class="hero-kicker-dot" aria-hidden="true"></span>Human insight. Technical possibility.</p>
-        <div class="hero-layout">
-          <div class="hero-copy">
-            <p class="hero-eyebrow"><%= site.name %> / <%= site.role %></p>
-            <h1 class="hero-title" id="hero-heading">
-              <span class="hero-line">Make</span>
-              <span class="hero-line hero-outline">complex</span>
-              <em class="hero-line hero-accent">feel simple.</em>
-            </h1>
-            <p class="hero-intro">Useful applications. Thoughtful AI. Connected workflows. Built around people.</p>
-            <div class="hero-actions">
-              <a class="button button-primary" href="#work">Explore my work <span aria-hidden="true">↓</span></a>
-              <a class="button-text" href="/contact">Start a conversation <span aria-hidden="true">→</span></a>
-            </div>
+      <div class="wrap">
+        <ul class="stickers" role="list" aria-hidden="true">
+          <% heroStickers.forEach((sticker, index) => { %><li class="sticker sticker--<%= index + 1 %>"><%= sticker %></li><% }) %>
+        </ul>
+        <h1 class="hero-title" id="hero-heading">Make complex<br> <em>feel simple.</em></h1>
+        <div class="hero-row">
+          <div class="hero-intro">
+            <img src="/images/amber-goding-portrait-400.webp" alt="Portrait of Amber Goding" width="400" height="400">
+            <p><strong>I’m Amber Goding,</strong> a full-stack developer and AI-augmented builder. I turn real-world problems into useful tools, explain my decisions clearly, and use AI thoughtfully.</p>
           </div>
-          <div class="hero-art" aria-hidden="true">
-            <div class="art-glow"></div>
-            <div class="art-shadow"></div>
-            <div class="sculpture">
-              <div class="ribbon ribbon-back"></div>
-              <div class="ribbon ribbon-front"></div>
-              <div class="ribbon ribbon-edge"></div>
-              <img class="sculpture-mark" src="/brand/ag-monogram-reversed.svg" alt="" width="330" height="200">
-            </div>
-            <span class="art-label art-label-top">Idea <span>↘</span></span>
-            <span class="art-label art-label-bottom"><span>↗</span> Reality</span>
-            <span class="art-caption"><span>+</span> The space between idea &amp; execution</span>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#work">See the work <span aria-hidden="true">↘</span></a>
+            <a class="button button-outline" href="/contact">Start a conversation</a>
           </div>
-        </div>
-        <div class="hero-footer">
-          <p>Designed with intention. Built to be used.</p>
-          <a class="hero-scroll" href="#work">Scroll to explore <span aria-hidden="true">↓</span></a>
         </div>
       </div>
     </section>
 
-    <p class="service-band">
-      <span>Applications</span><b aria-hidden="true">✳</b><span>AI integration</span><b aria-hidden="true">✳</b><span>Automation</span>
-    </p>
+    <div class="ticker" data-ticker>
+      <div class="ticker-track" aria-hidden="true">
+        <% for (let copy = 0; copy < 2; copy++) { %>
+        <p class="ticker-move"><% for (let repeat = 0; repeat < 2; repeat++) { services.forEach((service) => { %><span><%= service.title %></span><% }) } %></p>
+        <% } %>
+      </div>
+      <button class="ticker-toggle" type="button" aria-pressed="false" data-ticker-toggle hidden>Pause motion</button>
+    </div>
 
     <section class="section work" id="work" aria-labelledby="work-heading">
       <div class="wrap">
-        <div class="section-top">
-          <p class="section-label"><span>01 /</span> Selected work</p>
-          <p class="status-note">More projects in development</p>
-        </div>
-        <div class="split-heading">
-          <h2 id="work-heading">Less friction. <em>More possibility.</em></h2>
-          <p>Practical ideas, brought to life. Each project is described from what was actually built, with the problem, the approach, and the result.</p>
-        </div>
-        <ol class="project-list" role="list">
-          <% let slot = 0; %>
-          <% featuredProjects.forEach((project) => { const n = String(++slot).padStart(2, '0'); const shot = project.card.image; %>
-          <li class="project project--featured">
-            <article class="project-card project-card--linked" aria-labelledby="project-<%= n %>-title">
-              <div class="project-preview project-preview--image">
-                <%- include('partials/picture', { shot, sizes: '(min-width: 90rem) 50rem, (min-width: 48rem) 55vw, 100vw' }) %>
+        <p class="kicker" data-reveal>Selected work</p>
+        <h2 id="work-heading" data-reveal>Less friction. <em>More possibility.</em></h2>
+        <ol class="work-list" role="list">
+          <% featuredProjects.forEach((project, index) => { const n = String(index + 1).padStart(2, '0'); const shot = project.card.image; %>
+          <li class="project" data-reveal>
+            <article class="project-card work-item" aria-labelledby="project-<%= n %>-title">
+              <span class="work-num" aria-hidden="true"><%= n %></span>
+              <div class="work-copy">
+                <p class="chip"><%= project.category %></p>
+                <h3 id="project-<%= n %>-title"><a class="project-link" href="/projects/<%= project.slug %>"><%= project.title %></a></h3>
+                <p><%= project.card.summary %></p>
+                <% if (shot.sample) { %><p class="work-note">Screenshot shows the app’s fictional sample data.</p><% } %>
+                <p class="work-cta" aria-hidden="true">Read the case study <span>→</span></p>
               </div>
-              <div class="project-meta">
-                <p class="project-kicker"><%= n %> / <%= project.category %></p>
-                <h3 id="project-<%= n %>-title"><a class="project-link" href="/projects/<%= project.slug %>"><%= project.title %> <span aria-hidden="true">→</span></a></h3>
-                <p class="project-summary"><%= project.card.summary %></p>
-              </div>
-            </article>
-          </li>
-          <% }) %>
-          <% projectPlaceholders.forEach((project) => { const n = String(++slot).padStart(2, '0'); %>
-          <li class="project project--<%= project.variant %>">
-            <article class="project-card" aria-labelledby="project-<%= n %>-title">
-              <div class="project-preview" aria-hidden="true">
-                <span class="preview-label"><%= project.category %></span>
-                <% if (project.variant === 'composition') { %>
-                <div class="preview-composition">
-                  <span class="preview-small">From the first idea</span>
-                  <strong>What if<br>it just<br><em>worked?</em></strong>
-                  <img class="preview-stamp" src="/brand/ag-monogram-reversed.svg" alt="" width="330" height="200">
-                </div>
-                <% } else if (project.variant === 'workflow') { %>
-                <div class="preview-workflow">
-                  <span>Input</span><i></i><span class="preview-core"><img src="/brand/ag-monogram-reversed.svg" alt="" width="50" height="30"></span><i></i><span>Outcome</span>
-                </div>
-                <strong class="preview-headline">Make room<br>for <em>better work.</em></strong>
-                <% } else if (project.variant === 'signal') { %>
-                <div class="preview-signal"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-                <strong class="preview-headline">Signal,<br><em>not noise.</em></strong>
-                <% } else { %>
-                <div class="preview-layers"><i></i><i></i><i></i></div>
-                <strong class="preview-headline">Layer by<br><em>layer.</em></strong>
-                <% } %>
-                <span class="preview-foot">Concept art · not an application screenshot</span>
-              </div>
-              <div class="project-meta">
-                <p class="project-kicker"><%= n %> / <%= project.category %></p>
-                <h3 id="project-<%= n %>-title"><%= project.heading %></h3>
-                <p class="placeholder-badge">Development placeholder. Real project coming.</p>
+              <div class="work-shot">
+                <%- include('partials/picture', { shot, sizes: '(min-width: 56rem) 45vw, 100vw' }) %>
               </div>
             </article>
           </li>
@@ -107,55 +55,91 @@
 
     <section class="section services" id="services" aria-labelledby="services-heading">
       <div class="wrap">
-        <div class="section-top">
-          <p class="section-label"><span>02 /</span> What I build</p>
-        </div>
-        <div class="services-layout">
-          <div class="services-intro">
-            <h2 id="services-heading">Practical tools for <em>real work.</em></h2>
-            <a class="button-text" href="/services">Explore services in detail <span aria-hidden="true">→</span></a>
+        <p class="kicker" data-reveal>Services</p>
+        <h2 id="services-heading" data-reveal>Practical tools <em>for real work.</em></h2>
+        <ol class="svc-grid" role="list">
+          <% services.forEach((service, index) => { %>
+          <li class="svc" data-reveal>
+            <span class="svc-num" aria-hidden="true"><%= String(index + 1).padStart(2, '0') %> /</span>
+            <h3><%= service.title %></h3>
+            <p><%= service.summary %></p>
+          </li>
+          <% }) %>
+        </ol>
+        <a class="button-text" href="/services" data-reveal>Explore services in detail <span aria-hidden="true">→</span></a>
+      </div>
+    </section>
+
+    <section class="section stack" id="stack" aria-labelledby="stack-heading">
+      <div class="wrap">
+        <div class="stack-head" data-reveal>
+          <div>
+            <p class="kicker">Tech stack &amp; tools</p>
+            <h2 id="stack-heading"><%= stackIntro.heading.lead %> <em><%= stackIntro.heading.accent %></em></h2>
           </div>
-          <ol class="service-list" role="list">
-            <% services.forEach((service, index) => { %>
-            <li class="service">
-              <span class="service-number" aria-hidden="true"><%= String(index + 1).padStart(2, '0') %></span>
-              <h3><%= service.title %></h3>
-              <p><%= service.summary %></p>
-            </li>
-            <% }) %>
-          </ol>
+          <p class="stack-lede"><%= stackIntro.lede %></p>
         </div>
+        <div class="stack-ui" data-stack data-reveal>
+          <div class="stack-tabs" data-stack-tabs hidden>
+            <% stackGroups.forEach((group, index) => { %>
+            <button class="stack-tab" type="button" id="stack-tab-<%= group.id %>" aria-controls="stack-panel-<%= group.id %>" data-stack-tab>
+              <span class="stack-tab-num" aria-hidden="true"><%= String(index + 1).padStart(2, '0') %></span>
+              <span class="stack-tab-label"><%= group.label %></span>
+              <span class="stack-tab-count"><%= group.tools.length %> tools</span>
+            </button>
+            <% }) %>
+          </div>
+          <div class="stack-panels">
+            <% stackGroups.forEach((group, index) => { %>
+            <section class="stack-panel" id="stack-panel-<%= group.id %>" aria-labelledby="stack-panel-<%= group.id %>-heading" data-stack-panel>
+              <div class="stack-panel-head">
+                <span class="stack-panel-num" aria-hidden="true"><%= String(index + 1).padStart(2, '0') %></span>
+                <h3 id="stack-panel-<%= group.id %>-heading"><%= group.label %></h3>
+              </div>
+              <ul class="stack-tools" role="list">
+                <% group.tools.forEach((tool, toolIndex) => { %><li style="--i: <%= toolIndex %>"><%= tool %></li><% }) %>
+              </ul>
+              <p class="stack-usage"><%= group.usage %></p>
+              <p class="stack-projects"><span>See it in:</span>
+                <% group.projects.forEach((slug) => { %><a href="/projects/<%= slug %>"><%= projectTitles[slug] %></a><% }) %>
+              </p>
+            </section>
+            <% }) %>
+          </div>
+        </div>
+        <aside class="build-tools" aria-labelledby="build-tools-heading" data-reveal>
+          <h3 id="build-tools-heading"><%= buildTools.heading %></h3>
+          <ul class="build-tools-list" role="list">
+            <% buildTools.tools.forEach((tool) => { %><li><%= tool %></li><% }) %>
+          </ul>
+          <p><%= buildTools.note %></p>
+        </aside>
       </div>
     </section>
 
     <section class="section about" id="about" aria-labelledby="about-heading">
       <div class="wrap about-layout">
-        <p class="section-label"><span>03 /</span> The person behind the build</p>
-        <h2 id="about-heading">Curiosity meets <em>follow-through.</em></h2>
-        <div class="about-copy">
-          <p class="about-lead">I’m Amber, a practical application and automation builder.</p>
-          <p>I turn real-world problems into useful tools, explain my decisions clearly, and use AI thoughtfully.</p>
+        <div class="about-photo" data-reveal>
+          <img src="/images/amber-goding-portrait-800.webp" srcset="/images/amber-goding-portrait-400.webp 400w, /images/amber-goding-portrait-800.webp 800w, /images/amber-goding-portrait-1200.webp 1200w" sizes="(min-width: 56rem) 30rem, 90vw" alt="Portrait of Amber Goding" width="800" height="800" loading="lazy" decoding="async">
+          <span class="sticker sticker--1" aria-hidden="true">Hi, I’m Amber</span>
+        </div>
+        <div class="about-copy" data-reveal>
+          <p class="kicker">About</p>
+          <h2 id="about-heading">Thoughtful tools start with <em>understanding people.</em></h2>
+          <blockquote class="about-quote"><p>“I welcome feedback because a useful application needs to make sense to <span>the people using it.</span>”</p></blockquote>
+          <p class="about-body">I start by asking questions and clarifying the problem before suggesting a solution. From there, I break the work into manageable steps, communicate progress, and explain the decisions along the way.</p>
           <a class="button-text" href="/about">More about Amber <span aria-hidden="true">→</span></a>
         </div>
-        <ol class="principles" role="list">
-          <% principles.forEach((principle, index) => { %>
-          <li>
-            <span class="principle-number" aria-hidden="true"><%= String(index + 1).padStart(2, '0') %></span>
-            <h3><%= principle.title %></h3>
-            <p><%= principle.text %></p>
-          </li>
-          <% }) %>
-        </ol>
       </div>
     </section>
 
     <section class="section contact" id="contact" aria-labelledby="contact-heading">
-      <div class="wrap">
-        <p class="section-label"><span>04 /</span> Have something in mind?</p>
+      <div class="wrap" data-reveal>
+        <p class="kicker">Have something in mind?</p>
         <h2 class="contact-title" id="contact-heading">Let’s make it <em>happen.</em></h2>
         <div class="contact-row">
           <p>Tell me about the problem you’re trying to solve, the workflow you want to simplify, or the idea you want to build.</p>
-          <a class="contact-cta" href="/contact">Send a message <span aria-hidden="true">→</span></a>
+          <a class="contact-cta" href="/contact">Start a conversation <span aria-hidden="true">→</span></a>
         </div>
       </div>
     </section>

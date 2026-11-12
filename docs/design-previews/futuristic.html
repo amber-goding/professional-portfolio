@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Direction 4 · Futuristic | Design preview</title>
+<meta name="robots" content="noindex">
+<style>
+@font-face { font-family: "Space Grotesk"; font-style: normal; font-weight: 400 700; font-display: swap; src: url("../../public/fonts/space-grotesk-latin.woff2") format("woff2"); }
+@font-face { font-family: "DM Sans"; font-style: normal; font-weight: 400 700; font-display: swap; src: url("../../public/fonts/dm-sans-latin.woff2") format("woff2"); }
+
+/* New exploratory palette (not the approved brand palette) */
+:root {
+  --void: #05070b; --panel: #0b1118; --panel-2: #101822; --text: #e8f1f2; --muted: #93a7b1;
+  --cyan: #3df5e0; --violet: #a68bff; --lime: #d4ff3a; --line: rgb(61 245 224 / .18);
+  --display: "Space Grotesk", system-ui, sans-serif;
+  --body: "DM Sans", system-ui, sans-serif;
+  --mono: ui-monospace, "Cascadia Code", Consolas, "SFMono-Regular", Menlo, monospace;
+  --gutter: clamp(1rem, 5vw, 4rem); --max: 88rem;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--void); color: var(--text); font: 400 1rem/1.6 var(--body); overflow-wrap: break-word; }
+body::before { content: ""; position: fixed; inset: 0; z-index: -1; background-image: linear-gradient(rgb(61 245 224 / .05) 1px, transparent 1px), linear-gradient(90deg, rgb(61 245 224 / .05) 1px, transparent 1px); background-size: 48px 48px; mask-image: radial-gradient(ellipse at 50% 0%, #000 30%, transparent 80%); }
+h1, h2, h3, p, ul, ol, figure, dl, dd { margin: 0; }
+ul[role="list"], ol[role="list"] { list-style: none; padding: 0; }
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--lime); outline-offset: 4px; }
+.wrap { width: min(100% - 2 * var(--gutter), var(--max)); margin-inline: auto; }
+.skip { position: absolute; left: 1rem; top: -4rem; padding: .6rem 1rem; background: var(--lime); color: var(--void); z-index: 20; }
+.skip:focus { top: 1rem; }
+.mono { font-family: var(--mono); font-size: .8125rem; letter-spacing: .04em; }
+.tag { color: var(--cyan); }
+
+.preview-bar { border-bottom: 1px solid var(--line); background: #0a0f14; font-size: .8125rem; color: var(--muted); }
+.preview-bar .wrap { display: flex; flex-wrap: wrap; gap: .25rem 1.25rem; justify-content: space-between; padding-block: .55rem; }
+.preview-bar a { color: var(--lime); text-underline-offset: .2em; }
+
+/* Header */
+.site-header .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1.5rem; padding-block: 1rem; }
+.brand { display: inline-flex; align-items: center; gap: .75rem; text-decoration: none; }
+.brand svg { width: 2.75rem; height: 2.75rem; }
+.brand span { font: 600 .9375rem var(--mono); letter-spacing: .12em; }
+.site-header ul { display: flex; flex-wrap: wrap; gap: 0 clamp(.75rem, 2.5vw, 1.75rem); align-items: center; }
+.site-header a.nav { display: inline-flex; align-items: center; min-height: 44px; font: 500 .875rem var(--mono); color: var(--muted); text-decoration: none; }
+.site-header a.nav b { color: var(--cyan); font-weight: 500; margin-right: .35rem; }
+.site-header a.nav:hover { color: var(--text); }
+.bracket { display: inline-flex; align-items: center; gap: .5rem; min-height: 44px; padding: .5rem 1rem; border: 1px solid var(--cyan); font: 600 .875rem var(--mono); color: var(--cyan); text-decoration: none; clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); transition: background-color .2s, color .2s; }
+.bracket:hover { background: var(--cyan); color: var(--void); }
+
+/* Hero */
+.hero { position: relative; padding-block: clamp(3rem, 8vw, 6.5rem); }
+.hero::after { content: ""; position: absolute; inset: 0 0 auto 40%; height: 70%; z-index: -1; background: radial-gradient(circle at 60% 30%, rgb(166 139 255 / .22), transparent 60%), radial-gradient(circle at 30% 60%, rgb(61 245 224 / .14), transparent 55%); filter: blur(10px); }
+.hero-grid { display: grid; gap: clamp(2.5rem, 5vw, 4rem); align-items: center; }
+.hero h1 { margin-top: 1.25rem; font: 700 clamp(2.9rem, 9vw, 7.5rem)/.92 var(--display); letter-spacing: -.05em; }
+.hero h1 .accent { color: var(--cyan); }
+.hero .lede { margin-top: 1.5rem; max-width: 32rem; color: var(--muted); font-size: clamp(1.0625rem, 1.5vw, 1.2rem); }
+.actions { display: flex; flex-wrap: wrap; gap: .75rem 1rem; margin-top: 2rem; }
+.btn-solid { display: inline-flex; align-items: center; gap: .75rem; min-height: 48px; padding: .75rem 1.3rem; background: var(--lime); color: var(--void); font: 700 .9375rem var(--mono); text-decoration: none; clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px); }
+.btn-solid:hover { background: var(--cyan); }
+.terminal { position: relative; border: 1px solid var(--line); background: rgb(11 17 24 / .85); backdrop-filter: blur(6px); box-shadow: 0 0 0 1px rgb(166 139 255 / .08), 0 30px 80px rgb(0 0 0 / .5); }
+.terminal-bar { display: flex; align-items: center; gap: .45rem; padding: .7rem 1rem; border-bottom: 1px solid var(--line); color: var(--muted); }
+.terminal-bar i { width: .6rem; height: .6rem; border-radius: 50%; background: #2a3a44; }
+.terminal-bar span { margin-left: auto; }
+.terminal pre { margin: 0; padding: 1.25rem 1.25rem 1.5rem; font: 400 .875rem/1.8 var(--mono); white-space: pre-wrap; color: var(--text); }
+.terminal .p { color: var(--lime); }
+.terminal .c { color: var(--muted); }
+.terminal .v { color: var(--violet); }
+.cursor { display: inline-block; width: .55em; height: 1.1em; vertical-align: -.2em; background: var(--cyan); }
+.corner { position: absolute; width: 18px; height: 18px; border: 2px solid var(--cyan); }
+.corner.tl { left: -6px; top: -6px; border-right: 0; border-bottom: 0; }
+.corner.br { right: -6px; bottom: -6px; border-left: 0; border-top: 0; }
+
+/* Sections */
+section[id] { scroll-margin-top: 1rem; }
+.section { padding-block: clamp(4rem, 8vw, 7rem); border-top: 1px solid var(--line); }
+.section-head { display: grid; gap: .75rem 3rem; margin-bottom: clamp(2.25rem, 4vw, 3.25rem); }
+.section-head h2 { font: 700 clamp(2.2rem, 5.5vw, 4.25rem)/1 var(--display); letter-spacing: -.04em; }
+.section-head h2 .accent { color: var(--violet); }
+.section-head p { max-width: 30rem; color: var(--muted); }
+
+/* Modules (projects) */
+.modules { display: grid; gap: 1.5rem; }
+.module { position: relative; display: grid; background: var(--panel); border: 1px solid var(--line); transition: border-color .25s, box-shadow .25s; }
+.module:hover { border-color: rgb(61 245 224 / .55); box-shadow: 0 0 40px rgb(61 245 224 / .12); }
+.module-shot { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
+.module-shot img { width: 100%; aspect-ratio: 8 / 5; object-fit: cover; object-position: left top; }
+.module-shot::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(transparent 0 3px, rgb(0 0 0 / .08) 3px 4px); pointer-events: none; }
+.module-body { display: grid; gap: .8rem; padding: 1.5rem; align-content: start; }
+.module-body h3 { font: 700 clamp(1.5rem, 2.6vw, 2rem)/1.1 var(--display); letter-spacing: -.03em; }
+.module-body p { color: var(--muted); }
+.readout { display: grid; grid-template-columns: auto 1fr; gap: .35rem 1rem; padding: .9rem 1rem; border: 1px dashed var(--line); font: 400 .8125rem/1.5 var(--mono); }
+.readout dt { color: var(--cyan); }
+.readout dd { color: var(--text); }
+.module a.go { font: 700 .875rem var(--mono); color: var(--lime); text-decoration: none; }
+.module a.go::after { content: ""; position: absolute; inset: 0; }
+.module:hover a.go, .module a.go:focus-visible { text-decoration: underline; text-underline-offset: .3em; }
+
+/* Capabilities */
+.caps { display: grid; gap: 1rem; }
+.cap { display: grid; gap: .5rem; padding: 1.5rem; background: linear-gradient(135deg, rgb(166 139 255 / .08), rgb(61 245 224 / .04)); border: 1px solid var(--line); }
+.cap .code { font: 600 .8125rem var(--mono); color: var(--violet); }
+.cap h3 { font: 700 1.5rem/1.2 var(--display); letter-spacing: -.02em; }
+.cap p { color: var(--muted); }
+.text-link { display: inline-flex; align-items: center; min-height: 48px; margin-top: 1.5rem; font: 700 .875rem var(--mono); color: var(--lime); text-underline-offset: .3em; }
+
+/* Operator (about) */
+.op { display: grid; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+.op-frame { position: relative; width: min(100% - 12px, 26rem); padding: 12px; border: 1px solid var(--line); background: var(--panel); }
+.op-frame img { width: 100%; aspect-ratio: 1; }
+.op-frame .label { position: absolute; left: 12px; bottom: -1px; transform: translateY(100%); padding: .3rem .6rem; background: var(--cyan); color: var(--void); font: 700 .8125rem var(--mono); }
+.op-copy { display: grid; gap: 1.1rem; max-width: 36rem; }
+.op-copy h2 { font: 700 clamp(2rem, 4.5vw, 3.4rem)/1.04 var(--display); letter-spacing: -.035em; }
+.op-copy h2 .accent { color: var(--cyan); }
+.op-copy p { color: var(--muted); }
+
+/* Contact */
+.contact { text-align: center; padding-block: clamp(4rem, 9vw, 8rem); border-top: 1px solid var(--line); background: radial-gradient(ellipse at 50% 100%, rgb(166 139 255 / .18), transparent 60%); }
+.contact h2 { margin-top: 1rem; font: 700 clamp(2.6rem, 9vw, 7rem)/.95 var(--display); letter-spacing: -.05em; }
+.contact h2 .accent { color: var(--lime); }
+.contact p { max-width: 34rem; margin: 1.5rem auto 2rem; color: var(--muted); }
+.contact small { display: block; margin-top: 1rem; color: var(--muted); font-size: .8125rem; }
+footer { border-top: 1px solid var(--line); color: var(--muted); }
+footer .wrap { display: flex; flex-wrap: wrap; gap: .5rem 2rem; justify-content: space-between; align-items: center; padding-block: 1.5rem; }
+
+@media (min-width: 56rem) {
+  .hero-grid { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); }
+  .section-head { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); align-items: end; }
+  .modules { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .caps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .op { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+  .hero h1, .hero .lede, .hero .actions, .terminal { animation: boot .9s cubic-bezier(.2,.7,.2,1) both; }
+  .hero .lede { animation-delay: .1s; } .hero .actions { animation-delay: .2s; } .terminal { animation-delay: .25s; }
+  .cursor { animation: blink 1s steps(1) 6; }
+  .reveal-ready [data-reveal] { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
+  .reveal-ready [data-reveal].is-in { opacity: 1; transform: none; }
+}
+@keyframes boot { from { opacity: 0; transform: translateY(16px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes blink { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<div class="preview-bar" role="note" aria-label="Design preview">
+  <div class="wrap"><span><strong>Design preview</strong> · Direction 4: Futuristic · New exploratory palette and mark · Not the live site.</span><a href="index.html">Compare all directions</a></div>
+</div>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Amber Goding, home">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><polygon points="24,2 44,13 44,35 24,46 4,35 4,13" fill="none" stroke="#3df5e0" stroke-width="2"/><polygon points="24,8 39,16.5 39,31.5 24,40 9,31.5 9,16.5" fill="rgb(166 139 255 / .15)"/><text x="24" y="29.5" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="14" fill="#e8f1f2" letter-spacing="1">AG</text></svg>
+      <span>AMBER_GODING</span>
+    </a>
+    <nav aria-label="Main">
+      <ul role="list">
+        <li><a class="nav" href="#work"><b>01</b>Work</a></li>
+        <li><a class="nav" href="#services"><b>02</b>Services</a></li>
+        <li><a class="nav" href="#about"><b>03</b>About</a></li>
+        <li><a class="bracket" href="#contact">Contact →</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" id="top" aria-labelledby="hero-heading">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="mono tag">// application &amp; automation builder</p>
+        <h1 id="hero-heading">Make complex <span class="accent">feel simple.</span></h1>
+        <p class="lede">I’m Amber Goding. I turn real-world problems into useful tools, explain my decisions clearly, and use AI thoughtfully.</p>
+        <div class="actions">
+          <a class="btn-solid" href="#work">View modules →</a>
+          <a class="bracket" href="#contact">Start a conversation</a>
+        </div>
+      </div>
+      <div class="terminal">
+        <span class="corner tl" aria-hidden="true"></span><span class="corner br" aria-hidden="true"></span>
+        <div class="terminal-bar mono" aria-hidden="true"><i></i><i></i><i></i><span>~/amber-goding</span></div>
+<pre aria-label="Terminal-style summary"><span class="p">&gt;</span> whoami
+Amber Goding · application &amp; automation builder
+
+<span class="p">&gt;</span> ls ./projects
+<span class="v">reentry-resource-extractor</span>
+<span class="v">catering-concierge</span>
+<span class="v">huntsomewhere</span>
+
+<span class="p">&gt;</span> cat principles.txt
+<span class="c">Start with the real problem.
+Explain the decisions.
+Use AI thoughtfully.</span>
+
+<span class="p">&gt;</span> <span class="cursor" aria-hidden="true"></span></pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="work" aria-labelledby="work-heading">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <div><p class="mono tag">[01] selected_work</p><h2 id="work-heading" style="margin-top:.75rem">Less friction. <span class="accent">More possibility.</span></h2></div>
+        <p>Three working applications, each described from what was actually built.</p>
+      </div>
+      <ul class="modules" role="list">
+        <li class="module" data-reveal>
+          <div class="module-shot"><img src="../../public/images/projects/reentry-resource-extractor/start-screen-800.webp" srcset="../../public/images/projects/reentry-resource-extractor/start-screen-800.webp 800w, ../../public/images/projects/reentry-resource-extractor/start-screen-1600.webp 1600w" sizes="(min-width: 56rem) 28vw, 100vw" alt="Start screen of the Reentry Resource Extractor with its Retrieve, Extract, and Review pathway." width="1600" height="1000" loading="lazy"></div>
+          <div class="module-body">
+            <h3>Reentry Resource Extractor</h3>
+            <p>Turns a public reentry-program web page into a draft listing, with evidence-checked AI extraction and human review of every field.</p>
+            <dl class="readout"><dt>TYPE</dt><dd>AI integration</dd><dt>STACK</dt><dd>JavaScript · Node.js · OpenAI API</dd><dt>STATUS</dt><dd>Deployed on Railway</dd></dl>
+            <a class="go" href="http://localhost:3000/projects/reentry-resource-extractor">open_case_study →</a>
+          </div>
+        </li>
+        <li class="module" data-reveal>
+          <div class="module-shot"><img src="../../public/images/projects/catering-concierge/dashboard-sample-desktop-800.webp" srcset="../../public/images/projects/catering-concierge/dashboard-sample-desktop-800.webp 800w, ../../public/images/projects/catering-concierge/dashboard-sample-desktop-1600.webp 1600w" sizes="(min-width: 56rem) 28vw, 100vw" alt="Catering Concierge dashboard showing labelled fictional sample data and modules marked Limited or Planned." width="1600" height="1000" loading="lazy"></div>
+          <div class="module-body">
+            <h3>Catering Concierge</h3>
+            <p>Connects a Zapier workflow to a restaurant app: an authenticated, duplicate-aware import and a restaurant-scoped review screen. Screenshot shows fictional sample data.</p>
+            <dl class="readout"><dt>TYPE</dt><dd>Workflow automation</dd><dt>STACK</dt><dd>Next.js · Prisma · Zapier</dd><dt>STATUS</dt><dd>Deployed demonstration</dd></dl>
+            <a class="go" href="http://localhost:3000/projects/catering-concierge">open_case_study →</a>
+          </div>
+        </li>
+        <li class="module" data-reveal>
+          <div class="module-shot"><img src="../../public/images/projects/huntsomewhere/public-areas-desktop-800.webp" srcset="../../public/images/projects/huntsomewhere/public-areas-desktop-800.webp 800w, ../../public/images/projects/huntsomewhere/public-areas-desktop-1600.webp 1600w" sizes="(min-width: 56rem) 28vw, 100vw" alt="HuntSomewhere public areas page listing curated wildlife management areas, each marked Not confirmed by HuntSomewhere." width="1600" height="1000" loading="lazy"></div>
+          <div class="module-body">
+            <h3>HuntSomewhere</h3>
+            <p>A trip planner for Maryland hunters: editable trip preferences, saved trips, and curated public areas matched by county, with clear limits on what the data confirms.</p>
+            <dl class="readout"><dt>TYPE</dt><dd>Application development</dd><dt>STACK</dt><dd>Next.js · PostgreSQL · OpenAI API</dd><dt>STATUS</dt><dd>Deployed on Railway</dd></dl>
+            <a class="go" href="http://localhost:3000/projects/huntsomewhere">open_case_study →</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="services" aria-labelledby="services-heading">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <div><p class="mono tag">[02] capabilities</p><h2 id="services-heading" style="margin-top:.75rem">Practical tools <span class="accent">for real work.</span></h2></div>
+        <p>Three established service areas, each starting with how the work happens today.</p>
+      </div>
+      <ul class="caps" role="list" data-reveal>
+        <li class="cap"><span class="code">SVC-01</span><h3>Application development</h3><p>Web applications designed around the people who use them, from the first problem statement and data model to a working tool.</p></li>
+        <li class="cap"><span class="code">SVC-02</span><h3>AI integration</h3><p>AI used where it genuinely helps, such as extracting, summarizing, and organizing information, with clear limits and human review built in.</p></li>
+        <li class="cap"><span class="code">SVC-03</span><h3>Workflow automation</h3><p>Connecting the tools and steps behind repetitive work so information moves where it needs to go with less manual effort.</p></li>
+      </ul>
+      <a class="text-link" href="http://localhost:3000/services">explore_services →</a>
+    </div>
+  </section>
+
+  <section class="section" id="about" aria-labelledby="about-heading">
+    <div class="wrap op" data-reveal>
+      <div class="op-frame"><span class="corner tl" aria-hidden="true"></span><span class="corner br" aria-hidden="true"></span><img src="../../public/images/amber-goding-portrait-800.webp" srcset="../../public/images/amber-goding-portrait-400.webp 400w, ../../public/images/amber-goding-portrait-800.webp 800w" sizes="(min-width: 56rem) 26rem, 90vw" alt="Portrait of Amber Goding" width="800" height="800" loading="lazy"><span class="label">OPERATOR: AMBER GODING</span></div>
+      <div class="op-copy">
+        <p class="mono tag">[03] about</p>
+        <h2 id="about-heading">Thoughtful tools start with <span class="accent">understanding people.</span></h2>
+        <p>I’m Amber Goding, an application and automation builder who enjoys turning complicated problems into tools that make everyday work easier.</p>
+        <p>When I include AI, I consider where it can help, where its limits matter, and where a person should remain involved.</p>
+        <a class="text-link" href="http://localhost:3000/about">read_more →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact" aria-labelledby="contact-heading">
+    <div class="wrap" data-reveal>
+      <p class="mono tag">[04] start_conversation()</p>
+      <h2 id="contact-heading">Let’s make it <span class="accent">happen.</span></h2>
+      <p>Tell me about the problem you’re trying to solve, the workflow you want to simplify, or the idea you want to build.</p>
+      <a class="btn-solid" href="http://localhost:3000/contact">Open the contact form →</a>
+      <small>Preview element: opens the existing contact form in the local app. No form is included here.</small>
+    </div>
+  </section>
+</main>
+<footer><div class="wrap mono"><span>© 2026 AMBER_GODING</span><span>application &amp; automation builder</span><a href="#top">back_to_top ↑</a></div></footer>
+<script>
+if ('IntersectionObserver' in window && matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+  document.documentElement.classList.add('reveal-ready');
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' });
+  document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
+}
+</script>
+</body>
+</html>
