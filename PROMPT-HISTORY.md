@@ -656,3 +656,99 @@ Then record an internal planning section in the portfolio README and recommend 3
   - Homepage: both cards keep a 1.6 ratio, image clicks hit the links, and Tab plus Enter on the Catering card opens its case study.
   - The homepage probe again flags the stroke-only hero word "complex" (probe limitation, unchanged).
 - **Not verified:** the signed-in Inquiries screen, any live import, live duplicate handling, and two-account separation (none run or viewed for this task). Also Safari/Firefox, real devices, screen readers.
+
+**Outcome:** The user committed the Catering Concierge case study as `2d02143` ("Add Catering Concierge case study and second project card"). Push status not recorded.
+
+### 15. HuntSomewhere case-study draft (internal, awaiting approval)
+
+**Asked:** Prepare, but don't publish, a proposed HuntSomewhere entry for Amber's review. Review the sibling repository read-only and identify changes since the inventory, separating committed, uncommitted, and deployed behavior. Find the repository and any recorded deployment URL, and check only public pages if one exists. Draft the copy, evidence, decisions needed, card summary, and screenshot plan. Offer the existing contribution sentence only as a proposal. Save to `docs/huntsomewhere-case-study-draft.md`, marked internal. No public content, published-list, styling, dependency, or approval changes. No commit.
+
+**Findings:**
+- **Repository, read-only (`git --no-optional-locks`):** `main` = `origin/main` = `5d4c484` with a clean tree, so nothing has changed since the inventory. Clerk sign-in exists only on unmerged branches (`58e3509`, `668444d`).
+- **Source re-read:**
+  - AI prompt, strict schema, zod validation, and code-side group expansion (`lib/trips/ai.ts`, `preferences.ts`);
+  - atomic allowance `UPDATE`, UUID trips re-validated on load, description not stored (`store.ts`, `app/plan/actions.ts`);
+  - six curated areas in four counties with provenance (`lib/areas/curated.ts`, `data/sources/...`);
+  - uncertainty notices (`app/areas/area-card.tsx`).
+- **Deployment URL:** none recorded on any branch. One GET to the conventional Railway address `https://week-7-build-huntsomewhere-production.up.railway.app/` returned the HuntSomewhere site.
+  - Read-only checks: `/`, `/areas` (all six areas and the not-confirmed notice), `/sources`, and `/plan` returned 200. No form submitted, no AI call, no trip created.
+  - The live landing headline promises permission requests that aren't built; this is flagged for Amber.
+  - The address needs the owner's confirmation before it's linked.
+- **Repository URL:** `https://github.com/amber-goding/week-7-build-HuntSomewhere` (HTTP 200).
+
+**Done:** the new internal draft `docs/huntsomewhere-case-study-draft.md`, with:
+- proposed copy in the existing case-study structure;
+- an evidence table with file references;
+- live-check results, with owner-reported items kept out of the public copy;
+- six decisions for Amber: inclusion, contribution wording, live URL or repository only, a demonstration trip for screenshots, an optional paid AI call for one screenshot, and the landing headline;
+- a screenshot plan using public pages plus a filled-but-unsubmitted manual form.
+
+**Verification:** documentation only. `npm test` was re-run to confirm nothing changed; `git diff --check` was clean. The HuntSomewhere repository is unchanged (same HEAD, clean tree). **Not verified:** the AI suggestion flow, saving a trip, and trip-area discovery on the live app. These weren't exercised because they would write records or make a paid call.
+
+### 16. Third case study: HuntSomewhere
+
+**Asked:** Implement `/projects/huntsomewhere` and replace the homepage's Application placeholder, keeping the order Reentry, Catering, HuntSomewhere.
+- **Owner-approved:**
+  - the project;
+  - the confirmed live URL `https://week-7-build-huntsomewhere-production.up.railway.app/`;
+  - the repository `https://github.com/amber-goding/week-7-build-HuntSomewhere`;
+  - a new, project-specific contribution sentence, used verbatim;
+  - ONE fictional demonstration trip through the manual form, without AI.
+- **No live AI:** no paid AI call and no use of the AI suggestion feature.
+- **Corrections first:** fix the draft's "private link", "can't be overspent", and absolute "never" claims, and update the draft's status and decisions.
+- **Not allowed:** no changes to the other repository, no secrets, no extra records, no deleting the trip without approval, no commit.
+
+**Verified:**
+- **Repository, read-only:** `main` = `origin/main` = `5d4c484`, clean, unchanged since entry 15. Re-read:
+  - `trip-planner.tsx`: manual chip pickers, and a save section stating "Anyone with the link can view these preferences";
+  - `preferences.ts`: schema; invalid or out-of-order dates become unresolved in code;
+  - `ai.ts` and `store.ts`.
+- **Live, confirmed deployment (scratchpad `hunt-capture.mjs`):**
+  - **Public pages:** `/areas` (all six WMAs), `/sources`, and `/plan` loaded.
+  - **The one demonstration trip:**
+    - Garrett County / White-tailed deer / Vertical bow / 2026-11-14 to 2026-11-15, set through the select and date controls with the description empty.
+    - The form state was checked before saving. A marker file was written before the single Save click, so a re-run couldn't save again.
+    - Result: exactly one non-GET request (`POST /plan`, a server action) and navigation to `/trips/a708ed60-d49a-4d09-8dd0-4f7cff2b4771`.
+  - **The trip's pages:** the trip page shows the preferences and "Anyone with this link can view these preferences". `/areas` from it lists exactly Mt. Nebo WMA and Cunningham Swamp WMA, with the county-only notice.
+  - 177 requests in total; the AI button was never pressed.
+- **Noted:** the live planner intro itself says "save them to a private link", which contradicts the app's own save notice. It's flagged for the owner; the planner top wasn't used as a screenshot.
+
+**Done:**
+- **Screenshots:** in `public/images/projects/huntsomewhere/`, WebP at two widths plus a JPEG fallback, metadata stripped, 11–151 KB each.
+  - `public-areas-desktop`: the homepage card image, real public data, no flag.
+  - `demo-preferences-desktop`: "Demonstration input".
+  - `demo-trip-areas-desktop`: "Demonstration trip".
+  - `demo-trip-phone`: "Demonstration trip".
+- **Content:** a third `projects.js` entry, with the corrected wording:
+  - link access: anyone with the link can view;
+  - "a database-enforced limit on AI requests", explaining the conditional reservation, with no monetary claim;
+  - model instructions kept separate from code checks, with the AI step stated as reviewed in source and not run;
+  - county-only matching that "doesn't establish hunting access, eligibility, seasons, or suitability for a species or method";
+  - planned features listed as not built;
+  - the approved contribution, verbatim.
+- **Template:** a per-image `flagLabel` (default "Sample data"). `.project-title` has a lower minimum size (`clamp(2.25rem, 8vw, 5.5rem)`), because "HuntSomewhere" broke mid-word at 320px; the change only affects widths under about 450px.
+- **Homepage:** the Application placeholder was removed from `home.js`; one placeholder remains.
+- **Tests:**
+  - **`projects.test.js`:**
+    - three published projects in order, a card test with three links and then one unlinked placeholder, and the 404 list now including `HuntSomewhere` and `/huntsomewhere/extra`;
+    - **new HuntSomewhere describe:**
+      - metadata, one h1, no skipped headings;
+      - the contribution verbatim, and only the approved links;
+      - link-access, limit, county-only, scope, and source-only-AI wording, with "private link" and "spending cap" style phrases banned;
+      - planned features absent from the implemented list;
+      - banned claims;
+      - demonstration flags, dimensions, srcset widths, no metadata;
+      - contact privacy.
+  - **`app.test.js`:** expects three real cards and one placeholder.
+  - **Nav loop and privacy scan:** include the new page.
+- **Docs:** AGENTS.md (dated approval, demonstration-trip record, status corrected from Git: latest commit `2d02143`). README (route, status, temporary content, remaining checks, planning-section status). The draft was rewritten as the approval and correction record.
+
+**Verification:**
+- `npm test`: 171 tests, 170 passed, 0 failed, 1 skipped (Windows SIGTERM). Email is disabled or mocked.
+- **Headless Chrome, all three case studies:**
+  - At 320/375/768/1024/1440: no overflow and no text under 12px. No mid-word breaks after the title fix; before it, "HuntSomewhere" broke at 320.
+  - Contrast: no failures.
+  - Tab order all focus-visible; menu opens and closes; reduced motion and no-JS OK.
+  - Homepage card: Tab plus Enter opens the HuntSomewhere case study.
+- **Card image clicks:** at 375/768/1440, a click on each card image lands on its link (scratchpad `card-probe.mjs`). The main script's earlier "false" readings came from cards it hadn't scrolled into view.
+- **Not verified:** the live AI suggestion step (deliberately not run); the no-results and multi-county states; the repository's check scripts (not re-run); Safari/Firefox, real devices, screen readers. The demonstration trip remains in the HuntSomewhere database.

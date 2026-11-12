@@ -1955,8 +1955,11 @@ button.button[aria-disabled="true"] {
 }
 
 /* Case-study page */
+/* A lower minimum than other page titles so single-word names such as
+   "HuntSomewhere" fit at 320px without breaking mid-word. */
 .project-title {
   max-width: 12ch;
+  font-size: clamp(2.25rem, 8vw, 5.5rem);
 }
 
 .project-facts {

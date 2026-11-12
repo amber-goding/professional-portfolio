@@ -7,12 +7,12 @@ Shared instructions for AI coding agents working in this repository. This file i
 Amber Goding’s professional portfolio and services website showcases her application development, AI integration, and workflow automation capabilities. It serves employers, prospective clients, and collaborators. It will be the long-term professional site at **ambergoding.com**.
 
 **Current status (2026-11-12):**
-- **Committed:** Milestone 1, the foundation (`f527181`); Milestone 2, the homepage, visual system, and AG branding (`c305a46`); the private contact form with Resend delivery (`d1582eb`); the `/services` page (`7b3fbaf`); the `/about` page (`ddbba93`); the internal portfolio project inventory (`a010517`); and the Reentry Resource Extractor case study with its accuracy correction (`562168a`).
+- **Committed:** Milestone 1, the foundation (`f527181`); Milestone 2, the homepage, visual system, and AG branding (`c305a46`); the private contact form with Resend delivery (`d1582eb`); the `/services` page (`7b3fbaf`); the `/about` page (`ddbba93`); the internal portfolio project inventory (`a010517`); the Reentry Resource Extractor case study with its accuracy correction (`562168a`); and the Catering Concierge case study (`2d02143`, the latest commit at the start of the HuntSomewhere task).
 - **Contact email, verified locally (owner-reported manual checks, not automated):**
   - The owner created a Resend account and verified the sending domain `mail.ambergoding.com` through Spaceship DNS.
   - A real inquiry submitted through the local contact form arrived in the owner's Gmail inbox, and its Reply-To pointed to the visitor address entered in the form.
 - **Still unverified:** email delivery from Railway (production variables, the deployed environment) and the deployment itself. Nothing has been deployed.
-- **Implemented, not committed:** the second case study, `/projects/catering-concierge`, and its homepage card (second slot). Reentry Resource Extractor stays first; the remaining two homepage slots are development placeholders.
+- **Implemented, not committed:** the third case study, `/projects/huntsomewhere`, its homepage card (third slot), and the internal review record `docs/huntsomewhere-case-study-draft.md`. Homepage order: Reentry Resource Extractor, Catering Concierge, HuntSomewhere, then one development placeholder.
 - Temporary content is listed in README.md under "Temporary content". Paid plans, further DNS changes, and deployment are **not approved**; see [Pending decisions](#pending-decisions).
 
 **Visual presentation is provisional.** The current website styling has **not** received the owner's final approval. The approved palette and the AG branding direction stand, but the overall visual presentation needs another dedicated design review before launch. Until then, don't make unrelated visual changes while working on other tasks.
@@ -68,7 +68,7 @@ Amber Goding’s professional portfolio and services website showcases her appli
 - Never deploy, change DNS, create paid resources, or incur charges without the owner's approval.
 
 **Portfolio:**
-- Show 3–4 real projects, each with the problem, solution, results, and working app or repository links. Candidates: HuntSomewhere, Ever After Planner, Reentry Resource Extractor, Catering Concierge. **Approved so far: Reentry Resource Extractor and Catering Concierge** (see [Decisions](#decisions)). The others stay unapproved until the owner records them there.
+- Show 3–4 real projects, each with the problem, solution, results, and working app or repository links. Candidates: HuntSomewhere, Ever After Planner, Reentry Resource Extractor, Catering Concierge. **Approved so far: Reentry Resource Extractor, Catering Concierge, and HuntSomewhere** (see [Decisions](#decisions)). Ever After Planner is not approved. The others stay unapproved until the owner records them there.
 - Case studies live at `/projects/<slug>`, generated from `src/content/projects.js`. Only entries marked `published: true` render; every other slug returns the standard 404. Screenshots come from the deployed application, and any screenshot that uses an app's own sample or demonstration data is captioned as sample data, never presented as a live result.
 - Plan around the completed versions intended for launch. Track unfinished work in an internal checklist, and reconcile every public description with verified functionality before publishing.
 - Follow the content rules below for every project description.
@@ -105,7 +105,7 @@ These are proposed or open items. They are **not approved** until they are recor
 - Final visual presentation (dedicated design review required before launch). The current styling is provisional and needs the owner's final approval.
 - Which host is canonical for the site (apex or `www`). DNS for `ambergoding.com` is hosted at Spaceship (owner-reported). Whether Spaceship supports the CNAME flattening or ALIAS record Railway needs for the apex hasn't been checked.
 - Railway plan.
-- Which further projects to feature. Reentry Resource Extractor and Catering Concierge are approved; HuntSomewhere and Ever After Planner are not. The internal inventory in README.md recommends a set, but it isn't approved.
+- Whether to feature a fourth project. Reentry Resource Extractor, Catering Concierge, and HuntSomewhere are approved; Ever After Planner is not. The internal inventory in README.md recommends a set, but it isn't approved.
 - Whether to include a résumé.
 
 ## Decisions
@@ -147,3 +147,20 @@ Approved decisions, dated. Add new entries at the end.
     - The sign-in-only Inquiries screen couldn't be captured and isn't pictured.
   - **Homepage:** the second slot (formerly the Automation placeholder) shows this project and links to the case study.
   - HuntSomewhere and Ever After Planner remain **unapproved**. Styling remains provisional.
+- 2026-11-12: **HuntSomewhere approved as the third portfolio entry.**
+  - **Live application (owner-confirmed):** `https://week-7-build-huntsomewhere-production.up.railway.app/`. **Repository:** `https://github.com/amber-goding/week-7-build-HuntSomewhere`. Keep this exact URL, but don't use the repository name in public prose.
+  - **Approved contribution wording, verbatim:** “I defined the problem and application workflow, guided AI-assisted implementation, reviewed the results, and refined how users review suggested trip preferences and understand the limits of the location data.”
+  - **Authorized:** ONE fictional demonstration trip through the deployed manual form, without AI. It was created once, on 2026-11-12, at `/trips/a708ed60-d49a-4d09-8dd0-4f7cff2b4771` (Garrett County, white-tailed deer, vertical bow, 2026-11-14 to 2026-11-15). Don't create more, and don't delete it without approval.
+  - **Not authorized:** live use of the AI suggestion feature, or any paid AI call. The AI step is described from source inspection only.
+  - **Case study:** `/projects/huntsomewhere`, written from the committed `main` (`5d4c484`) and the confirmed deployment.
+    - Saved trips are described as reachable by anyone with the link, not as private.
+    - The AI control is described as a database-enforced request limit, not a spending cap.
+    - Model instructions, code checks, and live-verified behavior are kept distinct.
+    - Matching is county only and doesn't establish access, eligibility, seasons, or species and method suitability.
+    - Accounts, maps, private listings, permission requests, and messaging are listed as planned.
+    - The review trail is in `docs/huntsomewhere-case-study-draft.md`.
+  - **Screenshots:** from the deployed app.
+    - The `/areas` list (real public data) is the homepage card image.
+    - The planner with the demonstration options, captioned "Demonstration input".
+    - The demonstration trip and its county results, captioned "Demonstration trip".
+  - Ever After Planner remains **unapproved**. Styling remains provisional.

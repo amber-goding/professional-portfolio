@@ -138,7 +138,7 @@ describe('contact privacy', () => {
       .readdirSync(publicDir, { recursive: true })
       .filter((p) => fs.statSync(path.join(publicDir, p)).isFile())
       .map((p) => `/${p.split(path.sep).join('/')}`);
-    for (const url of ['/', '/services', '/about', '/projects/reentry-resource-extractor', '/projects/catering-concierge', '/contact', '/does-not-exist', ...assetPaths]) {
+    for (const url of ['/', '/services', '/about', '/projects/reentry-resource-extractor', '/projects/catering-concierge', '/projects/huntsomewhere', '/contact', '/does-not-exist', ...assetPaths]) {
       const res = await fetch(`${ctx.baseUrl}${url}`);
       const body = Buffer.from(await res.arrayBuffer()).toString('latin1');
       assertNoSecrets(body, url);

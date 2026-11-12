@@ -88,7 +88,7 @@ Routes:
 - `GET /`: homepage (sections `#work`, `#services`, `#about`, `#contact`)
 - `GET /services`: Services page (sections `#application-development`, `#ai-integration`, `#workflow-automation`, `#process`)
 - `GET /about`: About page (introduction with portrait and professional links, background, "How I work", contact invitation)
-- `GET /projects/:slug`: case study for a published project (`src/content/projects.js`). Currently `/projects/reentry-resource-extractor` and `/projects/catering-concierge`. Any other slug, including unpublished candidates, returns the standard 404 page.
+- `GET /projects/:slug`: case study for a published project (`src/content/projects.js`). Currently `/projects/reentry-resource-extractor`, `/projects/catering-concierge`, and `/projects/huntsomewhere`. Any other slug, including unpublished candidates, returns the standard 404 page.
 - `GET /contact`: contact page. `POST /contact` handles submissions and returns HTML, or JSON when the request sends `Accept: application/json`.
 - `GET /healthz`: health check returning `{"status":"ok"}`
 - Anything else returns an HTML 404 page. Unexpected errors return a generic 500 page. Error details are logged on the server, never shown to visitors.
@@ -170,7 +170,7 @@ Real values belong in Railway's service variables or a local `.env` file, which 
 - **Homepage:** the first selected-work slot is this project (real title, summary, screenshot, and link).
 - **Accuracy correction (included in `562168a`):** the copy describes what the model is instructed to do and what the server checks. It doesn't claim extracted values are supported or correct.
 
-**Second case study (implemented, not committed):** `/projects/catering-concierge`, the owner-approved Catering Concierge (AGENTS.md, Decisions, 2026-11-12).
+**Second case study (committed in `2d02143`):** `/projects/catering-concierge`, the owner-approved Catering Concierge (AGENTS.md, Decisions, 2026-11-12).
 - **Sources:** that repository's committed `main` (`67f03bc`, the deployed branch) and its deployed interface, viewed signed out. Its working tree holds uncommitted manual-entry work on a feature branch, which the case study treats as in development.
 - **Content:**
   - the multi-channel intake problem;
@@ -184,7 +184,27 @@ Real values belong in Railway's service variables or a local `.env` file, which 
   - The fourth section's label can be set per project.
   - The flag uses deep teal on cream sections, because gold failed contrast there.
   - Homepage screenshot cards keep their ratio in every staggered slot.
-- **Homepage:** the second slot (formerly the Automation placeholder) is this project. The remaining two slots are development placeholders.
+- **Homepage:** the second slot (formerly the Automation placeholder) is this project.
+
+**Third case study (implemented, not committed):** `/projects/huntsomewhere`, the owner-approved HuntSomewhere (AGENTS.md, Decisions, 2026-11-12). The review trail is in `docs/huntsomewhere-case-study-draft.md`.
+- **Sources:** committed `main` (`5d4c484`, clean tree) and the owner-confirmed deployment.
+- **Live checks:**
+  - `/areas`, `/sources`, and `/plan` loaded.
+  - One fictional demonstration trip was saved through the manual form, with one POST and no AI: `/trips/a708ed60-d49a-4d09-8dd0-4f7cff2b4771`.
+  - Its county results showed exactly Mt. Nebo WMA and Cunningham Swamp WMA.
+  - The AI suggestion step wasn't run (not authorized) and is described from source.
+- **Content:**
+  - describe or set preferences, review, save, and discover;
+  - link-access saved trips (anyone with the link can view);
+  - a database-enforced AI request limit;
+  - six curated areas in four counties with official-source attribution;
+  - county-only matching and its limits;
+  - planned features kept separate.
+- **Screenshots:** the `/areas` list (real public data) is the homepage card image. The planner with demonstration options and the demonstration trip's pages carry "Demonstration input" or "Demonstration trip" flags.
+- **Template changes:**
+  - A screenshot's flag text can be set per image (`flagLabel`, default "Sample data").
+  - Case-study titles have a lower minimum size, so "HuntSomewhere" fits at 320px without breaking mid-word.
+- **Homepage:** the third slot (formerly the Application placeholder) is this project. One development placeholder remains.
 
 **Visual presentation is provisional.** The palette and AG branding are approved; the overall styling still needs the owner's final approval in a dedicated design review before launch.
 
@@ -192,7 +212,7 @@ Real values belong in Railway's service variables or a local `.env` file, which 
 
 - **Hero wording** (provisional, from the visual reference): "Human insight. Technical possibility.", "Make complex feel simple.", "Useful applications. Thoughtful AI. Connected workflows. Built around people.", "Designed with intention. Built to be used."
 - **Hero artwork labels:** "Idea", "Reality", "The space between idea & execution"
-- **Selected work:** the first two slots are the approved Reentry Resource Extractor and Catering Concierge. The other two slots are development placeholders, labeled on the page, with concept art rather than screenshots, no links, and invented headings. They are defined in `src/content/home.js`.
+- **Selected work:** the first three slots are the approved Reentry Resource Extractor, Catering Concierge, and HuntSomewhere. The last slot is a development placeholder, labeled on the page, with concept art rather than screenshots, no links, and invented headings. They are defined in `src/content/home.js`.
 - **Work introduction:** "Less friction. More possibility.", the paragraph below it (reworded when the first real project arrived), and the "More projects in development" note
 - **Services:** the heading "Practical tools for real work." and the three capability descriptions
 - **Homepage About teaser:** the heading "Curiosity meets follow-through.", the two introductory sentences, and the three principles. These are drawn from the approved positioning. The `/about` page copy itself is approved and not temporary.
@@ -203,7 +223,8 @@ Real values belong in Railway's service variables or a local `.env` file, which 
 
 - Owner review of the Reentry Resource Extractor case-study copy, and an end-to-end extraction check of the live app by the owner (the write-up is based on source inspection and the deployed interface, not a live AI run)
 - Owner review of the Catering Concierge case-study copy, and a signed-in check of the deployed Inquiries screen by the owner (it wasn't viewed for the case study)
-- Further projects (1–2 more, each owner-approved) with verified descriptions, screenshots, links, and case-study pages, replacing the remaining placeholders
+- Owner review of the HuntSomewhere case-study copy; a decision on keeping or deleting the demonstration trip; optionally, correcting the live planner's "private link" intro in the HuntSomewhere repository
+- Possibly one more project (owner-approved) with verified descriptions, screenshots, links, and case-study pages, replacing the remaining placeholders
 - Owner review of the Services page wording and the homepage About teaser
 - Decide whether to include a résumé
 - Contact in production: set the Railway variables and confirm a real inquiry sent from the deployed site arrives with the correct Reply-To. The local check is already done (owner-reported).
@@ -299,6 +320,8 @@ An internal inventory, prepared before any case-study page is built. **None of i
 
 ### HuntSomewhere
 
+**Status (2026-11-12): approved as the third portfolio entry, and its case study is implemented** at `/projects/huntsomewhere` (not yet committed). Approvals, corrections, live evidence, and the demonstration trip are recorded in `docs/huntsomewhere-case-study-draft.md`.
+
 - **Problem and audience:** Maryland hunters looking for public and private land and access; landowners managing listings and requests (`README.md`, `project-plan.md`).
 - **Launch scope (plan):** a large marketplace with milestones M1–M14 covering listings, access requests, permission documents, email, and further AI features. **Almost all of it is planned, not built.**
 - **Source:**
@@ -367,7 +390,7 @@ An internal inventory, prepared before any case-study page is built. **None of i
   - **Decisions:** server-fixed scope, a timing-safe token, the unique index for duplicates, logs without content.
   - **Verifiable result:** the observed 201 and 200 duplicate behaviour on the demo.
 
-### Recommendation (Reentry Resource Extractor and Catering Concierge approved; the rest proposed, not approved)
+### Recommendation (Reentry Resource Extractor, Catering Concierge, and HuntSomewhere approved; Ever After Planner not approved)
 
 **Feature three projects:**
 - **Reentry Resource Extractor** for AI integration.

@@ -33,7 +33,6 @@ export const services = [
 // must never link anywhere or describe features.
 export const projectPlaceholders = [
   { category: 'AI integration', heading: 'Clarity from complexity.', variant: 'signal' },
-  { category: 'Application', heading: 'Built to be used.', variant: 'layers' },
 ];
 
 // Working principles drawn directly from the approved positioning.

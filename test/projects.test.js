@@ -29,6 +29,16 @@ const CATERING = {
   repo: 'https://github.com/amber-goding/week-8-build-catering-concierge',
 };
 
+// Approved by the owner on 2026-11-12, written out independently of the content file.
+const HUNT = {
+  slug: 'huntsomewhere',
+  title: 'HuntSomewhere',
+  contribution:
+    'I defined the problem and application workflow, guided AI-assisted implementation, reviewed the results, and refined how users review suggested trip preferences and understand the limits of the location data.',
+  live: 'https://week-7-build-huntsomewhere-production.up.railway.app/',
+  repo: 'https://github.com/amber-goding/week-7-build-HuntSomewhere',
+};
+
 const textOf = (fragment) => fragment.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
 
@@ -72,7 +82,7 @@ describe('/projects/reentry-resource-extractor', () => {
   it('publishes only the approved projects, Reentry first', () => {
     assert.ok(publishedProjects.every((project) => project.published));
     // Update this when the owner approves another project (AGENTS.md, Decisions).
-    assert.deepEqual(publishedProjects.map((project) => project.slug), [APPROVED.slug, CATERING.slug]);
+    assert.deepEqual(publishedProjects.map((project) => project.slug), [APPROVED.slug, CATERING.slug, HUNT.slug]);
     assert.ok(projects.every((project) => /^[a-z0-9-]+$/.test(project.slug)));
   });
 
@@ -222,7 +232,7 @@ describe('project routing', () => {
   after(() => new Promise((resolve) => server.close(resolve)));
 
   it('returns the standard 404 page for unknown and unpublished slugs', async () => {
-    for (const path of ['/projects', '/projects/', '/projects/does-not-exist', '/projects/ever-after-planner', '/projects/huntsomewhere', '/projects/Reentry-Resource-Extractor', '/projects/reentry-resource-extractor/extra', '/projects/Catering-Concierge', '/projects/catering-concierge/extra']) {
+    for (const path of ['/projects', '/projects/', '/projects/does-not-exist', '/projects/ever-after-planner', '/projects/HuntSomewhere', '/projects/huntsomewhere/extra', '/projects/Reentry-Resource-Extractor', '/projects/reentry-resource-extractor/extra', '/projects/Catering-Concierge', '/projects/catering-concierge/extra']) {
       const res = await fetch(`${baseUrl}${path}`);
       assert.equal(res.status, 404, path);
       assert.match(res.headers.get('content-type'), /^text\/html/);
@@ -243,17 +253,125 @@ describe('project routing', () => {
     }
   });
 
-  it('links the first two cards to their case studies and leaves the rest unlinked', async () => {
+  it('links the first three cards to their case studies, in order, and leaves the last unlinked', async () => {
     const home = await (await fetch(`${baseUrl}/`)).text();
     const cards = [...home.matchAll(/<article class="project-card[^"]*"[\s\S]*?<\/article>/g)].map((m) => m[0]);
     const hrefs = cards.map((card) => card.match(/<a class="project-link" href="([^"]+)">/)?.[1] ?? null);
-    assert.deepEqual(hrefs, [`/projects/${APPROVED.slug}`, `/projects/${CATERING.slug}`, null, null]);
-    for (const [index, href] of hrefs.slice(0, 2).entries()) {
+    assert.deepEqual(hrefs, [`/projects/${APPROVED.slug}`, `/projects/${CATERING.slug}`, `/projects/${HUNT.slug}`, null]);
+    for (const [index, href] of hrefs.slice(0, 3).entries()) {
       assert.equal((await fetch(`${baseUrl}${href}`)).status, 200, href);
       for (const [, src] of cards[index].matchAll(/(?:src|srcset)="([^"\s,]+)/g)) {
         assert.equal((await fetch(`${baseUrl}${src}`)).status, 200, `${src} is served`);
       }
     }
+  });
+});
+
+describe('/projects/huntsomewhere', () => {
+  let server;
+  let baseUrl;
+  let html;
+  let main;
+
+  before(async () => {
+    ({ server, baseUrl } = await startServer());
+    const res = await fetch(`${baseUrl}/projects/${HUNT.slug}`);
+    assert.equal(res.status, 200);
+    assert.match(res.headers.get('content-type'), /^text\/html/);
+    html = await res.text();
+    main = html.match(/<main[\s\S]*<\/main>/)[0];
+  });
+
+  after(() => new Promise((resolve) => server.close(resolve)));
+
+  it('has page-specific metadata, one h1, and no skipped heading levels', () => {
+    assert.match(html, /<title>HuntSomewhere \| Amber Goding<\/title>/);
+    assert.match(html, /<meta name="description" content="Case study: HuntSomewhere[^"]{20,}">/);
+    const h1s = [...html.matchAll(/<h1[^>]*>([\s\S]*?)<\/h1>/g)];
+    assert.equal(h1s.length, 1);
+    assert.equal(textOf(h1s[0][1]), HUNT.title);
+    const levels = [...main.matchAll(/<h([1-6])[\s>]/g)].map((m) => Number(m[1]));
+    for (let i = 1; i < levels.length; i++) assert.ok(levels[i] <= levels[i - 1] + 1, `heading jumps to h${levels[i]}`);
+  });
+
+  it('states the approved contribution wording verbatim', () => {
+    assert.ok(textOf(main).includes(HUNT.contribution));
+    assert.equal(projects.find((project) => project.slug === HUNT.slug).contribution, HUNT.contribution);
+  });
+
+  it('links only to the approved live application and repository', () => {
+    const external = [...main.matchAll(/<a[^>]+href="(https?:\/\/[^"]+)"/g)].map((m) => m[1]);
+    assert.deepEqual([...new Set(external)].sort(), [HUNT.repo, HUNT.live].sort());
+    assert.doesNotMatch(html, /target="_blank"/);
+  });
+
+  it('describes link access, county-only matching, and the untested AI step accurately', () => {
+    const text = textOf(main);
+    assert.match(text, /Anyone who has (that|a trip’s) link can view/);
+    assert.doesNotMatch(text, /private link|private by design|secure link/i, 'saved trips are not described as private');
+    assert.match(text, /database-enforced limit on AI requests/i);
+    assert.doesNotMatch(text, /can’t be overspent|spending cap|budget cap/i);
+    assert.match(text, /doesn’t establish hunting access, eligibility, seasons, or suitability for a species or method/);
+    assert.match(text, /six curated wildlife management areas in four counties/i);
+    assert.match(text, /described here from the source code|reviewed in the source but not run/);
+  });
+
+  it('keeps planned features out of the implemented scope', () => {
+    const scope = main.match(/<section class="section section--cream project-scope"[\s\S]*?<\/section>/)[0];
+    const [implemented, limitations] = [...scope.matchAll(/<ul>([\s\S]*?)<\/ul>/g)].map((m) => textOf(m[1]));
+    assert.doesNotMatch(implemented, /\b(accounts?|maps?|private-land|listings?|access requests?|permission|messaging|statewide)\b/i);
+    assert.match(limitations, /no accounts/i);
+    assert.match(limitations, /planned, not built/);
+    assert.match(limitations, /not a statewide inventory/);
+  });
+
+  it('makes no unsupported claims or schedule references', () => {
+    const text = textOf(main);
+    const banned = [
+      /\d+\s?%/,
+      /\baccura(cy|te|tely)\b/i,
+      /\b(saves?|saved|saving)\s+(time|hours|\d)/i,
+      /\bclients?\b|\bcustomers?\b|\btestimonial/i,
+      /\b\d+ (users|people|testers)\b/i,
+      /\bguarantee/i,
+      /\bsecure\b/i,
+      /\bbootcamp|curriculum|\bstudent\b|\bbeginner\b|\bweek[ -]?\d/i,
+    ];
+    for (const pattern of banned) assert.doesNotMatch(text, pattern);
+  });
+
+  it('serves its screenshots at declared sizes and labels every demonstration image', async () => {
+    const figures = [...main.matchAll(/<figure class="([^"]+)">([\s\S]*?)<\/figure>/g)].map((m) => ({ classes: m[1], body: m[2] }));
+    assert.equal(figures.length, 3);
+    for (const figure of figures) {
+      assert.ok(figure.classes.includes('project-figure--sample'), 'each figure shows demonstration input');
+      assert.match(figure.body, /<span class="figure-flag">Demonstration (input|trip)<\/span>/);
+      assert.match(figure.body, /\/images\/projects\/huntsomewhere\/demo-/);
+      const img = figure.body.match(/<img\b[^>]*>/)[0];
+      assert.match(img, /\salt="[^"]{40,}"/);
+      const [, src] = img.match(/\ssrc="([^"]+)"/);
+      const [, width] = img.match(/\swidth="(\d+)"/);
+      const [, height] = img.match(/\sheight="(\d+)"/);
+      const buffer = Buffer.from(await (await fetch(`${baseUrl}${src}`)).arrayBuffer());
+      assert.deepEqual(imageSize(buffer), { width: Number(width), height: Number(height) }, `${src} dimensions`);
+      const [, srcset] = figure.body.match(/<source type="image\/webp" srcset="([^"]+)"/);
+      for (const entry of srcset.split(',')) {
+        const [webp, descriptor] = entry.trim().split(' ');
+        const res = await fetch(`${baseUrl}${webp}`);
+        assert.equal(res.status, 200, `${webp} is served`);
+        const webpBuffer = Buffer.from(await res.arrayBuffer());
+        assert.equal(imageSize(webpBuffer).width, Number(descriptor.replace('w', '')));
+        for (const marker of ['EXIF', 'XMP ', 'ICCP']) assert.ok(!webpBuffer.toString('latin1').includes(marker));
+      }
+    }
+    assert.match(main, /real public source data; the trip itself is fictional/);
+    assert.doesNotMatch(main, /AI (result|suggestion) screenshot/i);
+  });
+
+  it('invites contact through /contact without exposing an email address', () => {
+    assert.match(main, /<a class="contact-cta" href="\/contact">/);
+    assert.doesNotMatch(html, /mailto:/i);
+    assert.doesNotMatch(html, /[\w.+-]+@[\w-]+\.[\w.]+/);
   });
 });
 

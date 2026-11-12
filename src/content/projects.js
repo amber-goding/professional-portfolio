@@ -338,6 +338,172 @@ projects.push({
   },
 });
 
+// HuntSomewhere: written from the committed source on `main` (5d4c484), which the
+// deployment runs, and from the confirmed deployment. The AI step is described from
+// source inspection only; no live AI request was made (not authorized). One
+// fictional demonstration trip was created through the manual form on 2026-11-12.
+const huntImages = '/images/projects/huntsomewhere';
+
+projects.push({
+  slug: 'huntsomewhere',
+  published: true,
+  approvedOn: '2026-11-12',
+  title: 'HuntSomewhere',
+  category: 'Application development',
+  description:
+    'Case study: HuntSomewhere turns a hunter’s trip description into editable search preferences, saves them in PostgreSQL behind a unique link, and lists curated Maryland public areas that match by county, with official sources and clear limits.',
+  tagline:
+    'A trip planner for hunters in Maryland. Describe a trip or set preferences by hand, review and edit them, save the trip to a unique link, and see which curated public wildlife management areas fall in the counties you chose, each with its official source and a clear note on what hasn’t been confirmed.',
+  audience:
+    'Built for Maryland hunters who want a quicker start on where to look, without being told that a place is open or legal to hunt when the data doesn’t say so.',
+  status:
+    'Deployed on Railway. Trip planning, saved trips, and county-based discovery of six curated public areas work today. Accounts, private-land listings, access requests, and maps are planned.',
+  stackSummary:
+    'Next.js, React, and TypeScript with Prisma on Neon PostgreSQL, zod validation, and the OpenAI Responses API, deployed on Railway.',
+  // Approved by the owner on 2026-11-12. Do not edit.
+  contribution:
+    'I defined the problem and application workflow, guided AI-assisted implementation, reviewed the results, and refined how users review suggested trip preferences and understand the limits of the location data.',
+  contributionHeading: { lead: 'What I', accent: 'contributed.' },
+  links: {
+    live: { label: 'Open the live application', href: 'https://week-7-build-huntsomewhere-production.up.railway.app/' },
+    repo: { label: 'View the repository', href: 'https://github.com/amber-goding/week-7-build-HuntSomewhere' },
+  },
+  card: {
+    summary:
+      'A trip planner for Maryland hunters: describe or set trip preferences, edit them, save the trip to a unique link, and see curated public wildlife management areas in matching counties, each with its official source and a note on what isn’t confirmed.',
+    image: {
+      base: `${huntImages}/public-areas-desktop`,
+      widths: [1600, 800],
+      fallbackWidth: 1600,
+      width: 1600,
+      height: 1000,
+      alt: 'The HuntSomewhere public areas page: a statement that it includes six wildlife management areas in Garrett, Allegany, Washington, and Montgomery counties from Maryland DNR data, a limited-coverage notice saying public ownership does not by itself mean hunting is allowed, and the first area cards, each marked Not confirmed by HuntSomewhere.',
+    },
+  },
+  problem: {
+    heading: { lead: 'Where to look,', accent: 'and what’s really known.' },
+    paragraphs: [
+      'Planning a hunt in Maryland means piecing together where public land is, which county it’s in, what you’re after, and how you’ll hunt, from sources that weren’t built to answer those questions together. Public ownership records say who owns a parcel, not whether hunting is allowed there, which species are present, or when seasons run.',
+      'HuntSomewhere’s longer-term goal is a hub connecting hunters with public areas and willing private landowners. The working version takes on the first step: turning a hunter’s intentions into clear search preferences and pointing to public areas in the right counties, while stating plainly what the data doesn’t establish.',
+    ],
+  },
+  workflow: {
+    heading: { lead: 'Describe, review,', accent: 'save, discover.' },
+    steps: [
+      {
+        title: 'Describe or set preferences',
+        text: 'A hunter can write a short description, up to 300 characters, and ask the AI step to suggest counties, species, methods, and dates. Or they can skip AI entirely and choose the same options from lists. The description is sent for that one request and isn’t stored.',
+      },
+      {
+        title: 'Review and save',
+        text: 'Every preference appears as a choice the hunter can remove or add to. Saving validates the selections on the server and stores them in PostgreSQL under a randomly generated link. Anyone who has that link can view the trip; it isn’t protected by an account.',
+      },
+      {
+        title: 'Discover public areas',
+        text: 'From a saved trip, the hunter can list curated wildlife management areas in the trip’s counties. Matching is by county only, and the results page says that species, methods, dates, and hunting access aren’t confirmed. A result is not a recommendation or a confirmed place to hunt.',
+      },
+    ],
+  },
+  decisions: {
+    heading: { lead: 'Clear about', accent: 'what the data says.' },
+    items: [
+      {
+        title: 'The AI suggests; code validates',
+        text: 'The model is instructed to extract only what the description states, to treat it as untrusted text, and not to infer seasons, bag limits, permission, or access. Its reply must match a strict JSON schema and is validated again against the allowed counties, species, and methods; a reply that doesn’t validate isn’t applied. Broad terms such as “deer” are expanded into specific options by code, so each one is visible and removable.',
+      },
+      {
+        title: 'Uncertain terms stay unresolved',
+        text: 'The model is instructed to leave season terms and vague dates, such as “opening day” or “early November”, as unresolved notes rather than dates. Code adds a check of its own: dates that aren’t real or are out of order become unresolved instead of being applied.',
+      },
+      {
+        title: 'A database-enforced limit on AI requests',
+        text: 'Before each AI request, a single conditional database update reserves one request from a fixed allowance. The update only succeeds while requests remain, so simultaneous requests can’t take the count past the limit. Reservations aren’t released, even if a request fails or times out. An environment switch or a database flag can turn AI off, and the manual form keeps working either way.',
+      },
+      {
+        title: 'Source data kept with its provenance',
+        text: 'The six areas come from the State of Maryland’s protected-lands dataset (MD iMAP / Maryland DNR). The source files are kept unchanged with recorded checksums and a provenance note, and each area carries only what the source establishes: its name, county, and DNR page link. The pages show the data credit, the retrieval date, that the source’s update date is unknown, the source’s as-is disclaimer, and a notice that public ownership doesn’t by itself mean hunting is allowed.',
+      },
+    ],
+  },
+  review: {
+    label: 'The interface',
+    heading: { lead: 'A demonstration trip,', accent: 'start to finish.' },
+    paragraphs: [
+      'These screens come from the deployed application. The trip shown was created for this case study through the manual form, with Garrett County, white-tailed deer, vertical bow, and two November dates. It contains no personal information, and no AI request was made. Garrett County returns the two curated areas the source places there.',
+      'The AI suggestion step is described here from the source code. It wasn’t exercised for this case study, so no AI result is pictured.',
+    ],
+  },
+  scope: {
+    heading: { lead: 'What it does,', accent: 'and doesn’t.' },
+    implemented: [
+      'AI-suggested county, species, method, and date preferences from a short description, with unresolved terms shown separately',
+      'A manual preference form that works without AI',
+      'Saved trips in PostgreSQL behind a randomly generated link, validated when saved and again when loaded',
+      'A list of six curated wildlife management areas in four counties (Garrett, Allegany, Washington, and Montgomery), each with its source and DNR page link',
+      'County-based discovery of those areas from a saved trip, with uncertainty and coverage notices',
+      'A data-sources page with attribution and the source’s published reuse terms',
+      'AI safeguards: input limits, a 10-second timeout, a database-enforced request limit, an off switch, and a specific message for each failure',
+    ],
+    limitations: [
+      'There are no accounts. Anyone who has a trip’s link can view it.',
+      'Coverage is six areas in four counties, not a statewide inventory.',
+      'Matching uses county only. It doesn’t establish hunting access, eligibility, seasons, or suitability for a species or method.',
+      'Maps, private-land listings, access requests, permission documents, and messaging are planned, not built.',
+      'Automated checks for the planner and the area data exist in the repository; they weren’t re-run for this case study.',
+    ],
+    verification:
+      'This write-up is based on the project’s committed source code and its deployed interface, checked on 2026-11-12. The public pages were viewed, and one fictional demonstration trip was saved through the manual form and its county results confirmed. The AI suggestion step was reviewed in the source but not run.',
+  },
+  technologies: [
+    { name: 'Next.js and React', detail: 'App Router pages and server actions, written in TypeScript.' },
+    { name: 'Tailwind CSS', detail: 'Interface styling, with light and dark themes.' },
+    { name: 'Prisma and Neon PostgreSQL', detail: 'Models and migrations for trips, the AI request allowance, and data sources.' },
+    { name: 'zod', detail: 'Validation of trip preferences and of the AI’s structured output.' },
+    { name: 'OpenAI Responses API', detail: 'Structured output against a strict JSON schema, called from the server.' },
+    { name: 'Railway', detail: 'Hosting for the deployed application.' },
+  ],
+  screenshots: {
+    start: {
+      base: `${huntImages}/demo-preferences-desktop`,
+      widths: [1600, 800],
+      fallbackWidth: 1600,
+      width: 1600,
+      height: 1000,
+      sample: true,
+      flagLabel: 'Demonstration input',
+      alt: 'The HuntSomewhere planner’s review step with Garrett County, White-tailed deer, and Vertical bow chosen as removable options, dates of November 14 and 15, 2026, and a save section stating that saving creates a random link and anyone with the link can view the preferences.',
+      caption: 'The deployed planner after choosing the demonstration trip’s options by hand, without AI. The save section states that anyone with the link can view the preferences.',
+    },
+    review: [
+      {
+        base: `${huntImages}/demo-trip-areas-desktop`,
+        widths: [1600, 800],
+        fallbackWidth: 1600,
+        width: 1600,
+        height: 1000,
+        sample: true,
+        flagLabel: 'Demonstration trip',
+        sizes: '(min-width: 90rem) 54rem, (min-width: 56rem) 60vw, 100vw',
+        alt: 'Public areas for the demonstration trip: the trip’s county is Garrett County, a notice says the results match county only and that species, methods, dates, and hunting access are not confirmed, and two area cards, Mt. Nebo WMA and Cunningham Swamp WMA, each show an official DNR page link and a Not confirmed by HuntSomewhere label.',
+        caption: 'County-matched results for the demonstration trip. The area details are real public source data; the trip itself is fictional.',
+      },
+      {
+        base: `${huntImages}/demo-trip-phone`,
+        widths: [780, 390],
+        fallbackWidth: 780,
+        width: 780,
+        height: 1688,
+        sample: true,
+        flagLabel: 'Demonstration trip',
+        frame: 'phone',
+        sizes: '(min-width: 90rem) 27rem, (min-width: 56rem) 30vw, 22rem',
+        alt: 'The saved demonstration trip on a phone: a note that anyone with the link can view the preferences and that they don’t confirm seasons, legality, permission, availability, or any property, followed by Garrett County, White-tailed deer, Vertical bow, the dates, and a Discover public areas button.',
+        caption: 'The saved demonstration trip on a phone, with the app’s note about link access.',
+      },
+    ],
+  },
+});
+
 export const publishedProjects = projects.filter((project) => project.published);
 
 export const findPublishedProject = (slug) => publishedProjects.find((project) => project.slug === slug);

@@ -155,7 +155,10 @@ describe('application routes', () => {
     it('shows the published projects first, in order, and keeps the other slots as unlinked placeholders', () => {
       const projects = [...html.matchAll(/<article class="project-card[^"]*"[\s\S]*?<\/article>/g)].map((m) => m[0]);
       assert.equal(projects.length, 4);
-      const [reentry, catering, ...placeholders] = projects;
+      const [reentry, catering, hunt, ...placeholders] = projects;
+      assert.match(hunt, /<a class="project-link" href="\/projects\/huntsomewhere">HuntSomewhere/);
+      assert.match(hunt, /<img[^>]+src="\/images\/projects\/huntsomewhere\/public-areas-desktop-1600\.jpg"[^>]+alt="[^"]{20,}"/);
+      assert.doesNotMatch(hunt, /Development placeholder|not an application screenshot/i);
       assert.match(reentry, /<a class="project-link" href="\/projects\/reentry-resource-extractor">Reentry Resource Extractor/);
       assert.match(reentry, /<img[^>]+src="\/images\/projects\/reentry-resource-extractor\/start-screen-1600\.jpg"[^>]+alt="[^"]{20,}"/);
       assert.match(catering, /<a class="project-link" href="\/projects\/catering-concierge">Catering Concierge/);
@@ -163,7 +166,7 @@ describe('application routes', () => {
       for (const featured of [reentry, catering]) {
         assert.doesNotMatch(featured, /Development placeholder|not an application screenshot/i);
       }
-      assert.equal(placeholders.length, 2);
+      assert.equal(placeholders.length, 1);
       for (const project of placeholders) {
         assert.match(project, /Development placeholder/);
         assert.match(project, /not an application screenshot/i);

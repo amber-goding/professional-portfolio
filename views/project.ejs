@@ -56,7 +56,7 @@
         <% const start = project.screenshots.start; %>
         <figure class="project-figure<%= start.sample ? ' project-figure--sample' : '' %>">
           <%- include('partials/picture', { shot: start, sizes: '(min-width: 90rem) 82rem, 100vw' }) %>
-          <figcaption><% if (start.sample) { %><span class="figure-flag">Sample data</span> <% } %><%= start.caption %></figcaption>
+          <figcaption><% if (start.sample) { %><span class="figure-flag"><%= start.flagLabel || 'Sample data' %></span> <% } %><%= start.caption %></figcaption>
         </figure>
       </div>
     </section>
@@ -89,7 +89,7 @@
           <% project.screenshots.review.forEach((shot) => { %>
           <figure class="project-figure<%= shot.sample ? ' project-figure--sample' : '' %><%= shot.frame === 'phone' ? ' project-figure--phone' : '' %>">
             <%- include('partials/picture', { shot, sizes: shot.sizes }) %>
-            <figcaption><% if (shot.sample) { %><span class="figure-flag">Sample data</span> <% } %><%= shot.caption %></figcaption>
+            <figcaption><% if (shot.sample) { %><span class="figure-flag"><%= shot.flagLabel || 'Sample data' %></span> <% } %><%= shot.caption %></figcaption>
           </figure>
           <% }) %>
         </div>
