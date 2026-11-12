@@ -152,10 +152,15 @@ describe('application routes', () => {
       assert.doesNotMatch(html, /[\w.+-]+@[\w-]+\.[\w.]+/, 'no email address appears in the page');
     });
 
-    it('labels every project preview as a placeholder and gives none a link', () => {
-      const projects = [...html.matchAll(/<article class="project-card"[\s\S]*?<\/article>/g)].map((m) => m[0]);
-      assert.ok(projects.length >= 1);
-      for (const project of projects) {
+    it('shows the published project first and keeps the other slots as unlinked placeholders', () => {
+      const projects = [...html.matchAll(/<article class="project-card[^"]*"[\s\S]*?<\/article>/g)].map((m) => m[0]);
+      assert.equal(projects.length, 4);
+      const [featured, ...placeholders] = projects;
+      assert.match(featured, /<a class="project-link" href="\/projects\/reentry-resource-extractor">Reentry Resource Extractor/);
+      assert.match(featured, /<img[^>]+src="\/images\/projects\/reentry-resource-extractor\/start-screen-1600\.jpg"[^>]+alt="[^"]{20,}"/);
+      assert.doesNotMatch(featured, /Development placeholder|not an application screenshot/i);
+      assert.equal(placeholders.length, 3);
+      for (const project of placeholders) {
         assert.match(project, /Development placeholder/);
         assert.match(project, /not an application screenshot/i);
         assert.doesNotMatch(project, /<a[\s>]|<button[\s>]/);

@@ -112,9 +112,14 @@ describe('/about', () => {
         assert.ok(!raw.includes(marker), `${name} carries no ${marker} metadata`);
       }
     }
-    // Only the published sizes are shipped.
+    // Only the published portrait sizes are shipped at the top level. Project
+    // screenshots live in subdirectories and are checked by their own tests.
     const dir = fileURLToPath(new URL('../public/images', import.meta.url));
-    assert.deepEqual(fs.readdirSync(dir).sort(), Object.keys(files).sort());
+    const entries = fs.readdirSync(dir, { withFileTypes: true });
+    const portraitFiles = entries.filter((entry) => entry.isFile() && entry.name.startsWith('amber-goding-portrait-')).map((entry) => entry.name);
+    assert.deepEqual(portraitFiles.sort(), Object.keys(files).sort());
+    const otherFiles = entries.filter((entry) => entry.isFile() && !entry.name.startsWith('amber-goding-portrait-')).map((entry) => entry.name);
+    assert.deepEqual(otherFiles, [], 'files other than the portrait belong in a subdirectory');
   });
 
   it('links to the supplied LinkedIn and GitHub profiles with clear labels', () => {

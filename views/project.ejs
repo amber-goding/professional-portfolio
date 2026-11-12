@@ -1,0 +1,152 @@
+<%- include('partials/header') %>
+    <section class="page-hero project-hero" aria-labelledby="project-heading">
+      <div class="wrap">
+        <p class="section-label"><span>Case study /</span> <%= project.category %></p>
+        <h1 class="page-title project-title" id="project-heading"><%= project.title %></h1>
+        <p class="page-lede"><%= project.tagline %></p>
+        <p class="page-note"><%= project.audience %></p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="<%= project.links.live.href %>"><%= project.links.live.label %> <span aria-hidden="true">↗</span></a>
+          <a class="button-text" href="<%= project.links.repo.href %>"><%= project.links.repo.label %> <span aria-hidden="true">↗</span></a>
+        </div>
+        <dl class="project-facts">
+          <div>
+            <dt>My role</dt>
+            <dd><%= project.contribution %></dd>
+          </div>
+          <div>
+            <dt>Built with</dt>
+            <dd><%= project.stackSummary %></dd>
+          </div>
+          <div>
+            <dt>Status</dt>
+            <dd><%= project.status %></dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section project-section" aria-labelledby="problem-heading">
+      <div class="wrap project-section-layout">
+        <div class="project-section-intro">
+          <p class="section-label"><span>01 /</span> Problem</p>
+          <h2 id="problem-heading"><%= project.problem.heading.lead %> <em><%= project.problem.heading.accent %></em></h2>
+        </div>
+        <div class="project-prose">
+          <% project.problem.paragraphs.forEach((paragraph) => { %>
+          <p><%= paragraph %></p>
+          <% }) %>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--cream project-workflow" aria-labelledby="workflow-heading">
+      <div class="wrap">
+        <p class="section-label"><span>02 /</span> How it works</p>
+        <h2 id="workflow-heading"><%= project.workflow.heading.lead %> <em><%= project.workflow.heading.accent %></em></h2>
+        <ol class="principles process-steps process-steps--three" role="list">
+          <% project.workflow.steps.forEach((step, index) => { %>
+          <li>
+            <span class="principle-number" aria-hidden="true"><%= String(index + 1).padStart(2, '0') %></span>
+            <h3><%= step.title %></h3>
+            <p><%= step.text %></p>
+          </li>
+          <% }) %>
+        </ol>
+        <figure class="project-figure">
+          <%- include('partials/picture', { shot: project.screenshots.start, sizes: '(min-width: 90rem) 82rem, 100vw' }) %>
+          <figcaption><%= project.screenshots.start.caption %></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section project-section" aria-labelledby="decisions-heading">
+      <div class="wrap">
+        <p class="section-label"><span>03 /</span> Implementation decisions</p>
+        <h2 id="decisions-heading"><%= project.decisions.heading.lead %> <em><%= project.decisions.heading.accent %></em></h2>
+        <div class="decision-grid">
+          <% project.decisions.items.forEach((decision) => { %>
+          <div class="decision">
+            <h3><%= decision.title %></h3>
+            <p><%= decision.text %></p>
+          </div>
+          <% }) %>
+        </div>
+      </div>
+    </section>
+
+    <section class="section project-section project-review" aria-labelledby="review-heading">
+      <div class="wrap">
+        <p class="section-label"><span>04 /</span> The review interface</p>
+        <h2 id="review-heading"><%= project.review.heading.lead %> <em><%= project.review.heading.accent %></em></h2>
+        <div class="project-prose">
+          <% project.review.paragraphs.forEach((paragraph) => { %>
+          <p><%= paragraph %></p>
+          <% }) %>
+        </div>
+        <div class="project-figures">
+          <% project.screenshots.review.forEach((shot) => { %>
+          <figure class="project-figure project-figure--sample<%= shot.frame === 'phone' ? ' project-figure--phone' : '' %>">
+            <%- include('partials/picture', { shot, sizes: shot.sizes }) %>
+            <figcaption><span class="figure-flag">Sample data</span> <%= shot.caption %></figcaption>
+          </figure>
+          <% }) %>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--cream project-scope" aria-labelledby="scope-heading">
+      <div class="wrap">
+        <p class="section-label"><span>05 /</span> Scope</p>
+        <h2 id="scope-heading"><%= project.scope.heading.lead %> <em><%= project.scope.heading.accent %></em></h2>
+        <div class="scope-grid">
+          <div class="detail-group">
+            <h3>What is implemented</h3>
+            <ul>
+              <% project.scope.implemented.forEach((item) => { %><li><%= item %></li><% }) %>
+            </ul>
+          </div>
+          <div class="detail-group">
+            <h3>What it does not do</h3>
+            <ul>
+              <% project.scope.limitations.forEach((item) => { %><li><%= item %></li><% }) %>
+            </ul>
+          </div>
+        </div>
+        <p class="scope-note"><%= project.scope.verification %></p>
+      </div>
+    </section>
+
+    <section class="section project-section" aria-labelledby="contribution-heading">
+      <div class="wrap project-section-layout">
+        <div class="project-section-intro">
+          <p class="section-label"><span>06 /</span> Contribution</p>
+          <h2 id="contribution-heading"><%= project.contributionHeading.lead %> <em><%= project.contributionHeading.accent %></em></h2>
+        </div>
+        <div class="project-prose">
+          <p><%= project.contribution %></p>
+          <h3>Built with</h3>
+          <ul class="tech-list" role="list">
+            <% project.technologies.forEach((tech) => { %>
+            <li><strong><%= tech.name %></strong> <span><%= tech.detail %></span></li>
+            <% }) %>
+          </ul>
+          <ul class="project-links" role="list">
+            <li><a class="button-text" href="<%= project.links.live.href %>"><%= project.links.live.label %> <span aria-hidden="true">↗</span></a></li>
+            <li><a class="button-text" href="<%= project.links.repo.href %>"><%= project.links.repo.label %> <span aria-hidden="true">↗</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section contact" aria-labelledby="project-contact-heading">
+      <div class="wrap">
+        <p class="section-label"><span>Next /</span> Have a similar problem?</p>
+        <h2 class="contact-title" id="project-contact-heading">Let’s talk it <em>through.</em></h2>
+        <div class="contact-row">
+          <p>Describe the information you need to organize or the workflow you want to simplify. We can work out together whether a tool like this would help.</p>
+          <a class="contact-cta" href="/contact">Start a conversation <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+<%- include('partials/footer') %>

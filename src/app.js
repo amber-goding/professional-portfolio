@@ -4,6 +4,7 @@ import express from 'express';
 import { createContactRouter } from './contact/router.js';
 import { aboutPage, portrait, profileLinks } from './content/about.js';
 import { navigation, principles, projectPlaceholders, services } from './content/home.js';
+import { findPublishedProject, publishedProjects } from './content/projects.js';
 import { processSteps, serviceDetails, servicesIntro } from './content/services.js';
 
 const projectRoot = fileURLToPath(new URL('..', import.meta.url));
@@ -61,8 +62,23 @@ export function createApp({
       title: `${site.name} | ${site.role}`,
       description: site.description,
       services,
+      featuredProjects: publishedProjects,
       projectPlaceholders,
       principles,
+    });
+  });
+
+  // Case studies exist only for published projects. Anything else falls
+  // through to the standard 404 page.
+  app.get('/projects/:slug', (req, res, next) => {
+    const project = findPublishedProject(req.params.slug);
+    if (!project) {
+      return next();
+    }
+    res.render('project', {
+      title: `${project.title} | ${site.name}`,
+      description: project.description,
+      project,
     });
   });
 

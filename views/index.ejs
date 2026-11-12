@@ -46,14 +46,29 @@
       <div class="wrap">
         <div class="section-top">
           <p class="section-label"><span>01 /</span> Selected work</p>
-          <p class="status-note">Project previews in development</p>
+          <p class="status-note">More projects in development</p>
         </div>
         <div class="split-heading">
           <h2 id="work-heading">Less friction. <em>More possibility.</em></h2>
-          <p>Practical ideas, brought to life. Real projects, their problems, process, and results, will appear here.</p>
+          <p>Practical ideas, brought to life. Each project is described from what was actually built, with the problem, the approach, and the result.</p>
         </div>
         <ol class="project-list" role="list">
-          <% projectPlaceholders.forEach((project, index) => { const n = String(index + 1).padStart(2, '0'); %>
+          <% let slot = 0; %>
+          <% featuredProjects.forEach((project) => { const n = String(++slot).padStart(2, '0'); const shot = project.card.image; %>
+          <li class="project project--featured">
+            <article class="project-card project-card--linked" aria-labelledby="project-<%= n %>-title">
+              <div class="project-preview project-preview--image">
+                <%- include('partials/picture', { shot, sizes: '(min-width: 90rem) 50rem, (min-width: 48rem) 55vw, 100vw' }) %>
+              </div>
+              <div class="project-meta">
+                <p class="project-kicker"><%= n %> / <%= project.category %></p>
+                <h3 id="project-<%= n %>-title"><a class="project-link" href="/projects/<%= project.slug %>"><%= project.title %> <span aria-hidden="true">→</span></a></h3>
+                <p class="project-summary"><%= project.card.summary %></p>
+              </div>
+            </article>
+          </li>
+          <% }) %>
+          <% projectPlaceholders.forEach((project) => { const n = String(++slot).padStart(2, '0'); %>
           <li class="project project--<%= project.variant %>">
             <article class="project-card" aria-labelledby="project-<%= n %>-title">
               <div class="project-preview" aria-hidden="true">

@@ -1,0 +1,4 @@
+<picture>
+  <source type="image/webp" srcset="<%= shot.widths.map((w) => `${shot.base}-${w}.webp ${w}w`).join(', ') %>" sizes="<%= sizes %>">
+  <img src="<%= shot.base %>-<%= shot.fallbackWidth %>.jpg" alt="<%= shot.alt %>" width="<%= shot.width %>" height="<%= shot.height %>" loading="lazy" decoding="async">
+</picture>

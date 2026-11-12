@@ -63,6 +63,10 @@ The site runs without any other variables. Without email configuration, `/contac
 | `src/content/about.js` | `/about` content: the owner-approved copy, portrait details (files, dimensions, `sizes`), and the LinkedIn and GitHub links |
 | `views/about.ejs` | About page |
 | `public/images/` | Portrait in WebP at 400, 800, and 1200px, plus an 800px JPEG fallback. Resized from the owner's photo without retouching; metadata stripped |
+| `src/content/projects.js` | Case-study content. Only entries marked `published: true` are rendered. Each has the approved contribution wording, links, copy, and screenshot details |
+| `views/project.ejs` | Case-study page, shared by every published project |
+| `views/partials/picture.ejs` | Responsive image: WebP sources with a JPEG fallback, intrinsic size, lazy loading |
+| `public/images/projects/<slug>/` | Project screenshots in WebP at two widths plus a JPEG fallback, captured from the deployed application; metadata stripped |
 | `src/contact/` | Contact feature: `router.js` (GET/POST `/contact`), `config.js` (environment), `validation.js`, `form-token.js` (signed timing/submission token), `rate-limit.js`, `resend.js` (Resend HTTPS client) |
 | `views/contact.ejs` | Contact page with every form state: form, field errors, alert, success, and unavailable |
 | `public/js/contact.js` | Optional enhancement for inline feedback. The form works fully without it |
@@ -84,6 +88,7 @@ Routes:
 - `GET /`: homepage (sections `#work`, `#services`, `#about`, `#contact`)
 - `GET /services`: Services page (sections `#application-development`, `#ai-integration`, `#workflow-automation`, `#process`)
 - `GET /about`: About page (introduction with portrait and professional links, background, "How I work", contact invitation)
+- `GET /projects/:slug`: case study for a published project (`src/content/projects.js`). Currently `/projects/reentry-resource-extractor`. Any other slug, including unpublished candidates, returns the standard 404 page.
 - `GET /contact`: contact page. `POST /contact` handles submissions and returns HTML, or JSON when the request sends `Accept: application/json`.
 - `GET /healthz`: health check returning `{"status":"ok"}`
 - Anything else returns an HTML 404 page. Unexpected errors return a generic 500 page. Error details are logged on the server, never shown to visitors.
@@ -153,10 +158,16 @@ Real values belong in Railway's service variables or a local `.env` file, which 
 
 **Services page (committed in `7b3fbaf`):** `/services` covers the three service areas. For each: who it could help, the problems it addresses, what an engagement could include, and an illustrative example clearly marked as not client work. It also has a four-step process and links to `/contact`. The main navigation's Services link now goes to `/services`; the homepage keeps its `#services` overview, which links to the page. Services and About are approved as separate pages.
 
-**About page (implemented, not committed):** `/about` uses the owner-approved copy, portrait, and LinkedIn and GitHub links (recorded in AGENTS.md under Decisions).
+**About page (committed in `ddbba93`):** `/about` uses the owner-approved copy, portrait, and LinkedIn and GitHub links (recorded in AGENTS.md under Decisions).
 - **Portrait:** responsive WebP sources with a JPEG fallback, intrinsic dimensions, and alt text "Portrait of Amber Goding". It is not lazy-loaded because it sits near the top of the page.
 - **Navigation:** the main navigation's About link now goes to `/about` and is marked as the current page there.
 - **Homepage:** the `#about` teaser stays and links to the page ("More about Amber").
+
+**First case study (implemented, not committed):** `/projects/reentry-resource-extractor`, the owner-approved Reentry Resource Extractor (AGENTS.md, Decisions, 2026-11-12).
+- **Structure:** a reusable content file (`src/content/projects.js`) and template (`views/project.ejs`): problem and audience, the retrieve → extract → review workflow, implementation decisions, the review interface, scope and limitations, the approved contribution wording, technologies, links to the live application and repository, and a contact invitation.
+- **Honesty rules in the copy:** missing details stay "Not Found"; extracted information needs human review; matching quoted evidence is not proof an interpretation is correct; no measured results, accuracy, adoption, or client outcomes; saving, exporting, publishing, and site crawling are listed as not implemented.
+- **Screenshots:** captured from the deployed application on 2026-11-12 without changing it. The start screen is a plain capture. The two review-interface captures use the app's own "Show development sample results" button, which renders test data in the browser without any server or AI call, and are captioned as sample data. "Analyze Program" was not submitted.
+- **Homepage:** the first selected-work slot is now this project (real title, summary, screenshot, and link). The other three slots remain development placeholders.
 
 **Visual presentation is provisional.** The palette and AG branding are approved; the overall styling still needs the owner's final approval in a dedicated design review before launch.
 
@@ -164,8 +175,8 @@ Real values belong in Railway's service variables or a local `.env` file, which 
 
 - **Hero wording** (provisional, from the visual reference): "Human insight. Technical possibility.", "Make complex feel simple.", "Useful applications. Thoughtful AI. Connected workflows. Built around people.", "Designed with intention. Built to be used."
 - **Hero artwork labels:** "Idea", "Reality", "The space between idea & execution"
-- **Selected work:** all four project slots are development placeholders, labeled on the page, with concept art rather than screenshots, no links, and invented headings ("Purpose in every detail." and the others). They are defined in `src/content/home.js`.
-- **Work introduction:** "Less friction. More possibility." and the paragraph below it
+- **Selected work:** the first slot is the approved Reentry Resource Extractor. The other three slots are development placeholders, labeled on the page, with concept art rather than screenshots, no links, and invented headings ("Connect the moving parts." and the others). They are defined in `src/content/home.js`.
+- **Work introduction:** "Less friction. More possibility.", the paragraph below it (reworded when the first real project arrived), and the "More projects in development" note
 - **Services:** the heading "Practical tools for real work." and the three capability descriptions
 - **Homepage About teaser:** the heading "Curiosity meets follow-through.", the two introductory sentences, and the three principles. These are drawn from the approved positioning. The `/about` page copy itself is approved and not temporary.
 - **Contact:** the heading "Let's make it happen." and its supporting sentence, on the homepage, `/contact`, and the closing invitation on `/about`
@@ -173,7 +184,8 @@ Real values belong in Railway's service variables or a local `.env` file, which 
 
 ### Remaining before launch
 
-- Real projects (3–4) with verified descriptions, visuals, live/repository links, and case-study pages
+- Owner review of the Reentry Resource Extractor case-study copy, and an end-to-end extraction check of the live app by the owner (the write-up is based on source inspection and the deployed interface, not a live AI run)
+- Further projects (2–3 more, each owner-approved) with verified descriptions, screenshots, links, and case-study pages, replacing the remaining placeholders
 - Owner review of the Services page wording and the homepage About teaser
 - Decide whether to include a résumé
 - Contact in production: set the Railway variables and confirm a real inquiry sent from the deployed site arrives with the correct Reply-To. The local check is already done (owner-reported).
@@ -193,7 +205,7 @@ An internal inventory, prepared before any case-study page is built. **None of i
 
 **Applies to every project:**
 - **Contribution:** all commits are authored "Amber Goding", and the histories show work done with AI coding agents (Claude Code, Codex). Amber's exact contribution and how to describe that collaboration publicly **need owner confirmation**. Don't infer either from the commit author.
-- **Links:** the GitHub URLs below are the recorded `origin` remotes, and each returned HTTP 200 without signing in on 2026-11-12. Their pages weren't reviewed. **No repository records a deployed URL.**
+- **Links:** the GitHub URLs below are the recorded `origin` remotes, and each returned HTTP 200 without signing in on 2026-11-12. Their pages weren't reviewed. **No repository records a deployed URL.** The owner later supplied Reentry Resource Extractor's URL (see its section).
 - **Repository names and contents:** names like `week-5-build`, and in-repo docs, refer to the original build schedule. Decide whether to rename the repositories or review their public docs before linking them from the site.
 - **Visual assets:** no project has app screenshots or recordings. `Projects/Ever After Ornamental Wedding Planner.png` is a design concept board (palette and "detail view" callouts), not a screenshot.
 
@@ -208,6 +220,11 @@ An internal inventory, prepared before any case-study page is built. **None of i
 
 ### Reentry Resource Extractor
 
+**Status (2026-11-12): approved as the first portfolio entry, and its case study is implemented** at `/projects/reentry-resource-extractor` (not yet committed).
+- **Owner-supplied:** live application `https://reentry-resource-extractor-production.up.railway.app/`, and the contribution wording recorded in AGENTS.md (Decisions). Codex confirmed the interface loads; no AI extraction was run.
+- **Screenshots:** the deployed start screen, and the review interface with the app's development sample results (captioned as sample data).
+- **Remaining:** owner review of the case-study copy; an end-to-end extraction check by the owner; confirmation that the repository's public name and README are what the owner wants linked.
+
 - **Problem and audience:** reentry program listings are hard to create when the details are scattered across public websites. The audience is managers of transitional housing and reentry programs (`project-plan.md`).
 - **Launch scope (plan):** enter a public URL → retrieve the page → AI extracts set fields → missing fields shown as "Not Found" → the manager reviews and edits. A listing is complete only after review.
 - **Source:**
@@ -221,17 +238,15 @@ An internal inventory, prepared before any case-study page is built. **None of i
   - Railway start configuration (`60f5d35`).
 - **Planned or unfinished:** no saving, export, or publishing of reviewed listings. No database and no automated tests. Only one page per analysis.
 - **Technologies:** vanilla JavaScript, Vite, Node `http`, cheerio, `openai` SDK; Railway-ready.
-- **Links:** repository `https://github.com/amber-goding/reentry-resource-extractor` (recorded and reachable). Deployment: none recorded.
+- **Links:** repository `https://github.com/amber-goding/reentry-resource-extractor` (recorded and reachable). Deployment: not recorded in the repository; the owner supplied `https://reentry-resource-extractor-production.up.railway.app/` (loads; interface confirmed by Codex).
 - **Needs checking:**
-  - Is it deployed?
-  - A runtime walk-through with a real program site.
-  - Screenshots.
-  - Which model is used in production (the code defaults to `gpt-5` unless `OPENAI_EXTRACTION_MODEL` is set).
-  - Contribution.
+  - A runtime walk-through with a real program site (by the owner; not run for the case study).
+  - Which model is used in production (the code defaults to `gpt-5` unless `OPENAI_EXTRACTION_MODEL` is set). The case study doesn't name a model.
+  - Contribution: approved wording recorded in AGENTS.md.
 - **Case-study outline:**
   - **Problem:** scattered program details.
   - **Approach:** AI limited to extraction from retrieved text, with a person confirming every field.
-  - **Solution:** URL → evidence-backed fields → review.
+  - **Solution:** URL → fields whose evidence quotes are matched in the page text → human review.
   - **Decisions:** strict schema, evidence must match the source, the private-address block, prompt-injection instructions.
   - **Verifiable result:** pending a runtime check and screenshots.
 
@@ -326,7 +341,7 @@ An internal inventory, prepared before any case-study page is built. **None of i
   - **Decisions:** server-fixed scope, a timing-safe token, the unique index for duplicates, logs without content.
   - **Verifiable result:** the observed 201 and 200 duplicate behaviour on the demo.
 
-### Recommendation (proposed, not approved)
+### Recommendation (Reentry Resource Extractor approved; the rest proposed, not approved)
 
 **Feature three projects:**
 - **Reentry Resource Extractor** for AI integration.

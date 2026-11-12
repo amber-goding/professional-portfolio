@@ -138,11 +138,13 @@ describe('contact privacy', () => {
       .readdirSync(publicDir, { recursive: true })
       .filter((p) => fs.statSync(path.join(publicDir, p)).isFile())
       .map((p) => `/${p.split(path.sep).join('/')}`);
-    for (const url of ['/', '/services', '/about', '/contact', '/does-not-exist', ...assetPaths]) {
+    for (const url of ['/', '/services', '/about', '/projects/reentry-resource-extractor', '/contact', '/does-not-exist', ...assetPaths]) {
       const res = await fetch(`${ctx.baseUrl}${url}`);
       const body = Buffer.from(await res.arrayBuffer()).toString('latin1');
       assertNoSecrets(body, url);
-      if (!url.endsWith('.woff2')) assertNoRealAddresses(body, url);
+      // Compressed binaries (fonts, images) contain random byte runs that can
+      // look like short addresses. The exact-secret check above still covers them.
+      if (!/\.(woff2|webp|jpe?g|png)$/i.test(url)) assertNoRealAddresses(body, url);
       assert.doesNotMatch(body, /mailto:/i, `${url} has no mailto link`);
     }
   });

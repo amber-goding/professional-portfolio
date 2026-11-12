@@ -484,3 +484,90 @@ Then record an internal planning section in the portfolio README and recommend 3
 - Build Reentry's case study first: its scope is complete in source and it has no auth or database dependencies.
 
 **Verification:** documentation-only change. `git diff --check` was run, and the portfolio app was not changed. **Not verified:** any app at runtime, deployments, the contents of the GitHub pages, and the check counts recorded inside each project.
+
+**Outcome:** The user committed the inventory as `a010517` ("Record portfolio project inventory and case-study plan"). Push status not recorded.
+
+### 12. First case study: Reentry Resource Extractor
+
+**Asked:** Implement `/projects/reentry-resource-extractor` as a reusable case-study structure, and replace only the first homepage placeholder with the real project (title, summary, authentic screenshot, case-study link).
+- **Owner-approved:** the project; the live URL `https://reentry-resource-extractor-production.up.railway.app/`; the repository link; and the contribution wording, used verbatim.
+- **Copy rules:** explain "Not Found" and human review, and distinguish quoted-evidence matching from proving an interpretation correct. No time-savings, accuracy, adoption, or client claims. Don't imply saving, exporting, publishing, or crawling.
+- **Screenshots:** from the deployed app, using "Show development sample results" only, captioned as sample data. Never submit "Analyze Program", make paid AI calls, or enter personal data.
+- **Not allowed:** no `.env`, other repos, DNS, emails, staging, committing, or deploying.
+
+**Done:**
+- **Screenshots (scratchpad `reentry-capture.mjs`):**
+  - Before capturing, confirmed in the Reentry source and the deployed bundle that the sample button renders hard-coded test data in the browser without calling `/api/*`.
+  - Headless Chrome at 2x, with every network request logged. Result: 7 GETs, all to the app's own host, zero `/api/` calls, no non-GET requests, and the URL field left empty.
+  - Captured the start screen (1280px viewport) and the review interface with sample data (desktop 1280px; phone 390px).
+  - Resized with Pillow to WebP (two widths each) plus a JPEG fallback in `public/images/projects/reentry-resource-extractor/`, with metadata stripped (26–163 KB each).
+- **Content:** `src/content/projects.js` holds a `projects` array with `published` flags, plus `publishedProjects` and `findPublishedProject`. The Reentry entry covers:
+  - problem and audience;
+  - the three-step workflow;
+  - six implementation decisions, each checked against `server.js` and `src/main.js` (evidence-match rule with whitespace-only normalization, strict schema, prompt-injection instructions, private-address blocking with 5 MB / 3 redirects / 8 s limits, separate AI and reviewed values, server-only key);
+  - the review section;
+  - scope with implemented items and limitations (one page, no crawling, nothing saved/exported/published, no accounts, evidence matching ≠ correctness, no automated tests);
+  - a verification note;
+  - technologies;
+  - the contribution wording, verbatim.
+- **Templates:**
+  - `views/project.ejs`: hero with links and facts, six numbered sections, and a closing contact invitation linking to `/contact`.
+  - New `views/partials/picture.ejs`: responsive WebP + JPEG with dimensions and lazy loading.
+  - Sample-data figures carry a visible "Sample data" flag in the caption. The tall phone capture is capped at 22rem until it gets its own column.
+- **Route:** `GET /projects/:slug` renders only published slugs; everything else falls through to the existing 404.
+- **Homepage:**
+  - `index.ejs` renders published projects first (a screenshot card with a stretched link), then the placeholders. The first placeholder was removed from `home.js`, leaving three.
+  - The work intro sentence was reworded ("Real projects … will appear here" no longer fit), and the status note now reads "More projects in development". Both are listed as provisional in the README.
+- **CSS:** a new "Project case studies" block only; no unrelated pages changed.
+- **Tests:**
+  - New `test/projects.test.js`, with the approved wording and URLs hard-coded independently. It checks:
+    - published set, metadata, a single h1, ordered h2s with no skipped levels;
+    - the contribution verbatim, and only the two approved external links;
+    - the Not Found, review, evidence-limit, and scope statements;
+    - banned claims;
+    - every screenshot served at its declared size, with srcset widths matching and no metadata;
+    - sample captions, the contact link, no addresses, and labelled regions;
+    - 404 for unknown, unpublished, mis-cased, and nested slugs;
+    - the first homepage card reaching the case study.
+  - Updates to existing tests:
+    - `app.test.js`: the first card is the real project, and the remaining three are unlinked placeholders.
+    - `about.test.js`: the portrait checks are kept, with project screenshots allowed in subdirectories.
+    - Nav-destination loop and privacy scan: now include the case study.
+- **Docs:** AGENTS.md records the dated approval (live URL, verbatim contribution, screenshot method, other candidates not approved), the case-study rules, and the updated status and pending decision. README has layout rows, the route, status, temporary content, pre-launch items, and the planning section's Reentry status.
+
+**Redirections and fixes:**
+- Sixteen edits were rejected once by a transient auto-mode check (no verdict) and retried in smaller batches.
+- The privacy scan's address regex matched a random byte run (`d@U.R`) inside a WebP. Binary images are now skipped by the address-pattern check, like fonts; the exact-secret check still covers them.
+- The first browser run hung waiting for off-screen lazy images, so it was stopped and the wait capped at 4 s.
+- The phone screenshot rendered 691×1509 at tablet width, so it's now capped at phone width.
+
+**Verification:**
+- `npm test`: 152 tests, 151 passed, 0 failed, 1 skipped (Windows SIGTERM). The email provider is disabled or mocked, and no email was sent.
+- **Headless Chrome (scratchpad `project-browser.mjs`):**
+  - At 320/375/768/1024/1440: no overflow, no mid-word heading breaks, no text under 12px, all images loaded and within the viewport.
+  - Contrast: no failures on the case study (lowest 5.69:1).
+  - Keyboard: tab order skip → nav → live/repo links → closing links → contact → back to top, all with visible focus.
+  - 375 menu opens and closes (no nav item is marked current on project pages). Reduced motion and no-JS both OK.
+  - Homepage card: the image click hits the link, Tab reaches it with a visible outline, and Enter opens the case study. The three placeholders remain.
+- **External links:** the live URL and repository each returned HTTP 200, and the live app loaded in Chrome with its sample review working.
+- **Not verified:** a live AI extraction (deliberately not run), so the write-up rests on source inspection plus the deployed interface. Also not verified: Safari/Firefox, real devices, screen readers.
+
+### 13. Accuracy correction: what evidence matching guarantees
+
+**Asked:** Correct case-study and homepage-card copy that overstated what evidence matching guarantees. Replace "This catches fabricated quotes and values" with the owner's exact wording. Review the tagline, card summary, description, and headings for similar guarantees, describing what the model is *instructed* to do and what the server *checks*. Keep the contribution wording, the screenshot captions, and the scope accurate. Change tests only where the wording requires it. No behavior, styling, dependency, or other-repo changes.
+
+**Done (`src/content/projects.js`, 12 exact replacements):**
+- **Evidence decision:** now uses the owner's wording: "This rejects evidence quotes that do not appear in the retrieved text. A matching quote can still accompany an incorrect interpretation, so every field requires human review."
+- **Tagline, card summary, and description:** "The AI fills in / extracts only what the page supports" and "evidence-backed" became statements of the instruction ("the model is instructed to use only the page's text") and of the server check (a value is kept only when its evidence quote appears in the page text).
+- **Decisions h2:** "Designed so the AI can't quietly guess." became "Built to check the AI, not to trust it."
+- **Extract step:** "never to guess. Anything the page doesn't support comes back as Not Found" now describes the two actual paths to Not Found: the model reports not found, or the quote can't be matched.
+- **Review step:** "Nothing is treated as final until a person has reviewed it" became "The statuses show which fields a person has checked…". The app has no "final" state.
+- **Prompt injection:** now "reduce the risk… lower that risk; they don't eliminate it".
+- **Fetch limits:** "fetched safely" / "can't be pointed at internal systems" became "with fetch limits" / "to keep the tool from being pointed at…".
+- **Review paragraph:** "beside the exact text they came from" became "beside the quote the model cited, which the server has matched in the page text".
+- **Limitation:** "reduces fabrication" became "only confirms that a quote appears in the retrieved text…".
+- **Unchanged:** the contribution wording (verified verbatim), screenshot captions and labels, links, and scope items.
+- **README:** the internal outline phrase "evidence-backed fields" was reworded to match.
+- **Tests (`test/projects.test.js`):** the h2 expectation was updated, and the evidence-limit assertions now check the new sentences. Overstated phrases ("only what the page supports", "catches fabricated", "can't quietly guess / never to guess", "evidence-backed") were added to the banned-claims list.
+
+**Verification:** `node --test test/projects.test.js`: 11/11 passed. `npm test`: 152 tests, 151 passed, 0 failed, 1 skipped (Windows SIGTERM), with email mocked or disabled. `git diff --check` was clean, and a phrase scan of `src`, `views`, README, and AGENTS found no remaining overstated wording. No browser re-run, because only text changed and no layout or styling did. No extraction run, no email, no commit.

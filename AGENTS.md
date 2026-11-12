@@ -7,12 +7,12 @@ Shared instructions for AI coding agents working in this repository. This file i
 Amber Goding’s professional portfolio and services website showcases her application development, AI integration, and workflow automation capabilities. It serves employers, prospective clients, and collaborators. It will be the long-term professional site at **ambergoding.com**.
 
 **Current status (2026-11-12):**
-- **Committed:** Milestone 1, the foundation (`f527181`); Milestone 2, the homepage, visual system, and AG branding (`c305a46`); the private contact form with Resend delivery (`d1582eb`); and the `/services` page (`7b3fbaf`).
+- **Committed:** Milestone 1, the foundation (`f527181`); Milestone 2, the homepage, visual system, and AG branding (`c305a46`); the private contact form with Resend delivery (`d1582eb`); the `/services` page (`7b3fbaf`); the `/about` page (`ddbba93`); and the internal portfolio project inventory (`a010517`).
 - **Contact email, verified locally (owner-reported manual checks, not automated):**
   - The owner created a Resend account and verified the sending domain `mail.ambergoding.com` through Spaceship DNS.
   - A real inquiry submitted through the local contact form arrived in the owner's Gmail inbox, and its Reply-To pointed to the visitor address entered in the form.
 - **Still unverified:** email delivery from Railway (production variables, the deployed environment) and the deployment itself. Nothing has been deployed.
-- **Implemented, not committed:** the `/about` page, with owner-approved copy, portrait, and professional links (see [Decisions](#decisions)).
+- **Implemented, not committed:** the first case study, `/projects/reentry-resource-extractor`, and the first real homepage project card. The other three homepage slots remain development placeholders.
 - Temporary content is listed in README.md under "Temporary content". Paid plans, further DNS changes, and deployment are **not approved**; see [Pending decisions](#pending-decisions).
 
 **Visual presentation is provisional.** The current website styling has **not** received the owner's final approval. The approved palette and the AG branding direction stand, but the overall visual presentation needs another dedicated design review before launch. Until then, don't make unrelated visual changes while working on other tasks.
@@ -68,7 +68,8 @@ Amber Goding’s professional portfolio and services website showcases her appli
 - Never deploy, change DNS, create paid resources, or incur charges without the owner's approval.
 
 **Portfolio:**
-- Show 3–4 real projects, each with the problem, solution, results, and working app or repository links. Candidates: HuntSomewhere, Ever After Planner, Reentry Resource Extractor, Catering Concierge.
+- Show 3–4 real projects, each with the problem, solution, results, and working app or repository links. Candidates: HuntSomewhere, Ever After Planner, Reentry Resource Extractor, Catering Concierge. **Approved so far: Reentry Resource Extractor only** (see [Decisions](#decisions)). The others stay unapproved until the owner records them there.
+- Case studies live at `/projects/<slug>`, generated from `src/content/projects.js`. Only entries marked `published: true` render; every other slug returns the standard 404. Screenshots come from the deployed application, and any screenshot that uses an app's own sample or demonstration data is captioned as sample data, never presented as a live result.
 - Plan around the completed versions intended for launch. Track unfinished work in an internal checklist, and reconcile every public description with verified functionality before publishing.
 - Follow the content rules below for every project description.
 
@@ -104,7 +105,7 @@ These are proposed or open items. They are **not approved** until they are recor
 - Final visual presentation (dedicated design review required before launch). The current styling is provisional and needs the owner's final approval.
 - Which host is canonical for the site (apex or `www`). DNS for `ambergoding.com` is hosted at Spaceship (owner-reported). Whether Spaceship supports the CNAME flattening or ALIAS record Railway needs for the apex hasn't been checked.
 - Railway plan.
-- Which 3–4 projects to feature.
+- Which further projects to feature. Reentry Resource Extractor is approved; HuntSomewhere, Ever After Planner, and Catering Concierge are not. The internal inventory in README.md recommends a set, but it isn't approved.
 - Whether to include a résumé.
 
 ## Decisions
@@ -124,3 +125,10 @@ Approved decisions, dated. Add new entries at the end.
   - **Portrait:** the owner-supplied photo, resized for the web without retouching, with metadata stripped (`public/images/amber-goding-portrait-*`). Don't retouch, regenerate, or replace it.
   - **Professional links:** LinkedIn `https://www.linkedin.com/in/amber-goding/` and GitHub `https://github.com/amber-goding`. They are used as links only; their contents have not been reviewed, so don't describe them.
   - The homepage About teaser and the About page's closing contact invitation reuse earlier wording that remains provisional. The overall styling remains provisional.
+- 2026-11-12: **Reentry Resource Extractor approved as the first portfolio entry.**
+  - **Live application:** `https://reentry-resource-extractor-production.up.railway.app/`. **Repository:** `https://github.com/amber-goding/reentry-resource-extractor`. The owner supplied the deployment URL. Codex opened the site and confirmed the interface loads; no AI extraction was run.
+  - **Approved contribution wording, verbatim:** “I defined the problem and application workflow, guided AI-assisted implementation, reviewed the results, and refined the interface and human-verification process.”
+  - **Case study:** `/projects/reentry-resource-extractor`, written from the inspected source and the deployed interface (README "Portfolio project planning"). It states that missing details stay "Not Found", that extracted information needs human review, and that matching quoted evidence is not proof an interpretation is correct. It claims no measured time savings, accuracy, adoption, or client outcomes, and does not present saving, exporting, publishing, or site crawling as implemented.
+  - **Screenshots:** captured from the deployed application on 2026-11-12 without modifying it: the start screen, and the review interface showing the app's own development sample results (captioned as sample data, not a live extraction). "Analyze Program" was not submitted and no personal information was entered.
+  - **Homepage:** the first project slot now shows this project with a real screenshot and a link to the case study. The remaining three slots are still development placeholders.
+  - The other three candidates are **not** approved. Styling remains provisional.

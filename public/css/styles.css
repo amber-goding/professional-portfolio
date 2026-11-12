@@ -1891,6 +1891,284 @@ button.button[aria-disabled="true"] {
 }
 
 /* ==========================================================================
+   Project case studies (styling provisional; see AGENTS.md)
+   ========================================================================== */
+
+/* Homepage card for a published project: a real screenshot and one link
+   stretched over the whole card. */
+.project-card--linked {
+  position: relative;
+}
+
+.project-preview--image {
+  min-height: 0;
+  padding: 0;
+  aspect-ratio: 8 / 5;
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.project-preview--image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: left top;
+}
+
+.project-link {
+  text-decoration: none;
+  text-underline-offset: 0.2em;
+}
+
+.project-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.project-link span {
+  display: inline-block;
+  color: var(--gold);
+  transition: transform var(--duration) var(--ease);
+}
+
+.project-card--linked:hover .project-link,
+.project-link:focus-visible {
+  text-decoration: underline;
+  text-decoration-color: var(--gold);
+}
+
+.project-card--linked:hover .project-link span,
+.project-link:focus-visible span {
+  transform: translateX(4px);
+}
+
+.project-summary {
+  max-width: 34rem;
+  color: var(--muted);
+}
+
+/* Case-study page */
+.project-title {
+  max-width: 12ch;
+}
+
+.project-facts {
+  display: grid;
+  gap: 1.25rem 2.5rem;
+  margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.project-facts div {
+  display: grid;
+  gap: 0.35rem;
+  align-content: start;
+}
+
+.project-facts dt {
+  color: var(--gold);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.project-facts dd {
+  margin: 0;
+  color: var(--muted);
+}
+
+.project-section {
+  border-top: 1px solid var(--line);
+}
+
+.project-section-layout {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 3rem);
+}
+
+.project-section h2,
+.project-workflow h2,
+.project-scope h2 {
+  margin-top: 1rem;
+}
+
+.project-prose {
+  display: grid;
+  gap: 1.25rem;
+  max-width: 44rem;
+  font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+}
+
+.project-section .project-prose {
+  color: var(--muted);
+}
+
+.project-prose h3,
+.decision h3 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--cream);
+}
+
+.project-prose h3 {
+  margin-top: 1rem;
+}
+
+.project-review .project-prose {
+  margin-top: clamp(1.5rem, 3vw, 2rem);
+}
+
+.project-figure {
+  margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
+}
+
+.project-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--panel);
+}
+
+.project-figure figcaption {
+  margin-top: 0.75rem;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.section--cream .project-figure img {
+  border-color: var(--line-on-cream);
+}
+
+.section--cream .project-figure figcaption {
+  color: var(--muted-on-cream);
+}
+
+.figure-flag {
+  display: inline-block;
+  margin-right: 0.35rem;
+  padding: 0.1rem 0.5rem;
+  border: 1px dashed rgb(229 184 105 / 0.6);
+  border-radius: 999px;
+  color: var(--gold);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.project-figures {
+  display: grid;
+  gap: clamp(2rem, 4vw, 3rem);
+  align-items: start;
+}
+
+/* Tall phone captures stay at phone width until they get their own column. */
+.project-figure--phone {
+  max-width: 22rem;
+}
+
+.decision-grid {
+  display: grid;
+  gap: clamp(1.75rem, 3vw, 2.5rem);
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.decision {
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+}
+
+.decision p {
+  margin-top: 0.6rem;
+  color: var(--muted);
+}
+
+.scope-grid {
+  display: grid;
+  gap: clamp(1.75rem, 3vw, 2.5rem);
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.section--cream .detail-group ul {
+  color: var(--muted-on-cream);
+}
+
+.section--cream .detail-group li::marker {
+  color: var(--deep-teal);
+}
+
+.scope-note {
+  max-width: 44rem;
+  margin-top: clamp(1.75rem, 3vw, 2.5rem);
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line-on-cream);
+  color: var(--muted-on-cream);
+  font-size: 0.9375rem;
+}
+
+.tech-list {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.tech-list li {
+  display: grid;
+  gap: 0.15rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.tech-list strong {
+  color: var(--cream);
+}
+
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 2rem;
+}
+
+@media (min-width: 48rem) {
+  .project-facts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .decision-grid,
+  .scope-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(2rem, 4vw, 4rem);
+  }
+}
+
+@media (min-width: 56rem) {
+  .project-section-layout {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    align-items: start;
+    column-gap: clamp(3rem, 6vw, 6rem);
+  }
+
+  .process-steps--three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .project-figures {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  }
+
+  .project-figure--phone {
+    max-width: none;
+  }
+}
+
+/* ==========================================================================
    Footer
    ========================================================================== */
 

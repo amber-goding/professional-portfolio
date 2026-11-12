@@ -27,11 +27,11 @@ export const services = [
   },
 ];
 
-// DEVELOPMENT PLACEHOLDERS. These are not real projects. Each slot will be
-// replaced by a verified project (title, preview, case-study link) in a later
-// milestone. Placeholders must never link anywhere or describe features.
+// DEVELOPMENT PLACEHOLDERS. These are not real projects. Published projects
+// (src/content/projects.js) fill the first slots on the homepage, and these
+// fill the rest until each is replaced by a verified project. Placeholders
+// must never link anywhere or describe features.
 export const projectPlaceholders = [
-  { category: 'Featured application', heading: 'Purpose in every detail.', variant: 'composition' },
   { category: 'Automation', heading: 'Connect the moving parts.', variant: 'workflow' },
   { category: 'AI integration', heading: 'Clarity from complexity.', variant: 'signal' },
   { category: 'Application', heading: 'Built to be used.', variant: 'layers' },
