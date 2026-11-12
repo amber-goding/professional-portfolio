@@ -1,0 +1,139 @@
+/* Brand tokens (approved palette; see AGENTS.md) */
+:root {
+  --color-charcoal: #151a1c;
+  --color-deep-teal: #176b66;
+  --color-turquoise: #35d6cb;
+  --color-cream: #faf3e7;
+  --color-gold: #e5b869;
+
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --gutter: clamp(1rem, 5vw, 4rem);
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-charcoal);
+  color: var(--color-cream);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-turquoise);
+  outline-offset: 4px;
+}
+
+/* Skip link: hidden until focused with the keyboard */
+.skip-link {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 10;
+  padding: 0.75rem 1rem;
+  background: var(--color-cream);
+  color: var(--color-charcoal);
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+main:focus {
+  outline: none;
+}
+
+.site-header {
+  padding: 1.25rem var(--gutter);
+  border-bottom: 1px solid rgb(250 243 231 / 0.15);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+}
+
+.brand-mark {
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: -0.12em;
+  text-transform: none;
+}
+
+.brand-mark span {
+  color: var(--color-turquoise);
+}
+
+main {
+  flex: 1;
+  padding: clamp(3rem, 10vw, 7rem) var(--gutter);
+}
+
+.intro {
+  max-width: 48rem;
+}
+
+.kicker {
+  margin: 0 0 1rem;
+  color: var(--color-turquoise);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2.75rem, 9vw, 5.75rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.lede {
+  margin: 1.5rem 0 0;
+  max-width: 38rem;
+  font-size: clamp(1.125rem, 2.2vw, 1.375rem);
+}
+
+.text-link {
+  color: var(--color-turquoise);
+}
+
+.site-footer {
+  padding: 1.5rem var(--gutter);
+  border-top: 1px solid rgb(250 243 231 / 0.15);
+  font-size: 0.875rem;
+}
+
+.site-footer p {
+  margin: 0;
+}

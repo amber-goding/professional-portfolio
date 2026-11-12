@@ -1,0 +1,101 @@
+# AGENTS.md
+
+Shared instructions for AI coding agents working in this repository. This file is authoritative. Tool-specific files (such as `CLAUDE.md`) import it instead of copying it.
+
+## Project
+
+Amber Goding’s professional portfolio and services website showcases her application development, AI integration, and workflow automation capabilities. It serves employers, prospective clients, and collaborators. It will be the long-term professional site at **ambergoding.com**.
+
+**Current status (2026-11-12):** Milestone 1, the application foundation, is implemented and not yet committed. It includes the Express + EJS server, a minimal homepage, `/healthz`, 404 and error handling, static files from `public/` only, and tests. Nothing has been deployed. The email provider, service accounts, paid plans, DNS, and deployment are **not approved**; see [Pending decisions](#pending-decisions).
+
+**Commands:** `npm ci` (install), `npm start` (run), `npm run dev` (watch mode), `npm test` (all tests), `node --test test/<file>.test.js` (one file). See [README.md](README.md) for setup and the project layout.
+
+## Approved direction
+
+**Audience:** employers hiring developers or AI application builders; small businesses, freelancers, and service providers looking for practical applications and automation; potential collaborators.
+
+**Positioning:** a practical application and automation builder who turns real-world problems into useful tools, explains decisions clearly, and uses AI thoughtfully.
+
+**Pages:** Home/Portfolio, Services, About, Contact, and one case-study page per project.
+
+**Branding:** the AG monogram and the branding in the approved reference are approved.
+
+| Token | Hex |
+| --- | --- |
+| Charcoal | `#151A1C` |
+| Deep teal | `#176B66` |
+| Turquoise | `#35D6CB` |
+| Warm cream | `#FAF3E7` |
+| Amber-gold (restrained accents) | `#E5B869` |
+
+**Visual reference:** `C:\Users\amber\.codex\visualizations\2026\11\12\01a1cdb7-7b83-78b0-8957-5e063041aa15\teal-cream-gold-studio.html`. It is a visual concept, not production code. Keep its identity and bold direction: the lowercase "ag" monogram with a turquoise "g", the sculptural ribbon art in the hero, oversized Space Grotesk headlines with italic serif accents, a charcoal base, a deep-teal service band, a cream about section, and amber-gold details. Its wording and project illustrations are provisional. Its 6–9px label sizes are too small for production and must be raised to readable sizes.
+
+**Design expectations:**
+- Distinctive, polished, professional presentation with bold typography, strong visual focal points, and thoughtful layouts.
+- Fully responsive across phones, tablets, and desktops.
+- Smooth, purposeful transitions that respect `prefers-reduced-motion`.
+- Accessible navigation, full keyboard operation, visible focus states, readable contrast (WCAG AA), and a clear content hierarchy.
+- No unnecessary animation, dependencies, complexity, or unrelated features.
+
+## Functional requirements
+
+**Contact form:**
+- Delivers inquiries to the owner's inbox (ambergoding@gmail.com), configured through an environment variable.
+- Server-side validation, practical spam protection, and duplicate-submission prevention.
+- Clear pending, success, and error states. Entered information is kept when a submission fails.
+- Success is shown only after the server confirms the email provider accepted the message. Actual inbox delivery is verified separately before launch.
+- Credentials stay server-side. The visitor's address goes in Reply-To, and mail is sent from a properly verified sender identity.
+
+**Deployment:**
+- Built for Railway, with reproducible build and start commands. The server listens on Railway's `PORT` and binds to all interfaces.
+- Custom domain `ambergoding.com` plus `www.ambergoding.com`, served over HTTPS.
+- Required environment variables are documented with placeholders only.
+- Never deploy, change DNS, create paid resources, or incur charges without the owner's approval.
+
+**Portfolio:**
+- Show 3–4 real projects, each with the problem, solution, results, and working app or repository links. Candidates: HuntSomewhere, Ever After Planner, Reentry Resource Extractor, Catering Concierge.
+- Plan around the completed versions intended for launch. Track unfinished work in an internal checklist, and reconcile every public description with verified functionality before publishing.
+- Follow the content rules below for every project description.
+
+**Launch standard:** Placeholders are allowed during approved development milestones. At launch the site needs complete content, real project visuals, working links, working email delivery, and a verified deployment. Nothing unfinished may be presented as complete.
+
+## Content and communication rules
+
+- Present Amber as an application and automation builder with prior development training and experience.
+- Emphasize demonstrated capabilities, project work, problem-solving, and transferable experience.
+- Do not mention a bootcamp, curriculum, student status, or beginner status in public-facing content or metadata.
+- Never invent experience, credentials, features, metrics, testimonials, clients, or outcomes.
+- Explain technical decisions clearly so Amber remains an informed decision-maker.
+
+## Workflow rules
+
+- Work on one clearly scoped task at a time.
+- Explain meaningful changes and wait for approval before implementing them.
+- Inspect existing code and `git status` before making changes.
+- Never overwrite or discard existing work without permission.
+- Favor simple, maintainable solutions and avoid scope expansion.
+- Verify changes with appropriate checks.
+- Report exactly what changed, what was tested, and what remains unverified.
+- Never claim a test, integration, or deployment succeeded without evidence.
+- Never expose or commit secrets. Do not ask for secrets in chat or print them in logs. Keep real values in untracked `.env` files or Railway variables.
+- Do not commit, push, merge, or deploy without explicit approval.
+- After each verified implementation milestone, recommend a logical Git checkpoint and a concise commit message.
+- Record important approved decisions in [Decisions](#decisions) below or in concise project docs.
+
+## Pending decisions
+
+These are proposed or open items. They are **not approved** until they are recorded under Decisions.
+
+- Email delivery provider and sender address. *Proposed:* Resend's HTTPS API, because Railway's Hobby plan blocks outbound SMTP, sending from a verified subdomain such as `mail.ambergoding.com`.
+- DNS host for `ambergoding.com`, and which host is canonical (apex or `www`).
+- Railway plan.
+- Which 3–4 projects to feature.
+- Whether to include a résumé.
+
+## Decisions
+
+Approved decisions, dated. Add new entries at the end.
+
+- 2026-11-12: Website direction, audience, positioning, pages, branding colors, visual reference, and functional and launch requirements approved as recorded above.
+- 2026-11-12: Project description and content and communication rules approved as recorded above.
+- 2026-11-12: Architecture approved: a supported Node.js LTS release (`engines.node` is `24.x`), Express with server-rendered EJS templates, plain CSS and minimal vanilla JavaScript, no frontend compilation step, and Node's built-in test runner. The email provider, service accounts, paid plans, DNS changes, and deployment remain unapproved.

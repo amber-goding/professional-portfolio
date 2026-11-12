@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Environment files (real values never get committed)
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Test coverage and local artifacts
+coverage/
+.nyc_output/
+*.tmp
+tmp/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
