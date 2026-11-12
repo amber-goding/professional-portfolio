@@ -1908,6 +1908,11 @@ button.button[aria-disabled="true"] {
   background: var(--panel);
 }
 
+/* Beats the staggered-layout min-height on later slots, so screenshots keep their ratio. */
+.project .project-preview.project-preview--image {
+  min-height: 0;
+}
+
 .project-preview--image img {
   display: block;
   width: 100%;
@@ -2062,6 +2067,12 @@ button.button[aria-disabled="true"] {
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+/* Gold lacks contrast on cream, so the flag switches to deep teal there. */
+.section--cream .figure-flag {
+  border-color: rgb(23 107 102 / 0.55);
+  color: var(--deep-teal);
 }
 
 .project-figures {

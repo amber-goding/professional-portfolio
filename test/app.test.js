@@ -152,14 +152,18 @@ describe('application routes', () => {
       assert.doesNotMatch(html, /[\w.+-]+@[\w-]+\.[\w.]+/, 'no email address appears in the page');
     });
 
-    it('shows the published project first and keeps the other slots as unlinked placeholders', () => {
+    it('shows the published projects first, in order, and keeps the other slots as unlinked placeholders', () => {
       const projects = [...html.matchAll(/<article class="project-card[^"]*"[\s\S]*?<\/article>/g)].map((m) => m[0]);
       assert.equal(projects.length, 4);
-      const [featured, ...placeholders] = projects;
-      assert.match(featured, /<a class="project-link" href="\/projects\/reentry-resource-extractor">Reentry Resource Extractor/);
-      assert.match(featured, /<img[^>]+src="\/images\/projects\/reentry-resource-extractor\/start-screen-1600\.jpg"[^>]+alt="[^"]{20,}"/);
-      assert.doesNotMatch(featured, /Development placeholder|not an application screenshot/i);
-      assert.equal(placeholders.length, 3);
+      const [reentry, catering, ...placeholders] = projects;
+      assert.match(reentry, /<a class="project-link" href="\/projects\/reentry-resource-extractor">Reentry Resource Extractor/);
+      assert.match(reentry, /<img[^>]+src="\/images\/projects\/reentry-resource-extractor\/start-screen-1600\.jpg"[^>]+alt="[^"]{20,}"/);
+      assert.match(catering, /<a class="project-link" href="\/projects\/catering-concierge">Catering Concierge/);
+      assert.match(catering, /<img[^>]+src="\/images\/projects\/catering-concierge\/dashboard-sample-desktop-1600\.jpg"[^>]+alt="[^"]*fictional[^"]*"/);
+      for (const featured of [reentry, catering]) {
+        assert.doesNotMatch(featured, /Development placeholder|not an application screenshot/i);
+      }
+      assert.equal(placeholders.length, 2);
       for (const project of placeholders) {
         assert.match(project, /Development placeholder/);
         assert.match(project, /not an application screenshot/i);

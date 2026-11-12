@@ -133,7 +133,7 @@ describe('shared navigation destinations', () => {
 
   after(() => new Promise((resolve) => server.close(resolve)));
 
-  for (const page of ['/', '/services', '/about', '/projects/reentry-resource-extractor', '/contact', '/does-not-exist']) {
+  for (const page of ['/', '/services', '/about', '/projects/reentry-resource-extractor', '/projects/catering-concierge', '/contact', '/does-not-exist']) {
     it(`every main-navigation link on ${page} reaches a real page and section`, async () => {
       const html = await (await fetch(`${baseUrl}${page}`)).text();
       const nav = html.match(/<nav[^>]*aria-label="Main"[^>]*>([\s\S]*?)<\/nav>/)[1];

@@ -7,12 +7,12 @@ Shared instructions for AI coding agents working in this repository. This file i
 Amber Goding’s professional portfolio and services website showcases her application development, AI integration, and workflow automation capabilities. It serves employers, prospective clients, and collaborators. It will be the long-term professional site at **ambergoding.com**.
 
 **Current status (2026-11-12):**
-- **Committed:** Milestone 1, the foundation (`f527181`); Milestone 2, the homepage, visual system, and AG branding (`c305a46`); the private contact form with Resend delivery (`d1582eb`); the `/services` page (`7b3fbaf`); the `/about` page (`ddbba93`); and the internal portfolio project inventory (`a010517`).
+- **Committed:** Milestone 1, the foundation (`f527181`); Milestone 2, the homepage, visual system, and AG branding (`c305a46`); the private contact form with Resend delivery (`d1582eb`); the `/services` page (`7b3fbaf`); the `/about` page (`ddbba93`); the internal portfolio project inventory (`a010517`); and the Reentry Resource Extractor case study with its accuracy correction (`562168a`).
 - **Contact email, verified locally (owner-reported manual checks, not automated):**
   - The owner created a Resend account and verified the sending domain `mail.ambergoding.com` through Spaceship DNS.
   - A real inquiry submitted through the local contact form arrived in the owner's Gmail inbox, and its Reply-To pointed to the visitor address entered in the form.
 - **Still unverified:** email delivery from Railway (production variables, the deployed environment) and the deployment itself. Nothing has been deployed.
-- **Implemented, not committed:** the first case study, `/projects/reentry-resource-extractor`, and the first real homepage project card. The other three homepage slots remain development placeholders.
+- **Implemented, not committed:** the second case study, `/projects/catering-concierge`, and its homepage card (second slot). Reentry Resource Extractor stays first; the remaining two homepage slots are development placeholders.
 - Temporary content is listed in README.md under "Temporary content". Paid plans, further DNS changes, and deployment are **not approved**; see [Pending decisions](#pending-decisions).
 
 **Visual presentation is provisional.** The current website styling has **not** received the owner's final approval. The approved palette and the AG branding direction stand, but the overall visual presentation needs another dedicated design review before launch. Until then, don't make unrelated visual changes while working on other tasks.
@@ -68,7 +68,7 @@ Amber Goding’s professional portfolio and services website showcases her appli
 - Never deploy, change DNS, create paid resources, or incur charges without the owner's approval.
 
 **Portfolio:**
-- Show 3–4 real projects, each with the problem, solution, results, and working app or repository links. Candidates: HuntSomewhere, Ever After Planner, Reentry Resource Extractor, Catering Concierge. **Approved so far: Reentry Resource Extractor only** (see [Decisions](#decisions)). The others stay unapproved until the owner records them there.
+- Show 3–4 real projects, each with the problem, solution, results, and working app or repository links. Candidates: HuntSomewhere, Ever After Planner, Reentry Resource Extractor, Catering Concierge. **Approved so far: Reentry Resource Extractor and Catering Concierge** (see [Decisions](#decisions)). The others stay unapproved until the owner records them there.
 - Case studies live at `/projects/<slug>`, generated from `src/content/projects.js`. Only entries marked `published: true` render; every other slug returns the standard 404. Screenshots come from the deployed application, and any screenshot that uses an app's own sample or demonstration data is captioned as sample data, never presented as a live result.
 - Plan around the completed versions intended for launch. Track unfinished work in an internal checklist, and reconcile every public description with verified functionality before publishing.
 - Follow the content rules below for every project description.
@@ -105,7 +105,7 @@ These are proposed or open items. They are **not approved** until they are recor
 - Final visual presentation (dedicated design review required before launch). The current styling is provisional and needs the owner's final approval.
 - Which host is canonical for the site (apex or `www`). DNS for `ambergoding.com` is hosted at Spaceship (owner-reported). Whether Spaceship supports the CNAME flattening or ALIAS record Railway needs for the apex hasn't been checked.
 - Railway plan.
-- Which further projects to feature. Reentry Resource Extractor is approved; HuntSomewhere, Ever After Planner, and Catering Concierge are not. The internal inventory in README.md recommends a set, but it isn't approved.
+- Which further projects to feature. Reentry Resource Extractor and Catering Concierge are approved; HuntSomewhere and Ever After Planner are not. The internal inventory in README.md recommends a set, but it isn't approved.
 - Whether to include a résumé.
 
 ## Decisions
@@ -132,3 +132,18 @@ Approved decisions, dated. Add new entries at the end.
   - **Screenshots:** captured from the deployed application on 2026-11-12 without modifying it: the start screen, and the review interface showing the app's own development sample results (captioned as sample data, not a live extraction). "Analyze Program" was not submitted and no personal information was entered.
   - **Homepage:** the first project slot now shows this project with a real screenshot and a link to the case study. The remaining three slots are still development placeholders.
   - The other three candidates are **not** approved. Styling remains provisional.
+- 2026-11-12: **Catering Concierge approved as the second portfolio entry.**
+  - **Live application:** `https://week-8-build-catering-concierge-production.up.railway.app/`. **Repository:** `https://github.com/amber-goding/week-8-build-catering-concierge`. Keep this exact URL, but don't use the repository name in public prose.
+  - **Approved contribution wording, verbatim:** the same sentence as for Reentry Resource Extractor: “I defined the problem and application workflow, guided AI-assisted implementation, reviewed the results, and refined the interface and human-verification process.”
+  - **Case study:** `/projects/catering-concierge`, written from the committed source on that repository's `main` (`67f03bc`) and the deployed interface viewed signed out.
+    - It states that the AI review runs in Zapier and the app makes no AI calls.
+    - It presents the import endpoint's controls as specific checks, not guarantees.
+    - It lists menus, quotes, email, events, settings, and analytics as planned.
+    - It describes manual inquiry entry as in development: that work is uncommitted on a feature branch and not deployed.
+    - Live checks recorded in that repository's history are labelled as historical.
+  - **Screenshots:** captured signed out from the deployed app on 2026-11-12 with navigation only (no clicks, inputs, sign-in, Zapier triggers, or AI calls).
+    - The dashboard on desktop and phone, showing its built-in fictional sample data, captioned as sample data.
+    - The sign-in page.
+    - The sign-in-only Inquiries screen couldn't be captured and isn't pictured.
+  - **Homepage:** the second slot (formerly the Automation placeholder) shows this project and links to the case study.
+  - HuntSomewhere and Ever After Planner remain **unapproved**. Styling remains provisional.

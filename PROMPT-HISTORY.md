@@ -571,3 +571,88 @@ Then record an internal planning section in the portfolio README and recommend 3
 - **Tests (`test/projects.test.js`):** the h2 expectation was updated, and the evidence-limit assertions now check the new sentences. Overstated phrases ("only what the page supports", "catches fabricated", "can't quietly guess / never to guess", "evidence-backed") were added to the banned-claims list.
 
 **Verification:** `node --test test/projects.test.js`: 11/11 passed. `npm test`: 152 tests, 151 passed, 0 failed, 1 skipped (Windows SIGTERM), with email mocked or disabled. `git diff --check` was clean, and a phrase scan of `src`, `views`, README, and AGENTS found no remaining overstated wording. No browser re-run, because only text changed and no layout or styling did. No extraction run, no email, no commit.
+
+**Outcome:** Entries 12 and 13 (the Reentry case study and its accuracy correction) were committed by the user as `562168a` ("Add Reentry Resource Extractor case study"). Push status not recorded.
+
+### 14. Second case study: Catering Concierge
+
+**Asked:** Build `/projects/catering-concierge` on the existing data-driven structure, and replace the homepage's Automation placeholder with it. Reentry stays first, and the last two placeholders stay unlinked.
+- **Owner-approved:** the project; the live URL `https://week-8-build-catering-concierge-production.up.railway.app/`; the repository `https://github.com/amber-goding/week-8-build-catering-concierge`; and the same contribution wording, verbatim.
+- **Verification method:** check the sibling repository read-only, distinguishing uncommitted work from committed and deployed behavior. Inspect the live app without accounts, submissions, Zapier triggers, email, AI calls, or data changes.
+- **Copy rules:**
+  - The AI review happens in Zapier (if the source confirms it).
+  - Controls are described as specific checks, not guarantees.
+  - No isolation, race-proofing, accuracy, time-saving, adoption, or client claims.
+  - Historical checks are separated from checks made in this task.
+  - No schedule terms in public prose.
+- **Not allowed:** no `.env`, dependencies, other-repo changes, commit, push, or deploy.
+
+**Verified in the Catering repository (read-only, `git --no-optional-locks`):**
+- `main` = `origin/main` = `67f03bc`; the working tree is on `codex/manual-inquiry-entry`. The 19 uncommitted paths are manual inquiry entry, so it is in development and not deployed.
+- Source read from `main` via `git show`:
+  - **Import (`src/lib/zapier-import.ts`):**
+    - order of checks: configuration, then a timing-safe hashed bearer check, then content type, then a streamed 128 KiB limit, then exactly three fields;
+    - restaurant and table come from server configuration;
+    - `isDemo: true`;
+    - find-then-create, with the P2002 unique-index race returning the winner;
+    - `no-store`, with sanitized logs.
+  - **Reads (`src/lib/inquiries.ts`):** filtered by restaurant ID, newest first, at most 50.
+  - **Access (`src/lib/restaurant-access.ts`):** the restaurant comes only from the session membership; signed-out visitors go to `/sign-in` and users without a restaurant to `/setup`.
+  - **`/inquiries` page:** read-only, and fails closed.
+  - **AI:** no AI SDK in `src` or `package.json`, and the demo banner states "the app itself calls no AI service".
+  - **Navigation:** Inquiries is Limited; Email, Menu, Quotes, Events, and Settings are Planned.
+  - **Tests:** the import, auth, restaurant, and inquiry-read tests use a simulated database.
+- **Live app, signed out, navigation only (scratchpad `catering-capture.mjs`, request log):**
+  - `/`, `/sign-in`, `/quotes`, and `/api/health` (`{"status":"ok"}`) load. `/inquiries` redirects to `/sign-in`, so the review screen can't be captured.
+  - 177 requests, all GET, all to the app's host, no `/api/` calls, and no email addresses on the pages.
+  - The repository URL returned HTTP 200.
+
+**Done:**
+- **Screenshots:** in `public/images/projects/catering-concierge/`, WebP at two widths plus a JPEG fallback, metadata stripped, 28–155 KB each.
+  - Desktop and phone dashboard, showing its built-in fictional data, flagged as sample data.
+  - The sign-in page (real interface, no data, unflagged).
+- **Content:** a second `projects.js` entry, appended so Reentry stays first. It covers:
+  - the problem;
+  - the three-step workflow (Zapier prepares, the app receives, the owner reviews);
+  - six decisions, with simultaneous-delivery handling noted as covered by simulated-database tests, not live;
+  - an interface section explaining why the Inquiries screen isn't pictured;
+  - implemented scope and seven limitations;
+  - a verification note labelling the project's recorded live duplicate check as historical;
+  - technologies, the verbatim contribution, and links.
+  - Reentry's review shots now carry an explicit `sample: true`.
+- **Template (`views/project.ejs`):**
+  - Sample flags and classes follow each shot's `sample` field, for start and review figures alike.
+  - The fourth section's label comes from `review.label`, defaulting to the old text.
+- **Homepage:** the Automation placeholder was removed from `home.js`; the published project renders in slot 2.
+- **CSS:**
+  - `.project .project-preview.project-preview--image { min-height: 0 }`, so the staggered layout's min-height doesn't distort screenshots in slot 2.
+  - `.section--cream .figure-flag` uses deep teal: the gold flag measured 1.67:1 on cream.
+- **Tests:**
+  - **`projects.test.js`:**
+    - The published set is now both projects, in order, and the 404 list adds mis-cased and nested Catering slugs.
+    - A homepage-card test checks two linked cards, two unlinked placeholders, and images served.
+    - **New Catering describe:**
+      - metadata, one h1, no skipped levels;
+      - the contribution verbatim, and only the approved links;
+      - Zapier AI wording, with implemented scope free of planned or undeployed features;
+      - the limitations present, and the historical-check sentence;
+      - banned claims, including schedule terms;
+      - every sample image flagged and only those, with dimensions, srcset widths, and no metadata;
+      - contact without addresses.
+  - **`app.test.js`:** expects two real cards, then two placeholders.
+  - **Nav loop and privacy scan:** now include the new page.
+- **Docs:** AGENTS.md records the dated approval and corrected status (Reentry committed in `562168a`). README has route, status, and remaining-check updates, plus Catering status in the planning section.
+
+**Redirections and fixes:**
+- Two bash heredocs failed on shell quoting, so the content went in via the Edit tool and a scratchpad Node script.
+- The contrast failure on the cream-section sample flag was found in the browser run and fixed.
+
+**Verification:**
+- `npm test`: 162 tests, 161 passed, 0 failed, 1 skipped (Windows SIGTERM). Email is disabled or mocked.
+- **Headless Chrome (scratchpad `catering-browser.mjs`), on both case studies after the fix:**
+  - At 320/375/768/1024/1440: no overflow, no mid-word heading breaks, no text under 12px, all images loaded and in bounds. The phone capture is capped at 352px on tablet.
+  - Contrast: no failures (lowest 5.69:1).
+  - Tab order is all focus-visible. The 375 menu opens and closes; reduced motion and no-JS both OK.
+  - Homepage: both cards keep a 1.6 ratio, image clicks hit the links, and Tab plus Enter on the Catering card opens its case study.
+  - The homepage probe again flags the stroke-only hero word "complex" (probe limitation, unchanged).
+- **Not verified:** the signed-in Inquiries screen, any live import, live duplicate handling, and two-account separation (none run or viewed for this task). Also Safari/Firefox, real devices, screen readers.

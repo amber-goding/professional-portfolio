@@ -53,9 +53,10 @@
           </li>
           <% }) %>
         </ol>
-        <figure class="project-figure">
-          <%- include('partials/picture', { shot: project.screenshots.start, sizes: '(min-width: 90rem) 82rem, 100vw' }) %>
-          <figcaption><%= project.screenshots.start.caption %></figcaption>
+        <% const start = project.screenshots.start; %>
+        <figure class="project-figure<%= start.sample ? ' project-figure--sample' : '' %>">
+          <%- include('partials/picture', { shot: start, sizes: '(min-width: 90rem) 82rem, 100vw' }) %>
+          <figcaption><% if (start.sample) { %><span class="figure-flag">Sample data</span> <% } %><%= start.caption %></figcaption>
         </figure>
       </div>
     </section>
@@ -77,7 +78,7 @@
 
     <section class="section project-section project-review" aria-labelledby="review-heading">
       <div class="wrap">
-        <p class="section-label"><span>04 /</span> The review interface</p>
+        <p class="section-label"><span>04 /</span> <%= project.review.label || 'The review interface' %></p>
         <h2 id="review-heading"><%= project.review.heading.lead %> <em><%= project.review.heading.accent %></em></h2>
         <div class="project-prose">
           <% project.review.paragraphs.forEach((paragraph) => { %>
@@ -86,9 +87,9 @@
         </div>
         <div class="project-figures">
           <% project.screenshots.review.forEach((shot) => { %>
-          <figure class="project-figure project-figure--sample<%= shot.frame === 'phone' ? ' project-figure--phone' : '' %>">
+          <figure class="project-figure<%= shot.sample ? ' project-figure--sample' : '' %><%= shot.frame === 'phone' ? ' project-figure--phone' : '' %>">
             <%- include('partials/picture', { shot, sizes: shot.sizes }) %>
-            <figcaption><span class="figure-flag">Sample data</span> <%= shot.caption %></figcaption>
+            <figcaption><% if (shot.sample) { %><span class="figure-flag">Sample data</span> <% } %><%= shot.caption %></figcaption>
           </figure>
           <% }) %>
         </div>

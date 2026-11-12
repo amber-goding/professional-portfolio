@@ -88,7 +88,7 @@ Routes:
 - `GET /`: homepage (sections `#work`, `#services`, `#about`, `#contact`)
 - `GET /services`: Services page (sections `#application-development`, `#ai-integration`, `#workflow-automation`, `#process`)
 - `GET /about`: About page (introduction with portrait and professional links, background, "How I work", contact invitation)
-- `GET /projects/:slug`: case study for a published project (`src/content/projects.js`). Currently `/projects/reentry-resource-extractor`. Any other slug, including unpublished candidates, returns the standard 404 page.
+- `GET /projects/:slug`: case study for a published project (`src/content/projects.js`). Currently `/projects/reentry-resource-extractor` and `/projects/catering-concierge`. Any other slug, including unpublished candidates, returns the standard 404 page.
 - `GET /contact`: contact page. `POST /contact` handles submissions and returns HTML, or JSON when the request sends `Accept: application/json`.
 - `GET /healthz`: health check returning `{"status":"ok"}`
 - Anything else returns an HTML 404 page. Unexpected errors return a generic 500 page. Error details are logged on the server, never shown to visitors.
@@ -163,11 +163,28 @@ Real values belong in Railway's service variables or a local `.env` file, which 
 - **Navigation:** the main navigation's About link now goes to `/about` and is marked as the current page there.
 - **Homepage:** the `#about` teaser stays and links to the page ("More about Amber").
 
-**First case study (implemented, not committed):** `/projects/reentry-resource-extractor`, the owner-approved Reentry Resource Extractor (AGENTS.md, Decisions, 2026-11-12).
+**First case study (committed in `562168a`):** `/projects/reentry-resource-extractor`, the owner-approved Reentry Resource Extractor (AGENTS.md, Decisions, 2026-11-12).
 - **Structure:** a reusable content file (`src/content/projects.js`) and template (`views/project.ejs`): problem and audience, the retrieve → extract → review workflow, implementation decisions, the review interface, scope and limitations, the approved contribution wording, technologies, links to the live application and repository, and a contact invitation.
 - **Honesty rules in the copy:** missing details stay "Not Found"; extracted information needs human review; matching quoted evidence is not proof an interpretation is correct; no measured results, accuracy, adoption, or client outcomes; saving, exporting, publishing, and site crawling are listed as not implemented.
 - **Screenshots:** captured from the deployed application on 2026-11-12 without changing it. The start screen is a plain capture. The two review-interface captures use the app's own "Show development sample results" button, which renders test data in the browser without any server or AI call, and are captioned as sample data. "Analyze Program" was not submitted.
-- **Homepage:** the first selected-work slot is now this project (real title, summary, screenshot, and link). The other three slots remain development placeholders.
+- **Homepage:** the first selected-work slot is this project (real title, summary, screenshot, and link).
+- **Accuracy correction (included in `562168a`):** the copy describes what the model is instructed to do and what the server checks. It doesn't claim extracted values are supported or correct.
+
+**Second case study (implemented, not committed):** `/projects/catering-concierge`, the owner-approved Catering Concierge (AGENTS.md, Decisions, 2026-11-12).
+- **Sources:** that repository's committed `main` (`67f03bc`, the deployed branch) and its deployed interface, viewed signed out. Its working tree holds uncommitted manual-entry work on a feature branch, which the case study treats as in development.
+- **Content:**
+  - the multi-channel intake problem;
+  - Zapier preparing each record and writing the AI review (the app calls no AI service);
+  - the bearer-token import endpoint: server-fixed restaurant and table, exactly three fields, a 128 KiB limit, checks before the database, and duplicate handling backed by a unique index;
+  - the session-scoped, read-only Inquiries screen;
+  - scope and limitations, the approved contribution, technologies, links, and a contact invitation.
+- **Screenshots:** captured signed out on 2026-11-12 with navigation only. They show the dashboard on desktop and phone (its fictional sample data, flagged "Sample data") and the sign-in page. The sign-in-only Inquiries screen isn't pictured.
+- **Template changes:**
+  - Sample-data flags now follow each screenshot's `sample` field.
+  - The fourth section's label can be set per project.
+  - The flag uses deep teal on cream sections, because gold failed contrast there.
+  - Homepage screenshot cards keep their ratio in every staggered slot.
+- **Homepage:** the second slot (formerly the Automation placeholder) is this project. The remaining two slots are development placeholders.
 
 **Visual presentation is provisional.** The palette and AG branding are approved; the overall styling still needs the owner's final approval in a dedicated design review before launch.
 
@@ -175,7 +192,7 @@ Real values belong in Railway's service variables or a local `.env` file, which 
 
 - **Hero wording** (provisional, from the visual reference): "Human insight. Technical possibility.", "Make complex feel simple.", "Useful applications. Thoughtful AI. Connected workflows. Built around people.", "Designed with intention. Built to be used."
 - **Hero artwork labels:** "Idea", "Reality", "The space between idea & execution"
-- **Selected work:** the first slot is the approved Reentry Resource Extractor. The other three slots are development placeholders, labeled on the page, with concept art rather than screenshots, no links, and invented headings ("Connect the moving parts." and the others). They are defined in `src/content/home.js`.
+- **Selected work:** the first two slots are the approved Reentry Resource Extractor and Catering Concierge. The other two slots are development placeholders, labeled on the page, with concept art rather than screenshots, no links, and invented headings. They are defined in `src/content/home.js`.
 - **Work introduction:** "Less friction. More possibility.", the paragraph below it (reworded when the first real project arrived), and the "More projects in development" note
 - **Services:** the heading "Practical tools for real work." and the three capability descriptions
 - **Homepage About teaser:** the heading "Curiosity meets follow-through.", the two introductory sentences, and the three principles. These are drawn from the approved positioning. The `/about` page copy itself is approved and not temporary.
@@ -185,7 +202,8 @@ Real values belong in Railway's service variables or a local `.env` file, which 
 ### Remaining before launch
 
 - Owner review of the Reentry Resource Extractor case-study copy, and an end-to-end extraction check of the live app by the owner (the write-up is based on source inspection and the deployed interface, not a live AI run)
-- Further projects (2–3 more, each owner-approved) with verified descriptions, screenshots, links, and case-study pages, replacing the remaining placeholders
+- Owner review of the Catering Concierge case-study copy, and a signed-in check of the deployed Inquiries screen by the owner (it wasn't viewed for the case study)
+- Further projects (1–2 more, each owner-approved) with verified descriptions, screenshots, links, and case-study pages, replacing the remaining placeholders
 - Owner review of the Services page wording and the homepage About teaser
 - Decide whether to include a résumé
 - Contact in production: set the Railway variables and confirm a real inquiry sent from the deployed site arrives with the correct Reply-To. The local check is already done (owner-reported).
@@ -308,6 +326,14 @@ An internal inventory, prepared before any case-study page is built. **None of i
 
 ### Catering Concierge
 
+**Status (2026-11-12): approved as the second portfolio entry, and its case study is implemented** at `/projects/catering-concierge` (not yet committed).
+- **Owner-supplied:** live application `https://week-8-build-catering-concierge-production.up.railway.app/`, and the contribution wording recorded in AGENTS.md.
+- **Checked for this task (read-only):**
+  - **Repository:** `main` = `origin/main` = `67f03bc`. The working tree is on `codex/manual-inquiry-entry`, with manual entry uncommitted.
+  - **Source:** the committed code has no AI SDK, and the in-app banner states the app calls no AI service.
+  - **Live app:** `/`, `/sign-in`, `/quotes`, and `/api/health` (`{"status":"ok"}`) load signed out, and `/inquiries` redirects to `/sign-in`. The capture made 177 requests, all GET, with no `/api/` calls.
+- **Not verified here:** the signed-in Inquiries screen, any import, separation between two accounts, and live duplicate handling. The project's own records note a live duplicate check, which wasn't repeated.
+
 - **Problem and audience:** independent restaurants managing catering inquiries from first contact to a confirmed event (`README.md`).
 - **Launch scope (plan):** inbox, web-form, and manual intake; AI extraction; menus; deterministic quotes; drafted replies; bookings; analytics. **These modules are planned, not implemented.**
 - **Source (committed at `67f03bc`):**
@@ -341,7 +367,7 @@ An internal inventory, prepared before any case-study page is built. **None of i
   - **Decisions:** server-fixed scope, a timing-safe token, the unique index for duplicates, logs without content.
   - **Verifiable result:** the observed 201 and 200 duplicate behaviour on the demo.
 
-### Recommendation (Reentry Resource Extractor approved; the rest proposed, not approved)
+### Recommendation (Reentry Resource Extractor and Catering Concierge approved; the rest proposed, not approved)
 
 **Feature three projects:**
 - **Reentry Resource Extractor** for AI integration.

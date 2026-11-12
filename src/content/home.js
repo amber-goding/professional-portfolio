@@ -32,7 +32,6 @@ export const services = [
 // fill the rest until each is replaced by a verified project. Placeholders
 // must never link anywhere or describe features.
 export const projectPlaceholders = [
-  { category: 'Automation', heading: 'Connect the moving parts.', variant: 'workflow' },
   { category: 'AI integration', heading: 'Clarity from complexity.', variant: 'signal' },
   { category: 'Application', heading: 'Built to be used.', variant: 'layers' },
 ];

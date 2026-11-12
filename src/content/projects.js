@@ -149,6 +149,7 @@ export const projects = [
           width: 1600,
           height: 885,
           sizes: '(min-width: 90rem) 54rem, (min-width: 56rem) 60vw, 100vw',
+          sample: true,
           alt: 'The review interface on a desktop screen. Field cards for Program name and Website show badges reading Unreviewed and Found, the AI result, the quoted source evidence, an editable manager-reviewed value, and buttons to mark the value confirmed or clear it. A status message says the development sample results are for interface testing only.',
           caption: 'The review interface on a wide screen, showing the application’s development sample results rather than a live extraction.',
         },
@@ -161,6 +162,7 @@ export const projects = [
           // A tall phone capture: shown at phone width on narrow screens (styles.css).
           frame: 'phone',
           sizes: '(min-width: 90rem) 27rem, (min-width: 56rem) 30vw, 22rem',
+          sample: true,
           alt: 'The review interface on a phone: the Extraction results heading, the note that AI-generated information is a draft, and the Program name field card with its badges, AI result, source evidence, and manager-reviewed value.',
           caption: 'The same screen on a phone, again with sample data.',
         },
@@ -168,6 +170,173 @@ export const projects = [
     },
   },
 ];
+
+// Catering Concierge: written from the committed source on `main` (67f03bc),
+// which the deployment runs, and from the deployed interface viewed signed out.
+// Manual inquiry entry exists only as uncommitted work in that repository, so
+// it is described as in development, never as deployed.
+const cateringImages = '/images/projects/catering-concierge';
+
+const cateringDashboard = {
+  base: `${cateringImages}/dashboard-sample-desktop`,
+  widths: [1600, 800],
+  fallbackWidth: 1600,
+  width: 1600,
+  height: 1000,
+  sample: true,
+  alt: 'The Catering Concierge dashboard on a desktop screen. A demonstration-mode banner states that its inquiries, names, and figures are fictional. The sidebar lists Dashboard, Inquiries marked Limited, and Email, Menu, Quotes, Events, and Settings marked Planned. Summary cards and an inquiry pipeline are labelled Sample and Fictional.',
+  caption: 'The deployed dashboard, viewable without signing in. Everything on it is fictional sample data, and the sidebar marks each module as Limited or Planned. Imported inquiries appear on the separate Inquiries page, which requires sign-in and isn’t shown.',
+};
+
+projects.push({
+  slug: 'catering-concierge',
+  published: true,
+  approvedOn: '2026-11-12',
+  title: 'Catering Concierge',
+  category: 'Workflow automation',
+  description:
+    'Case study: Catering Concierge brings catering inquiries, prepared and reviewed in Zapier, into a restaurant-scoped review screen through an authenticated, duplicate-aware import endpoint.',
+  tagline:
+    'A catering operations app for independent restaurants. Its working pilot connects a Zapier workflow to the app: Zapier packages each inquiry with an AI-written review, an authenticated endpoint stores it once for the configured restaurant, and signed-in owners read their restaurant’s inquiries in one place.',
+  audience:
+    'Built for independent restaurants that receive catering requests through several channels and need one place to see what has come in.',
+  status:
+    'Deployed demonstration on Railway with fictional data. Inquiry import and review work as a limited pilot; menus, quotes, email, and events are planned.',
+  stackSummary:
+    'Next.js, React, and TypeScript with Prisma on Neon PostgreSQL, Google sign-in through Better Auth, and Zapier, deployed on Railway.',
+  // Approved by the owner on 2026-11-12. Do not edit.
+  contribution:
+    'I defined the problem and application workflow, guided AI-assisted implementation, reviewed the results, and refined the interface and human-verification process.',
+  contributionHeading: { lead: 'What I', accent: 'contributed.' },
+  links: {
+    live: { label: 'Open the live application', href: 'https://week-8-build-catering-concierge-production.up.railway.app/' },
+    repo: { label: 'View the repository', href: 'https://github.com/amber-goding/week-8-build-catering-concierge' },
+  },
+  card: {
+    summary:
+      'Connects a Zapier workflow to a restaurant app: Zapier prepares each catering inquiry with an AI review, an authenticated endpoint stores it once for the configured restaurant, and signed-in owners review it in one place.',
+    image: cateringDashboard,
+  },
+  problem: {
+    heading: { lead: 'Many channels,', accent: 'one kitchen.' },
+    paragraphs: [
+      'Catering requests reach an independent restaurant through different routes: email, website forms, and conversations someone types up later. Each arrives in its own format, with the event date, headcount, and dietary needs buried in free text, and each has to be found, read, and checked for missing details before anyone can respond.',
+      'Catering Concierge is planned as a complete catering workflow, from first contact to a confirmed event. The first working piece is intake: moving inquiries out of the tools where they arrive and into one place, attached to the right restaurant, without creating duplicates, and designed so each owner reads only their own restaurant’s inquiries.',
+    ],
+  },
+  workflow: {
+    heading: { lead: 'Prepare in Zapier,', accent: 'review in the app.' },
+    steps: [
+      {
+        title: 'Prepare in Zapier',
+        text: 'A published Zap watches a Zapier table of fictional pilot inquiries. For each new record, an AI by Zapier step writes a review of the request, and a code step packages the record ID, the original message, and that review as JSON. The AI step runs inside Zapier; the application itself calls no AI service.',
+      },
+      {
+        title: 'Deliver to the app',
+        text: 'Zapier sends the JSON to the application’s import endpoint with a bearer token. The server checks its own configuration, the token, the content type, the size, and the exact fields before it touches the database, then stores the inquiry for the restaurant named in server configuration, labelled as demonstration data.',
+      },
+      {
+        title: 'Review in one place',
+        text: 'A signed-in owner opens Inquiries and sees their restaurant’s latest inquiries, newest first. Each shows the original request and Zapier’s AI review under separate labels. The screen is read-only for now: nothing is approved, edited, or sent from it.',
+      },
+    ],
+  },
+  decisions: {
+    heading: { lead: 'Narrow by design,', accent: 'strict at the edges.' },
+    items: [
+      {
+        title: 'The server decides where data goes',
+        text: 'The destination restaurant and source table come from server configuration, never from the request. The endpoint accepts exactly three fields: the record ID, the inquiry message, and the AI review. Anything else, including an attempt to name a restaurant or mark a record as real, is rejected.',
+      },
+      {
+        title: 'Checks run before the database',
+        text: 'Requests are checked in a fixed order: configuration, bearer token, content type, body size (a 128 KiB limit enforced while the body is read), and then the payload. A request that fails any of them never reaches the database. The token check hashes both values and compares them in constant time.',
+      },
+      {
+        title: 'One record, one inquiry',
+        text: 'A repeat delivery of the same Zapier record returns the existing inquiry instead of creating another or overwriting it. A unique database index on the restaurant, table, and record ID backs this up: if two deliveries arrive together, the database rejects the second and the endpoint returns the first. Simultaneous deliveries are covered by automated tests against a simulated database rather than a live test.',
+      },
+      {
+        title: 'Restaurant scope comes from the session',
+        text: 'The Inquiries screen takes its restaurant only from the signed-in user’s membership, never from a URL or form, and every query filters by it. Signed-out visitors are sent to sign-in and users without a restaurant to setup. If loading fails, the page shows an unavailable notice instead of data.',
+      },
+      {
+        title: 'Imported text stays untrusted',
+        text: 'Line endings are normalized and unsupported control characters are refused, but the message and the AI review are otherwise stored as received and displayed as plain text. Responses never echo submitted content, and logs record error types without request bodies or tokens.',
+      },
+      {
+        title: 'Labelled, not dressed up',
+        text: 'Every imported record is stored and shown as demonstration data. The dashboard pipeline is a separate fictional preview, and modules that aren’t built are marked Planned in the navigation instead of being filled with convincing screens.',
+      },
+    ],
+  },
+  review: {
+    label: 'The interface',
+    heading: { lead: 'What’s public,', accent: 'what’s behind sign-in.' },
+    paragraphs: [
+      'The dashboard and the planned module pages can be viewed without an account. Sign-in uses Google, and the sign-in page says plainly what signing in does today: it confirms identity, lets the owner set up one restaurant, and gives access to that restaurant’s imported inquiries.',
+      'The Inquiries screen itself requires a restaurant account, so it isn’t pictured here. The screenshots were taken from the deployed application while signed out, and the dashboard images show its built-in fictional sample data.',
+    ],
+  },
+  scope: {
+    heading: { lead: 'What it does,', accent: 'and doesn’t.' },
+    implemented: [
+      'Google sign-in with seven-day sessions, and setup of one restaurant per account with an owner membership',
+      'An authenticated Zapier import endpoint with payload validation, a size limit, and duplicate handling',
+      'A restaurant-scoped, read-only Inquiries screen showing each original request with its Zapier AI review',
+      'A dashboard and pipeline preview built on clearly labelled fictional sample data',
+      'A health endpoint and production configuration for Railway',
+      'Automated tests for the sign-in wiring, restaurant setup, the import endpoint, and inquiry reads, using a simulated database where needed',
+    ],
+    limitations: [
+      'It is a demonstration on fictional data, running against a development database, not a production restaurant service.',
+      'The import is a single-restaurant pilot: one configured restaurant, one Zapier table, and one shared token.',
+      'The app makes no AI calls of its own. The review text comes from Zapier and is shown as received; the app doesn’t check whether it is correct.',
+      'Inquiries can be read, but not edited, approved, quoted, or answered, and nothing is extracted from them into structured fields.',
+      'The Email, Menu, Quotes, Events, and Settings pages describe planned scope only. Business analytics is also planned.',
+      'Entering an inquiry by hand is in development and isn’t part of the deployed version.',
+      'Restaurant scoping and simultaneous duplicate deliveries are covered by automated tests against a simulated database. Separation between two real restaurant accounts hasn’t been tested live.',
+    ],
+    verification:
+      'This write-up is based on the project’s committed source code and its deployed interface. The screenshots were captured from the live application on 2026-11-12 while signed out, without submitting anything. The project’s own records note a live Zapier test in which a first delivery was accepted and a repeat returned the same inquiry as a duplicate; that check wasn’t repeated for this case study.',
+  },
+  technologies: [
+    { name: 'Next.js and React', detail: 'App Router pages with server-side data loading, written in TypeScript.' },
+    { name: 'Tailwind CSS', detail: 'Interface styling and theme tokens.' },
+    { name: 'Prisma and Neon PostgreSQL', detail: 'The data model, migrations, and the unique index behind duplicate handling.' },
+    { name: 'Better Auth', detail: 'Google sign-in and database-backed sessions.' },
+    { name: 'Zapier', detail: 'Tables, AI by Zapier, Code by Zapier, and an authenticated API request that delivers each inquiry.' },
+    { name: 'Node.js test runner', detail: 'Automated tests for the import endpoint, sign-in wiring, and restaurant scope.' },
+    { name: 'Railway', detail: 'Hosting for the demonstration deployment.' },
+  ],
+  screenshots: {
+    start: cateringDashboard,
+    review: [
+      {
+        base: `${cateringImages}/sign-in-desktop`,
+        widths: [1600, 800],
+        fallbackWidth: 1600,
+        width: 1600,
+        height: 1000,
+        sizes: '(min-width: 90rem) 54rem, (min-width: 56rem) 60vw, 100vw',
+        alt: 'The Catering Concierge sign-in page on a desktop screen, with a Continue with Google button and a panel titled What signing in does today that lists identity confirmation through Google, seven-day sessions, no Gmail access, and setting up one restaurant to read its imported pilot inquiries.',
+        caption: 'The deployed sign-in page, captured signed out. It explains what signing in does today, including that it doesn’t connect Gmail.',
+      },
+      {
+        base: `${cateringImages}/dashboard-sample-phone`,
+        widths: [780, 390],
+        fallbackWidth: 780,
+        width: 780,
+        height: 1688,
+        sample: true,
+        frame: 'phone',
+        sizes: '(min-width: 90rem) 27rem, (min-width: 56rem) 30vw, 22rem',
+        alt: 'The dashboard on a phone: the menu button, the demonstration-mode banner, the Catering overview heading with a Sample data label, and the first summary card marked Sample.',
+        caption: 'The dashboard on a phone, with its fictional sample data and demonstration banner.',
+      },
+    ],
+  },
+});
 
 export const publishedProjects = projects.filter((project) => project.published);
 
