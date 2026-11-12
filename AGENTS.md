@@ -7,9 +7,13 @@ Shared instructions for AI coding agents working in this repository. This file i
 Amber Goding’s professional portfolio and services website showcases her application development, AI integration, and workflow automation capabilities. It serves employers, prospective clients, and collaborators. It will be the long-term professional site at **ambergoding.com**.
 
 **Current status (2026-11-12):**
-- **Committed:** Milestone 1, the foundation (`f527181`), and Milestone 2, the homepage, visual system, and AG branding (`c305a46`).
-- **Implemented, not committed:** the contact feature. It includes the `/contact` page and Resend delivery, but is **not launch-ready** until a real test inquiry has been confirmed in the owner's inbox.
-- Temporary content is listed in README.md under "Temporary content". Nothing has been deployed. Service accounts, paid plans, DNS, and deployment are **not approved**; see [Pending decisions](#pending-decisions).
+- **Committed:** Milestone 1, the foundation (`f527181`); Milestone 2, the homepage, visual system, and AG branding (`c305a46`); and the private contact form with Resend delivery (`d1582eb`).
+- **Contact email, verified locally (owner-reported manual checks, not automated):**
+  - The owner created a Resend account and verified the sending domain `mail.ambergoding.com` through Spaceship DNS.
+  - A real inquiry submitted through the local contact form arrived in the owner's Gmail inbox, and its Reply-To pointed to the visitor address entered in the form.
+- **Still unverified:** email delivery from Railway (production variables, the deployed environment) and the deployment itself. Nothing has been deployed.
+- **Implemented, not committed:** the `/services` page.
+- Temporary content is listed in README.md under "Temporary content". Paid plans, further DNS changes, and deployment are **not approved**; see [Pending decisions](#pending-decisions).
 
 **Visual presentation is provisional.** The current website styling has **not** received the owner's final approval. The approved palette and the AG branding direction stand, but the overall visual presentation needs another dedicated design review before launch. Until then, don't make unrelated visual changes while working on other tasks.
 
@@ -21,7 +25,7 @@ Amber Goding’s professional portfolio and services website showcases her appli
 
 **Positioning:** a practical application and automation builder who turns real-world problems into useful tools, explains decisions clearly, and uses AI thoughtfully.
 
-**Pages:** Home/Portfolio, Services, About, Contact, and one case-study page per project.
+**Pages:** Home/Portfolio, Services, About, Contact, and one case-study page per project. **Services (`/services`) and About are approved as separate pages**, not optional extras. The homepage keeps its short overview sections as well.
 
 **Branding:** the website palette below is approved. The logo direction is the **uppercase AG monogram** (revised 2026-11-12; it replaces the earlier lowercase "ag"):
 - An elegant, intertwined uppercase A and G in high-contrast serif letterforms, with a refined sweeping flourish and a small, restrained four-point sparkle, plus a spacious, editorial uppercase name treatment ("AMBER GODING").
@@ -97,9 +101,8 @@ Amber Goding’s professional portfolio and services website showcases her appli
 
 These are proposed or open items. They are **not approved** until they are recorded under Decisions.
 
-- Sender address and Resend account/domain setup. *Proposed:* a verified subdomain such as `mail.ambergoding.com`. Creating accounts and changing DNS need the owner's approval.
-- Final visual presentation (dedicated design review required before launch).
-- DNS host for `ambergoding.com`, and which host is canonical (apex or `www`).
+- Final visual presentation (dedicated design review required before launch). The current styling is provisional and needs the owner's final approval.
+- Which host is canonical for the site (apex or `www`). DNS for `ambergoding.com` is hosted at Spaceship (owner-reported). Whether Spaceship supports the CNAME flattening or ALIAS record Railway needs for the apex hasn't been checked.
 - Railway plan.
 - Which 3–4 projects to feature.
 - Whether to include a résumé.
@@ -114,3 +117,5 @@ Approved decisions, dated. Add new entries at the end.
 - 2026-11-12: Branding revised: the uppercase, intertwined serif AG monogram with flourish and sparkle replaces the lowercase "ag". The website palette is unchanged, and the brand board's blush-pink palette is not adopted. See Branding above.
 - 2026-11-12: The current visual presentation is **provisional**, not final. The palette and branding direction remain approved, and a dedicated design review is required before launch.
 - 2026-11-12: Contact delivery uses **Resend's HTTPS API**, approved for implementation. The recipient is configured only via `CONTACT_TO_EMAIL` and must never reach the browser (see Privacy). Creating a Resend account, verifying a sender domain, and changing DNS still need explicit approval.
+- 2026-11-12: Owner-reported: a Resend account was created and the sender domain `mail.ambergoding.com` verified through Spaceship DNS. A real local test inquiry arrived in the owner's Gmail with the correct Reply-To. Railway delivery remains unverified.
+- 2026-11-12: Services and About are approved as **separate pages**. `/services` covers only the three established service areas: application development, AI integration, and workflow automation.

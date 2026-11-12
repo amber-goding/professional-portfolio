@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 import express from 'express';
 import { createContactRouter } from './contact/router.js';
 import { navigation, principles, projectPlaceholders, services } from './content/home.js';
+import { processSteps, serviceDetails, servicesIntro } from './content/services.js';
 
 const projectRoot = fileURLToPath(new URL('..', import.meta.url));
 
@@ -61,6 +62,17 @@ export function createApp({
       services,
       projectPlaceholders,
       principles,
+    });
+  });
+
+  app.get('/services', (req, res) => {
+    res.render('services', {
+      title: `Services | ${site.name}`,
+      description:
+        'Application development, AI integration, and workflow automation: who each service could help, the problems it addresses, and how a project works.',
+      intro: servicesIntro,
+      services: serviceDetails,
+      processSteps,
     });
   });
 

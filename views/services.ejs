@@ -1,0 +1,87 @@
+<%- include('partials/header') %>
+    <section class="page-hero" aria-labelledby="services-page-heading">
+      <div class="wrap">
+        <p class="section-label"><span>Services /</span> What I build</p>
+        <h1 class="page-title" id="services-page-heading"><%= intro.heading.lead %> <em><%= intro.heading.accent %></em></h1>
+        <p class="page-lede"><%= intro.lede %></p>
+        <p class="page-note"><%= intro.note %></p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="/contact">Start a conversation <span aria-hidden="true">→</span></a>
+          <a class="button-text" href="#process">How a project works <span aria-hidden="true">↓</span></a>
+        </div>
+        <nav class="page-toc" aria-label="Services on this page">
+          <ol role="list">
+            <% services.forEach((service, index) => { %>
+            <li><a href="#<%= service.id %>"><span class="page-toc-number" aria-hidden="true"><%= String(index + 1).padStart(2, '0') %></span> <%= service.title %></a></li>
+            <% }) %>
+          </ol>
+        </nav>
+      </div>
+    </section>
+
+    <% services.forEach((service, index) => { const n = String(index + 1).padStart(2, '0'); %>
+    <section class="section service-detail" id="<%= service.id %>" aria-labelledby="<%= service.id %>-heading">
+      <div class="wrap service-detail-layout">
+        <div class="service-detail-intro">
+          <p class="section-label"><span><%= n %> /</span> Service</p>
+          <h2 id="<%= service.id %>-heading"><%= service.title %></h2>
+          <p class="service-detail-summary"><%= service.summary %></p>
+          <p class="service-detail-blocks"><strong>Typical building blocks:</strong> <%= service.buildingBlocks %></p>
+          <a class="button-text" href="/contact"><%= service.contactLabel %> <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="service-detail-body">
+          <div class="detail-group">
+            <h3>Who it could help</h3>
+            <ul>
+              <% service.audience.forEach((item) => { %><li><%= item %></li><% }) %>
+            </ul>
+          </div>
+          <div class="detail-group">
+            <h3>Problems it addresses</h3>
+            <ul>
+              <% service.problems.forEach((item) => { %><li><%= item %></li><% }) %>
+            </ul>
+          </div>
+          <div class="detail-group">
+            <h3>What an engagement could include</h3>
+            <ul>
+              <% service.engagement.forEach((item) => { %><li><%= item %></li><% }) %>
+            </ul>
+          </div>
+          <div class="example-card">
+            <p class="example-label">Illustrative example, not completed client work</p>
+            <h3>Example scenario</h3>
+            <p><%= service.example %></p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <% }) %>
+
+    <section class="section section--cream process" id="process" aria-labelledby="process-heading">
+      <div class="wrap">
+        <p class="section-label"><span>04 /</span> Process</p>
+        <h2 id="process-heading">How a project <em>works.</em></h2>
+        <ol class="principles process-steps" role="list">
+          <% processSteps.forEach((step, index) => { %>
+          <li>
+            <span class="principle-number" aria-hidden="true"><%= String(index + 1).padStart(2, '0') %></span>
+            <h3><%= step.title %></h3>
+            <p><%= step.text %></p>
+          </li>
+          <% }) %>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section contact" aria-labelledby="services-contact-heading">
+      <div class="wrap">
+        <p class="section-label"><span>Next /</span> Have a problem in mind?</p>
+        <h2 class="contact-title" id="services-contact-heading">Let’s talk it <em>through.</em></h2>
+        <div class="contact-row">
+          <p>Describe the problem in a few sentences; no technical detail needed. Not sure which service fits? That’s fine. We can work it out together.</p>
+          <a class="contact-cta" href="/contact">Start a conversation <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+<%- include('partials/footer') %>

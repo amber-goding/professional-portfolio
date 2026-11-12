@@ -57,7 +57,9 @@ The site runs without any other variables. Without email configuration, `/contac
 | `server.js` | Production entry point. Reads `PORT`, listens on `0.0.0.0`, and shuts down cleanly on `SIGTERM`/`SIGINT` |
 | `src/app.js` | Builds the Express app (routes, views, static files, 404 and error handling) without starting a listener, so tests can use it directly |
 | `src/config.js` | Port parsing and validation |
-| `src/content/home.js` | Homepage content: navigation, services, project placeholders, and principles |
+| `src/content/home.js` | Homepage content: navigation, services overview, project placeholders, and principles |
+| `src/content/services.js` | `/services` content: introduction, the three service areas (audience, problems, engagement, illustrative example), and the process steps |
+| `views/services.ejs` | Services page |
 | `src/contact/` | Contact feature: `router.js` (GET/POST `/contact`), `config.js` (environment), `validation.js`, `form-token.js` (signed timing/submission token), `rate-limit.js`, `resend.js` (Resend HTTPS client) |
 | `views/contact.ejs` | Contact page with every form state: form, field errors, alert, success, and unavailable |
 | `public/js/contact.js` | Optional enhancement for inline feedback. The form works fully without it |
@@ -77,6 +79,7 @@ Fonts come from Google Fonts' official distribution, and the licenses from the [
 Routes:
 
 - `GET /`: homepage (sections `#work`, `#services`, `#about`, `#contact`)
+- `GET /services`: Services page (sections `#application-development`, `#ai-integration`, `#workflow-automation`, `#process`)
 - `GET /contact`: contact page. `POST /contact` handles submissions and returns HTML, or JSON when the request sends `Accept: application/json`.
 - `GET /healthz`: health check returning `{"status":"ok"}`
 - Anything else returns an HTML 404 page. Unexpected errors return a generic 500 page. Error details are logged on the server, never shown to visitors.
@@ -138,9 +141,15 @@ Real values belong in Railway's service variables or a local `.env` file, which 
 - Service band, staggered selected-work layout (placeholders only), services overview, cream About teaser, contact invitation linking to `/contact`, and footer
 - Hover, focus, and menu transitions, all disabled under `prefers-reduced-motion`. No continuous animation.
 
-**Contact feature (implemented, not yet launch-ready):** `/contact` page with Resend delivery, validation, spam and rate limits, duplicate prevention, and every state, with or without JavaScript. Launch-ready only after a real test inquiry is confirmed in the inbox.
+**Contact feature (committed in `d1582eb`):** `/contact` page with Resend delivery, validation, spam and rate limits, duplicate prevention, and every state, with or without JavaScript.
+- **Verified locally, as owner-reported manual checks** (not automated):
+  - A Resend account was created and the sending domain `mail.ambergoding.com` was verified through Spaceship DNS.
+  - A real inquiry sent from the local site arrived in the owner's Gmail inbox, with Reply-To set to the visitor address entered in the form.
+- **Not yet verified:** delivery from Railway (production variables, the deployed environment) and the deployment itself.
 
-**Visual presentation is provisional.** The palette and AG branding are approved; the overall styling still needs a dedicated design review before launch.
+**Services page (implemented, not committed):** `/services` covers the three service areas. For each: who it could help, the problems it addresses, what an engagement could include, and an illustrative example clearly marked as not client work. It also has a four-step process and links to `/contact`. The main navigation's Services link now goes to `/services`; the homepage keeps its `#services` overview, which links to the page. Services and About are approved as separate pages.
+
+**Visual presentation is provisional.** The palette and AG branding are approved; the overall styling still needs the owner's final approval in a dedicated design review before launch.
 
 ### Temporary content (must be replaced or confirmed before launch)
 
@@ -151,16 +160,17 @@ Real values belong in Railway's service variables or a local `.env` file, which 
 - **Services:** the heading "Practical tools for real work." and the three capability descriptions
 - **About:** the heading "Curiosity meets follow-through.", the two introductory sentences, and the three principles. These are drawn from the approved positioning but still need Amber's own biography.
 - **Contact:** the heading "Let's make it happen." and its supporting sentence, on both the homepage and `/contact`
+- **Services page:** all wording in `src/content/services.js` is provisional, including the three illustrative example scenarios (home cleaning, tutoring, and property maintenance), which are hypothetical by design
 
 ### Remaining before launch
 
 - Real projects (3–4) with verified descriptions, visuals, live/repository links, and case-study pages
-- Services and About pages, if kept separate from the homepage sections
+- About page (approved as a separate page; not built yet). Owner review of the Services page wording
 - Final biography, photo, and professional links
-- Contact: a Resend account, a verified sender domain, production variables, and a confirmed real test inquiry in the inbox with the correct Reply-To
+- Contact in production: set the Railway variables and confirm a real inquiry sent from the deployed site arrives with the correct Reply-To. The local check is already done (owner-reported).
 - Dedicated design review of the overall visual presentation
 - Social/Open Graph metadata, `robots.txt`, and a sitemap
 - Manual checks on real phones and with a screen reader
-- Railway deployment, the `ambergoding.com` and `www` domains, HTTPS, and email sender verification
+- Railway deployment, the `ambergoding.com` and `www` domains, and HTTPS. DNS is at Spaceship; check that it supports the apex record Railway needs.
 
 Project requirements and approved decisions are recorded in [AGENTS.md](AGENTS.md).

@@ -65,15 +65,23 @@ describe('application routes', () => {
       assert.match(html, /<main id="main"/);
     });
 
-    it('has main navigation to homepage sections and the contact page', async () => {
+    it('has main navigation to homepage sections and the Services and Contact pages', async () => {
       const nav = html.match(/<nav[^>]*aria-label="Main"[^>]*>([\s\S]*?)<\/nav>/);
       assert.ok(nav, 'main navigation landmark is present');
       const navLinks = [...nav[1].matchAll(/href="([^"]+)"/g)].map((m) => m[1]);
-      assert.deepEqual(navLinks, ['/#work', '/#services', '/#about', '/contact']);
+      assert.deepEqual(navLinks, ['/#work', '/services', '/#about', '/contact']);
       for (const link of navLinks.filter((l) => l.startsWith('/#'))) {
         assert.ok(ids().has(link.slice(2)), `section ${link} exists`);
       }
-      assert.equal((await fetch(`${baseUrl}/contact`)).status, 200);
+      for (const page of ['/services', '/contact']) {
+        assert.equal((await fetch(`${baseUrl}${page}`)).status, 200, `${page} responds`);
+      }
+    });
+
+    it('keeps the services overview section and links it to the Services page', () => {
+      const overview = html.match(/<section class="section services" id="services"[\s\S]*?<\/section>/);
+      assert.ok(overview, 'homepage keeps the #services overview');
+      assert.match(overview[0], /href="\/services"/);
     });
 
     it('has a real menu button wired to the navigation', () => {

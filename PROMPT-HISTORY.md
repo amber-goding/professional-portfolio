@@ -347,3 +347,62 @@ No other features, no commits.
   - **Live delivery.** No Resend account or verified domain exists yet, so no real email was sent or received. The feature is **not launch-ready**.
   - Railway behavior (`X-Real-IP`, Host/`X-Forwarded-Host`) in a real deployment; Safari/Firefox; real screen readers.
 - **Privacy note:** the real address remains in the local commits `f527181` (AGENTS.md) and `c305a46` (`src/content/home.js`). They have not been pushed. Removing it from history before the first push would require rewriting history, which is the user's decision.
+
+**Outcome:** The user committed the contact feature as `d1582eb` ("Add private contact form with Resend delivery"). Afterwards the user created a Resend account, verified `mail.ambergoding.com` through Spaceship DNS, and confirmed that a real local test inquiry arrived in Gmail with the correct Reply-To. These are owner-reported manual checks, recorded in entry 9.
+
+### 9. Services page and recorded email progress
+
+**Asked:**
+- Record the owner-reported progress in AGENTS.md and README: the Resend account; `mail.ambergoding.com` verified via Spaceship DNS; a real local inquiry received in Gmail with the correct Reply-To; Railway delivery and deployment still unverified. Services and About are approved separate pages, and styling stays provisional. No credentials or private addresses.
+- Build a substantive `/services` page covering only application development, AI integration, and workflow automation. For each service: who it could help, problems, a possible engagement, and an illustrative example clearly marked as not client work.
+- Include a four-step process (understand the problem, define the scope, build and verify, hand off) and links to `/contact`.
+- Point the nav's Services link at `/services` and keep the homepage `#services` overview.
+- Use the existing visual system only, with no invented prices, timelines, guarantees, clients, credentials, or results, and no security or reliability claims.
+- Mocked email only; don't touch `.env`, email settings, contact logic, DNS, or deployment.
+
+**Done:**
+- **AGENTS.md:**
+  - Status now lists all three commits and the owner-reported email verification, with Railway delivery and deployment explicitly unverified.
+  - The Pages line states that Services and About are approved separate pages.
+  - Pending decisions: the Resend/sender item was removed; the final visual approval is kept; DNS is noted as at Spaceship, with apex ALIAS/flattening support for Railway unchecked.
+  - Two dated decisions were added.
+- **README:** layout rows for `src/content/services.js` and `views/services.ejs`; the `/services` route and its anchors; contact status (local verified by the owner, production unverified); a Services page status note; temporary content covering the Services wording and its hypothetical examples; and an updated "Remaining before launch" list (About page, production contact check, Spaceship apex check).
+- **`src/content/services.js`:** intro, three service objects (`id`, `title`, `contactLabel`, `summary`, `buildingBlocks`, `audience`, `problems`, `engagement`, `example`), and `processSteps`. The examples (home-cleaning, tutoring, property maintenance) were chosen to avoid overlapping the four real candidate projects (HuntSomewhere, Ever After Planner, Reentry Resource Extractor, Catering Concierge). Each example is phrased with "could".
+- **`views/services.ejs`:**
+  - `.page-hero` with h1, lede, note, a "Start a conversation" link to `/contact`, a "How a project works" link to `#process`, and an "On this page" nav.
+  - Three `section.service-detail` blocks, each labelled by its h2, with h3 groups and a dashed `.example-card` labelled "Illustrative example, not completed client work", plus a per-service "Talk about …" link to `/contact`.
+  - A cream `#process` section reusing `.principles` (4 columns at ≥56rem).
+  - A closing invitation reusing the homepage `.contact` block.
+- **`src/app.js`:** `GET /services` with a page-specific title and description.
+- **Navigation:** `home.js` Services nav link now goes to `/services`. The homepage `#services` overview gained an "Explore services in detail →" link (wrapped in `.services-intro`).
+- **CSS:**
+  - Existing selectors were extended instead of duplicated: `.page-hero/.page-title/.page-lede/.page-note` share the contact-page rules, and `.section--cream` shares the `.about` cream rules.
+  - New rules cover the TOC, service detail layout, detail lists (gold markers), example card, and process columns.
+  - An unused rule added by mistake was removed.
+- **Tests:**
+  - `test/app.test.js`: nav expectation updated to `['/#work','/services','/#about','/contact']`, both pages fetched, and a new check that the homepage `#services` overview remains and links to `/services`.
+  - New `test/services.test.js` uses `env: {}` and a fetch that throws if called:
+    - metadata, one h1, skip link, and `aria-current` on Services;
+    - exactly the three sections with h2 labels, the four h3 groups each, and substantive lists;
+    - examples labelled illustrative and using "could";
+    - process steps in order and no skipped heading levels;
+    - every "Start a conversation"/"Talk about" link goes to `/contact`, with no `mailto:` and no addresses;
+    - in-page anchors resolve;
+    - a banned-claims scan (prices, `$`, guarantees, testimonials, years of experience, certified, durations, percentages, security/reliability, bootcamp/beginner);
+    - every main-nav link on `/`, `/services`, `/contact`, and the 404 page reaches a 200 page and its fragment.
+
+**Redirections and fixes during the work:**
+- Test fixes: `#top` was exempted (the footer back-to-top link, as in the homepage test), and the banned-word check was narrowed because "student" appears legitimately in the tutoring example.
+- The browser run showed "Talk about ai integration" (lowercased title). Added an explicit `contactLabel` per service.
+- The TOC jump first measured −46px. A clean probe showed the section lands exactly 16px from the top (`scroll-margin-top`) with and without smooth scroll. The offset came from the harness's earlier `focus()` scroll, not the page.
+
+**Verification:**
+- `npm test`: 129 tests, 128 passed, 0 failed, 1 skipped (Windows SIGTERM). Contact tests use the mocked provider, and no real email was sent.
+- **Headless Chrome (scratchpad `services-browser.mjs`, real server without email variables):**
+  - At 320/375/768/1024/1440: no overflow, no heading overflow, no text under 12px. Single column below 56rem; two columns and a 4-column process at 1024+.
+  - Contrast across 108–111 text elements: no failures (lowest 5.69:1).
+  - Desktop tab order: skip → logo → nav → Start a conversation → How a project works → TOC ×3 → Talk about ×3, each with a 2px focus outline.
+  - Mobile (375) menu: Enter opens it, Escape closes it and returns focus, and Services carries `aria-current`. The tablet (768) menu opens.
+  - Reduced motion: `scroll-behavior: auto`, transitions about 0. No JS: the toggle is hidden and the four links are visible.
+- Homepage regression run: no overflow, menu/no-JS OK, no contrast failures. The private address appears in no working-tree file (`.env` excluded from the search and never opened).
+- **Not verified:** Safari/Firefox, real devices and screen readers, Railway. The current page in the open mobile menu has no *visual* marker beyond `aria-current` (left as is to avoid unrelated visual changes).
