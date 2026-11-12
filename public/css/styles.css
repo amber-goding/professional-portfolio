@@ -1785,6 +1785,112 @@ button.button[aria-disabled="true"] {
 }
 
 /* ==========================================================================
+   About page (styling provisional; see AGENTS.md)
+   ========================================================================== */
+
+/* Text links on cream: the gold arrow and underline lack contrast there. */
+.about-copy .button-text {
+  justify-self: start;
+}
+
+.about .button-text span,
+.section--cream .button-text span {
+  color: var(--deep-teal);
+}
+
+.about .button-text:hover,
+.about .button-text:focus-visible,
+.section--cream .button-text:hover,
+.section--cream .button-text:focus-visible {
+  text-decoration-color: var(--deep-teal);
+}
+
+.about-hero-layout {
+  display: grid;
+  gap: clamp(2.5rem, 6vw, 4rem);
+}
+
+/* Smaller than other page titles so "understanding" never breaks mid-word. */
+.about-title {
+  max-width: 14ch;
+  font-size: clamp(2.25rem, 1.2rem + 4vw, 4.5rem);
+}
+
+.profile-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 2rem;
+  margin-top: 1.5rem;
+}
+
+.about-portrait {
+  position: relative;
+  width: min(100% - 14px, 22rem);
+}
+
+/* Decorative offset frame in the brand gold. */
+.about-portrait::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translate(14px, 14px);
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+}
+
+.about-portrait img {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 4px;
+}
+
+.about-story {
+  border-top: 1px solid var(--line);
+}
+
+.about-story-copy {
+  display: grid;
+  gap: 1.25rem;
+  max-width: 44rem;
+  color: var(--muted);
+  font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+}
+
+.about-approach-layout {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 3rem);
+}
+
+.about-approach-copy {
+  display: grid;
+  gap: 1.25rem;
+  max-width: 44rem;
+  font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+}
+
+@media (min-width: 56rem) {
+  .about-hero-layout {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    align-items: center;
+    column-gap: clamp(3rem, 6vw, 6rem);
+  }
+
+  .about-portrait {
+    justify-self: end;
+    width: min(100% - 14px, 28rem);
+  }
+
+  .about-approach-layout {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    align-items: start;
+    column-gap: clamp(3rem, 6vw, 6rem);
+  }
+}
+
+/* ==========================================================================
    Footer
    ========================================================================== */
 

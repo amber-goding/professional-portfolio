@@ -7,12 +7,12 @@ Shared instructions for AI coding agents working in this repository. This file i
 Amber Goding’s professional portfolio and services website showcases her application development, AI integration, and workflow automation capabilities. It serves employers, prospective clients, and collaborators. It will be the long-term professional site at **ambergoding.com**.
 
 **Current status (2026-11-12):**
-- **Committed:** Milestone 1, the foundation (`f527181`); Milestone 2, the homepage, visual system, and AG branding (`c305a46`); and the private contact form with Resend delivery (`d1582eb`).
+- **Committed:** Milestone 1, the foundation (`f527181`); Milestone 2, the homepage, visual system, and AG branding (`c305a46`); the private contact form with Resend delivery (`d1582eb`); and the `/services` page (`7b3fbaf`).
 - **Contact email, verified locally (owner-reported manual checks, not automated):**
   - The owner created a Resend account and verified the sending domain `mail.ambergoding.com` through Spaceship DNS.
   - A real inquiry submitted through the local contact form arrived in the owner's Gmail inbox, and its Reply-To pointed to the visitor address entered in the form.
 - **Still unverified:** email delivery from Railway (production variables, the deployed environment) and the deployment itself. Nothing has been deployed.
-- **Implemented, not committed:** the `/services` page.
+- **Implemented, not committed:** the `/about` page, with owner-approved copy, portrait, and professional links (see [Decisions](#decisions)).
 - Temporary content is listed in README.md under "Temporary content". Paid plans, further DNS changes, and deployment are **not approved**; see [Pending decisions](#pending-decisions).
 
 **Visual presentation is provisional.** The current website styling has **not** received the owner's final approval. The approved palette and the AG branding direction stand, but the overall visual presentation needs another dedicated design review before launch. Until then, don't make unrelated visual changes while working on other tasks.
@@ -119,3 +119,8 @@ Approved decisions, dated. Add new entries at the end.
 - 2026-11-12: Contact delivery uses **Resend's HTTPS API**, approved for implementation. The recipient is configured only via `CONTACT_TO_EMAIL` and must never reach the browser (see Privacy). Creating a Resend account, verifying a sender domain, and changing DNS still need explicit approval.
 - 2026-11-12: Owner-reported: a Resend account was created and the sender domain `mail.ambergoding.com` verified through Spaceship DNS. A real local test inquiry arrived in the owner's Gmail with the correct Reply-To. Railway delivery remains unverified.
 - 2026-11-12: Services and About are approved as **separate pages**. `/services` covers only the three established service areas: application development, AI integration, and workflow automation.
+- 2026-11-12: **About page content approved** by the owner:
+  - **Copy:** the page title "About Amber", the heading "Thoughtful tools start with understanding people.", the introduction and background paragraphs, and the "How I work" section, exactly as stored in `src/content/about.js`. Don't edit, extend, or add claims to it without approval. The owner chose not to include a specific past-work anecdote.
+  - **Portrait:** the owner-supplied photo, resized for the web without retouching, with metadata stripped (`public/images/amber-goding-portrait-*`). Don't retouch, regenerate, or replace it.
+  - **Professional links:** LinkedIn `https://www.linkedin.com/in/amber-goding/` and GitHub `https://github.com/amber-goding`. They are used as links only; their contents have not been reviewed, so don't describe them.
+  - The homepage About teaser and the About page's closing contact invitation reuse earlier wording that remains provisional. The overall styling remains provisional.

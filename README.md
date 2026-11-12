@@ -60,6 +60,9 @@ The site runs without any other variables. Without email configuration, `/contac
 | `src/content/home.js` | Homepage content: navigation, services overview, project placeholders, and principles |
 | `src/content/services.js` | `/services` content: introduction, the three service areas (audience, problems, engagement, illustrative example), and the process steps |
 | `views/services.ejs` | Services page |
+| `src/content/about.js` | `/about` content: the owner-approved copy, portrait details (files, dimensions, `sizes`), and the LinkedIn and GitHub links |
+| `views/about.ejs` | About page |
+| `public/images/` | Portrait in WebP at 400, 800, and 1200px, plus an 800px JPEG fallback. Resized from the owner's photo without retouching; metadata stripped |
 | `src/contact/` | Contact feature: `router.js` (GET/POST `/contact`), `config.js` (environment), `validation.js`, `form-token.js` (signed timing/submission token), `rate-limit.js`, `resend.js` (Resend HTTPS client) |
 | `views/contact.ejs` | Contact page with every form state: form, field errors, alert, success, and unavailable |
 | `public/js/contact.js` | Optional enhancement for inline feedback. The form works fully without it |
@@ -80,6 +83,7 @@ Routes:
 
 - `GET /`: homepage (sections `#work`, `#services`, `#about`, `#contact`)
 - `GET /services`: Services page (sections `#application-development`, `#ai-integration`, `#workflow-automation`, `#process`)
+- `GET /about`: About page (introduction with portrait and professional links, background, "How I work", contact invitation)
 - `GET /contact`: contact page. `POST /contact` handles submissions and returns HTML, or JSON when the request sends `Accept: application/json`.
 - `GET /healthz`: health check returning `{"status":"ok"}`
 - Anything else returns an HTML 404 page. Unexpected errors return a generic 500 page. Error details are logged on the server, never shown to visitors.
@@ -147,7 +151,12 @@ Real values belong in Railway's service variables or a local `.env` file, which 
   - A real inquiry sent from the local site arrived in the owner's Gmail inbox, with Reply-To set to the visitor address entered in the form.
 - **Not yet verified:** delivery from Railway (production variables, the deployed environment) and the deployment itself.
 
-**Services page (implemented, not committed):** `/services` covers the three service areas. For each: who it could help, the problems it addresses, what an engagement could include, and an illustrative example clearly marked as not client work. It also has a four-step process and links to `/contact`. The main navigation's Services link now goes to `/services`; the homepage keeps its `#services` overview, which links to the page. Services and About are approved as separate pages.
+**Services page (committed in `7b3fbaf`):** `/services` covers the three service areas. For each: who it could help, the problems it addresses, what an engagement could include, and an illustrative example clearly marked as not client work. It also has a four-step process and links to `/contact`. The main navigation's Services link now goes to `/services`; the homepage keeps its `#services` overview, which links to the page. Services and About are approved as separate pages.
+
+**About page (implemented, not committed):** `/about` uses the owner-approved copy, portrait, and LinkedIn and GitHub links (recorded in AGENTS.md under Decisions).
+- **Portrait:** responsive WebP sources with a JPEG fallback, intrinsic dimensions, and alt text "Portrait of Amber Goding". It is not lazy-loaded because it sits near the top of the page.
+- **Navigation:** the main navigation's About link now goes to `/about` and is marked as the current page there.
+- **Homepage:** the `#about` teaser stays and links to the page ("More about Amber").
 
 **Visual presentation is provisional.** The palette and AG branding are approved; the overall styling still needs the owner's final approval in a dedicated design review before launch.
 
@@ -158,15 +167,15 @@ Real values belong in Railway's service variables or a local `.env` file, which 
 - **Selected work:** all four project slots are development placeholders, labeled on the page, with concept art rather than screenshots, no links, and invented headings ("Purpose in every detail." and the others). They are defined in `src/content/home.js`.
 - **Work introduction:** "Less friction. More possibility." and the paragraph below it
 - **Services:** the heading "Practical tools for real work." and the three capability descriptions
-- **About:** the heading "Curiosity meets follow-through.", the two introductory sentences, and the three principles. These are drawn from the approved positioning but still need Amber's own biography.
-- **Contact:** the heading "Let's make it happen." and its supporting sentence, on both the homepage and `/contact`
+- **Homepage About teaser:** the heading "Curiosity meets follow-through.", the two introductory sentences, and the three principles. These are drawn from the approved positioning. The `/about` page copy itself is approved and not temporary.
+- **Contact:** the heading "Let's make it happen." and its supporting sentence, on the homepage, `/contact`, and the closing invitation on `/about`
 - **Services page:** all wording in `src/content/services.js` is provisional, including the three illustrative example scenarios (home cleaning, tutoring, and property maintenance), which are hypothetical by design
 
 ### Remaining before launch
 
 - Real projects (3–4) with verified descriptions, visuals, live/repository links, and case-study pages
-- About page (approved as a separate page; not built yet). Owner review of the Services page wording
-- Final biography, photo, and professional links
+- Owner review of the Services page wording and the homepage About teaser
+- Decide whether to include a résumé
 - Contact in production: set the Railway variables and confirm a real inquiry sent from the deployed site arrives with the correct Reply-To. The local check is already done (owner-reported).
 - Dedicated design review of the overall visual presentation
 - Social/Open Graph metadata, `robots.txt`, and a sitemap

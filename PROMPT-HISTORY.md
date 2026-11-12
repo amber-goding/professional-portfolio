@@ -406,3 +406,40 @@ No other features, no commits.
   - Reduced motion: `scroll-behavior: auto`, transitions about 0. No JS: the toggle is hidden and the four links are visible.
 - Homepage regression run: no overflow, menu/no-JS OK, no contrast failures. The private address appears in no working-tree file (`.env` excluded from the search and never opened).
 - **Not verified:** Safari/Firefox, real devices and screen readers, Railway. The current page in the open mobile menu has no *visual* marker beyond `aria-current` (left as is to avoid unrelated visual changes).
+
+**Outcome:** The user committed the Services page as `7b3fbaf` ("Add Services page and record verified email setup"). It has not been pushed.
+
+### 10. About page with approved copy, portrait, and professional links
+
+**Asked:** Build `/about` from owner-approved copy (page title "About Amber", heading, four introductory/background paragraphs, and a "How I work" section). Use the supplied portrait unretouched as optimized local assets with metadata stripped, and link to the supplied LinkedIn and GitHub URLs without claiming to have reviewed them. Point the About nav link to `/about`, keep the homepage `#about` teaser and link it to the page, reuse existing components, and record the approval in the docs. No anecdote, no new claims, no `.env`, email, DNS, or deployment changes, and no staging or committing.
+
+**Done:**
+- **Portrait:** the source PNG (1254×1254 RGB, no ICC profile or metadata) was resized with Pillow (Lanczos) in a scratchpad venv, so Pillow is not a project dependency. Output: `public/images/amber-goding-portrait-{400,800,1200}.webp` (simple VP8, no EXIF/XMP/ICC chunks) and an 800px progressive JPEG fallback. Size: 19–126 KB, down from 2.5 MB. The source file's SHA-256 is unchanged.
+- **`src/content/about.js`:** `aboutPage` (approved copy verbatim; the heading split into lead and `em` accent for styling only), `portrait` (alt "Portrait of Amber Goding", 800×800, WebP srcset, `sizes="(min-width: 56rem) 28rem, 22rem"`), and `profileLinks`.
+- **`views/about.ejs`:**
+  - A `.page-hero` with copy and a `<picture>` portrait side by side at ≥56rem. The portrait has a decorative offset gold frame and is not lazy-loaded.
+  - "LinkedIn profile ↗" and "GitHub profile ↗" in a list labelled "Professional profiles". They open in the same tab.
+  - The background paragraphs, then a cream "How I work" section, then a contact invitation that reuses the homepage's provisional "Let's make it happen." wording and links to `/contact`.
+- **Route:** `GET /about` with the title "About Amber | Amber Goding" and a description paraphrasing the approved first sentence.
+- **Navigation:** nav About now goes to `/about`, and the homepage teaser gained a "More about Amber →" link.
+- **CSS:** a new "About page" block. Cream-section text links get a deep-teal arrow and underline, because gold on cream lacks contrast. The `.about-title` is smaller than other page titles so "understanding" never breaks mid-word.
+- **Tests:**
+  - New `test/about.test.js`:
+    - the approved copy hard-coded independently of the content file;
+    - metadata, a single h1, `aria-current`, and copy order and headings;
+    - portrait markup and served files (dimensions parsed from the WebP/JPEG headers, content types, size under 200 KB, no metadata markers, and only the published files present);
+    - profile link URLs and labels, the contact link, no email addresses, and banned terms.
+  - `app.test.js` nav expectation is now `/about`, with a new teaser-link test. The nav-destination loop and the privacy scan now include `/about` (and `/services`).
+- **Docs:** AGENTS.md records the status (Services committed in `7b3fbaf`, About uncommitted) and a dated decision approving the copy, portrait, and links. README has layout rows, the route, the status, and updated temporary-content and pre-launch lists.
+
+**Verification:**
+- `npm test`: 140 tests, 139 passed, 0 failed, 1 skipped (Windows SIGTERM). The email provider is mocked or disabled, and no email was sent.
+- **Headless Chrome (scratchpad `about-browser.mjs`):**
+  - At 320/375/768/1024/1440: no overflow, no mid-word heading breaks (checked with `overflow-wrap: normal`), no text under 12px. The portrait renders square at 274/324/352/330/448px, using the 400w WebP on phones and tablet and the 800w at 1024+.
+  - Contrast: no failures on `/about`.
+  - Keyboard: tab order runs skip → logo → nav → LinkedIn → GitHub → Send a message → Back to top, with visible outlines.
+  - 375 menu: Enter opens it, About is current, Escape closes it and returns focus. The 768 menu opens.
+  - Reduced motion: transitions about 0. No JS: the nav stays visible and the portrait loads.
+  - Homepage: the teaser link is 48px tall, with a deep-teal focus outline when reached by Tab.
+- The homepage contrast probe flags the outlined hero word "complex" at a ratio of 1. That is a probe limitation (transparent fill with a cream text stroke), and the hero is unchanged.
+- **Not verified:** Safari/Firefox, real devices, screen readers, the external profile pages (not opened), and Railway.

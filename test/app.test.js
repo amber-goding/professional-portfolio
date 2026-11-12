@@ -65,15 +65,15 @@ describe('application routes', () => {
       assert.match(html, /<main id="main"/);
     });
 
-    it('has main navigation to homepage sections and the Services and Contact pages', async () => {
+    it('has main navigation to the work section and the Services, About, and Contact pages', async () => {
       const nav = html.match(/<nav[^>]*aria-label="Main"[^>]*>([\s\S]*?)<\/nav>/);
       assert.ok(nav, 'main navigation landmark is present');
       const navLinks = [...nav[1].matchAll(/href="([^"]+)"/g)].map((m) => m[1]);
-      assert.deepEqual(navLinks, ['/#work', '/services', '/#about', '/contact']);
+      assert.deepEqual(navLinks, ['/#work', '/services', '/about', '/contact']);
       for (const link of navLinks.filter((l) => l.startsWith('/#'))) {
         assert.ok(ids().has(link.slice(2)), `section ${link} exists`);
       }
-      for (const page of ['/services', '/contact']) {
+      for (const page of ['/services', '/about', '/contact']) {
         assert.equal((await fetch(`${baseUrl}${page}`)).status, 200, `${page} responds`);
       }
     });
@@ -82,6 +82,12 @@ describe('application routes', () => {
       const overview = html.match(/<section class="section services" id="services"[\s\S]*?<\/section>/);
       assert.ok(overview, 'homepage keeps the #services overview');
       assert.match(overview[0], /href="\/services"/);
+    });
+
+    it('keeps the About teaser section and links it to the About page', () => {
+      const teaser = html.match(/<section class="section about" id="about"[\s\S]*?<\/section>/);
+      assert.ok(teaser, 'homepage keeps the #about teaser');
+      assert.match(teaser[0], /<a class="button-text" href="\/about">More about Amber/);
     });
 
     it('has a real menu button wired to the navigation', () => {

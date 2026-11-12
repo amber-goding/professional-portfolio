@@ -4,7 +4,7 @@
 export const navigation = [
   { href: '/#work', label: 'Work' },
   { href: '/services', label: 'Services' },
-  { href: '/#about', label: 'About' },
+  { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact', cta: true },
 ];
 

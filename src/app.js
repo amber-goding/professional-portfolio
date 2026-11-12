@@ -2,6 +2,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import express from 'express';
 import { createContactRouter } from './contact/router.js';
+import { aboutPage, portrait, profileLinks } from './content/about.js';
 import { navigation, principles, projectPlaceholders, services } from './content/home.js';
 import { processSteps, serviceDetails, servicesIntro } from './content/services.js';
 
@@ -73,6 +74,17 @@ export function createApp({
       intro: servicesIntro,
       services: serviceDetails,
       processSteps,
+    });
+  });
+
+  app.get('/about', (req, res) => {
+    res.render('about', {
+      title: `${aboutPage.title} | ${site.name}`,
+      description:
+        'Amber Goding is an application and automation builder who turns complicated problems into tools that make everyday work easier.',
+      about: aboutPage,
+      portrait,
+      profileLinks,
     });
   });
 
