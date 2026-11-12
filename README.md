@@ -182,4 +182,171 @@ Real values belong in Railway's service variables or a local `.env` file, which 
 - Manual checks on real phones and with a screen reader
 - Railway deployment, the `ambergoding.com` and `www` domains, and HTTPS. DNS is at Spaceship; check that it supports the apex record Railway needs.
 
+## Portfolio project planning (internal)
+
+An internal inventory, prepared before any case-study page is built. **None of it is public content, and no project is approved for the site yet** (AGENTS.md lists the project choice as a pending decision). It is based on a read-only inspection of each repository's docs, source, and Git history on 2026-11-12. No dependencies were installed, no apps were run, and no environment files were opened.
+
+**Evidence labels:**
+- **Source:** the code exists in the repository.
+- **Repo-recorded:** stated in the project's own README, plan, or history. This includes owner-reported checks and checks observed by an agent in that project.
+- **Unverified:** not checked by running anything.
+
+**Applies to every project:**
+- **Contribution:** all commits are authored "Amber Goding", and the histories show work done with AI coding agents (Claude Code, Codex). Amber's exact contribution and how to describe that collaboration publicly **need owner confirmation**. Don't infer either from the commit author.
+- **Links:** the GitHub URLs below are the recorded `origin` remotes, and each returned HTTP 200 without signing in on 2026-11-12. Their pages weren't reviewed. **No repository records a deployed URL.**
+- **Repository names and contents:** names like `week-5-build`, and in-repo docs, refer to the original build schedule. Decide whether to rename the repositories or review their public docs before linking them from the site.
+- **Visual assets:** no project has app screenshots or recordings. `Projects/Ever After Ornamental Wedding Planner.png` is a design concept board (palette and "detail view" callouts), not a screenshot.
+
+### Folder mapping (confirmed from files)
+
+| Project | Folder in `C:\Users\amber\Desktop\Projects` | Evidence | Branch and state at inspection |
+| --- | --- | --- | --- |
+| Reentry Resource Extractor | `reentry-resource-extractor` | `README.md`, `project-plan.md` | `main` at `60f5d35`, clean |
+| Ever After Planner | `week-5-build` | `app/layout.tsx` (title "Ever After Planner") | `feature/user-authentication` at `cbe0699`. Uncommitted: `ownerId` schema change and a migration draft |
+| HuntSomewhere | `week-7-build-HuntSomewhere` | `README.md`, `package.json` (`huntsomewhere`) | `main` at `5d4c484`, clean |
+| Catering Concierge | `week-8-build-catering-concierge` | `README.md`, `AGENTS.md` | `codex/manual-inquiry-entry` at `67f03bc`. Uncommitted: manual inquiry entry (19 paths) |
+
+### Reentry Resource Extractor
+
+- **Problem and audience:** reentry program listings are hard to create when the details are scattered across public websites. The audience is managers of transitional housing and reentry programs (`project-plan.md`).
+- **Launch scope (plan):** enter a public URL → retrieve the page → AI extracts set fields → missing fields shown as "Not Found" → the manager reviews and edits. A listing is complete only after review.
+- **Source:**
+  - `server.js`:
+    - fetches one public HTML page (links are kept as text, not followed), blocking private and local addresses (DNS resolution check), with an 8 s timeout, 3 redirects, and a 5 MB page cap;
+    - extracts text with cheerio;
+    - calls the OpenAI Responses API with a strict JSON schema of 21 fields;
+    - instructs the model to treat page text as untrusted;
+    - keeps a value only if its quoted evidence appears in the retrieved text.
+  - `src/main.js`: per-field review controls (Unreviewed / Confirmed / Edited) with source evidence shown.
+  - Railway start configuration (`60f5d35`).
+- **Planned or unfinished:** no saving, export, or publishing of reviewed listings. No database and no automated tests. Only one page per analysis.
+- **Technologies:** vanilla JavaScript, Vite, Node `http`, cheerio, `openai` SDK; Railway-ready.
+- **Links:** repository `https://github.com/amber-goding/reentry-resource-extractor` (recorded and reachable). Deployment: none recorded.
+- **Needs checking:**
+  - Is it deployed?
+  - A runtime walk-through with a real program site.
+  - Screenshots.
+  - Which model is used in production (the code defaults to `gpt-5` unless `OPENAI_EXTRACTION_MODEL` is set).
+  - Contribution.
+- **Case-study outline:**
+  - **Problem:** scattered program details.
+  - **Approach:** AI limited to extraction from retrieved text, with a person confirming every field.
+  - **Solution:** URL → evidence-backed fields → review.
+  - **Decisions:** strict schema, evidence must match the source, the private-address block, prompt-injection instructions.
+  - **Verifiable result:** pending a runtime check and screenshots.
+
+### Ever After Planner
+
+- **Problem and audience:** couples planning a wedding, keeping tasks and details in one place (`app/layout.tsx` description). The project's intended audience and launch scope are not written down; **owner confirmation needed**.
+- **Source:**
+  - Wedding task create, edit, and delete (title, 15 alphabetical categories, status, due date, notes) through server actions and Prisma on PostgreSQL (Neon).
+  - "BrideZilla", an AI planning chat (`app/api/bridezilla/route.ts`):
+    - calls the OpenAI Responses API;
+    - input and output limits, a 30 s timeout, and safe error mapping;
+    - requires Clerk sign-in (`cbe0699`).
+  - Clerk email and Google sign-in.
+  - `tests/bridezilla-auth.test.mjs`: 8 tests with a mocked provider.
+- **Planned or unfinished:**
+  - **Tasks aren't scoped to a user.** The committed schema has no owner, and page and actions don't check sign-in, so every visitor shares the same tasks. The ownership migration exists only as an uncommitted draft, with backup preparation recorded in `prompt-history.md` (entries 49–56).
+  - No deployment recorded.
+- **Technologies:** Next.js 16, React 19, TypeScript, Tailwind CSS 4, Prisma 7 (`adapter-pg`), Neon PostgreSQL, Clerk, OpenAI Responses API.
+- **Links:** repository `https://github.com/amber-goding/week-5-build` (recorded and reachable). Deployment: none recorded.
+- **Needs checking:**
+  - The intended launch version.
+  - Per-user tasks completed and verified.
+  - Deployment.
+  - Screenshots of the real app.
+  - Contribution.
+- **Case-study outline:**
+  - **Problem:** scattered wedding tasks.
+  - **Approach:** a focused task planner plus an AI assistant that doesn't claim bookings or availability.
+  - **Solution:** CRUD planner, AI chat, sign-in.
+  - **Decisions:** server-only AI, input and output guardrails, sign-in required for AI.
+  - **Verifiable result:** blocked until tasks are per-user.
+
+### HuntSomewhere
+
+- **Problem and audience:** Maryland hunters looking for public and private land and access; landowners managing listings and requests (`README.md`, `project-plan.md`).
+- **Launch scope (plan):** a large marketplace with milestones M1–M14 covering listings, access requests, permission documents, email, and further AI features. **Almost all of it is planned, not built.**
+- **Source:**
+  - `/plan`: describe a trip → AI-suggested preferences you can edit (strict JSON schema, validated with zod) → manual editing. A shared 10-call AI allowance is reserved atomically, with an off switch.
+  - `/trips/[id]`: the trip saved to Neon and reopened by an unguessable link.
+  - `/areas`: 6 curated wildlife management areas from Maryland iMAP/DNR, with byte-for-byte source copies and `PROVENANCE.md`.
+  - `/trips/[id]/areas`: matching by county only, labelled as not confirmed.
+  - `/sources`: source attribution.
+  - Check scripts: `scripts/check-gate.ts` and `scripts/check-areas.ts`. The repo records 35/35 and 22/22 passing; they weren't run here.
+- **Repo-recorded (owner-reported, not verified here):** `main` deployed on Railway, and three people tried the deployed app (no tester details recorded). Whether the area-discovery deploy succeeded is not verified (`PROMPT-HISTORY.md` entries 28 and 30).
+- **Planned or unfinished:** accounts (Clerk work is on unmerged branches), private listings, access requests, maps, and the other milestones.
+- **Technologies:** Next.js 16, React 19, TypeScript, Tailwind CSS 4, Prisma 7 with the Neon adapter, zod, OpenAI Responses API (`fetch`), Railway.
+- **Links:** repository `https://github.com/amber-goding/week-7-build-HuntSomewhere` (recorded and reachable). Deployment URL: not recorded.
+- **Needs checking:**
+  - The deployed URL and a live walk-through.
+  - Which scope the case study should present: the launch version, against what is built today.
+  - Screenshots.
+  - Contribution.
+- **Case-study outline:**
+  - **Problem:** finding huntable land is fragmented.
+  - **Approach:** sourced public data with honest uncertainty labels; AI only proposes preferences, which a person can edit.
+  - **Solution:** trip planner → saved trip → areas in matching counties.
+  - **Decisions:** provenance kept byte for byte, county-only matching stated plainly, an atomic AI allowance, no raw trip text stored.
+  - **Verifiable result:** pending a live check.
+
+### Catering Concierge
+
+- **Problem and audience:** independent restaurants managing catering inquiries from first contact to a confirmed event (`README.md`).
+- **Launch scope (plan):** inbox, web-form, and manual intake; AI extraction; menus; deterministic quotes; drafted replies; bookings; analytics. **These modules are planned, not implemented.**
+- **Source (committed at `67f03bc`):**
+  - Better Auth Google sign-in, plus restaurant setup with owner membership.
+  - A Zapier import endpoint:
+    - bearer token with timing-safe comparison;
+    - strict payload rules and a 128 KiB cap;
+    - duplicates resolved by a unique index.
+  - A restaurant-scoped `/inquiries` review screen.
+  - Offline tests with a mocked database.
+  - The dashboard uses fictional sample data. The app makes no AI calls itself; the AI review is produced in Zapier.
+- **Repo-recorded:**
+  - **Observed by Codex on the deployed demo:** `/api/health` returned OK; a Zapier test returned 201 `created`, and a repeat returned 200 `duplicate`; fictional inquiries appeared with their AI reviews.
+  - **Owner-reported:** the Railway deploy, migrations, Google sign-in on the Railway domain, and the published five-step Zap.
+- **Planned or unfinished:**
+  - Manual inquiry entry is uncommitted and not verified live.
+  - Isolation between two accounts and concurrent deliveries are not tested live.
+  - Email, menu, quotes, events, and settings exist as routes only.
+  - It uses the Neon development branch; there is no production database.
+- **Technologies:** Next.js 16, React 19, TypeScript, Tailwind CSS 4, Prisma 7 with the Neon adapter, Better Auth, Zapier (Tables, AI by Zapier, Code, API), Railway, Node test runner.
+- **Links:** repository `https://github.com/amber-goding/week-8-build-catering-concierge` (recorded and reachable). Deployment URL: not recorded (the README uses `<railway-domain>`).
+- **Needs checking:**
+  - The deployed URL and whether the demo stays online.
+  - Which scope to present.
+  - Screenshots, which need demo data only.
+  - Contribution.
+- **Case-study outline:**
+  - **Problem:** catering inquiries scattered across channels.
+  - **Approach:** connect existing tools before building more; keep AI output reviewable.
+  - **Solution:** Zap with AI review → authenticated, idempotent import → restaurant-scoped review screen.
+  - **Decisions:** server-fixed scope, a timing-safe token, the unique index for duplicates, logs without content.
+  - **Verifiable result:** the observed 201 and 200 duplicate behaviour on the demo.
+
+### Recommendation (proposed, not approved)
+
+**Feature three projects:**
+- **Reentry Resource Extractor** for AI integration.
+- **Catering Concierge** for workflow automation.
+- **HuntSomewhere** for full-stack application development with public data.
+
+Together they cover the three service areas with little overlap: careful extraction backed by evidence, an automation pipeline with idempotent delivery, and a database-backed app with clear data provenance.
+
+**Ever After Planner** is a possible fourth once per-user tasks are finished and verified. Until then it has a privacy gap, and its stack overlaps HuntSomewhere.
+
+**Build Reentry Resource Extractor's case study first:**
+- Its source matches its own planned launch scope.
+- It has no database or sign-in dependencies.
+- It shows the "AI used thoughtfully" positioning most directly.
+- It needs only a deployment or runtime check, screenshots, and contribution wording.
+
+### Outstanding checks before any case study is published
+
+1. The owner chooses which projects to feature and how to describe Amber's contribution and the use of AI coding agents.
+2. For each chosen project: a working deployed URL or a decision to link only the repository, a live walk-through, real screenshots, and the repository naming and public docs review.
+3. Every public statement is checked against verified functionality. Planned modules are described only as planned, or left out.
+
 Project requirements and approved decisions are recorded in [AGENTS.md](AGENTS.md).

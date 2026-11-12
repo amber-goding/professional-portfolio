@@ -443,3 +443,44 @@ No other features, no commits.
   - Homepage: the teaser link is 48px tall, with a deep-teal focus outline when reached by Tab.
 - The homepage contrast probe flags the outlined hero word "complex" at a ratio of 1. That is a probe limitation (transparent fill with a cream text stroke), and the hero is unchanged.
 - **Not verified:** Safari/Firefox, real devices, screen readers, the external profile pages (not opened), and Railway.
+
+**Outcome:** The user committed the About page as `ddbba93` ("Add About page with approved copy and portrait"). Push status not recorded.
+
+### 11. Portfolio project inventory (read-only research)
+
+**Asked:** Before any case-study page is built, inventory the four candidate projects (HuntSomewhere, Ever After Planner, Reentry Resource Extractor, Catering Concierge) under `C:\Users\amber\Desktop\Projects`, mapping folders from the files themselves. For each project, report:
+- problem and audience;
+- launch scope;
+- what the source supports;
+- planned work;
+- technologies;
+- recorded and verified links;
+- visual assets;
+- outstanding checks;
+- a case-study outline.
+
+Then record an internal planning section in the portfolio README and recommend 3–4 projects and which to build first. Candidate repositories were read-only: no env files, installs, app runs, migrations, database connections, paid calls, or Git changes. Only README.md and PROMPT-HISTORY.md could change, and public pages had to stay untouched.
+
+**Done:**
+- **Folder mapping:**
+  - Each mapping was confirmed from file contents: `reentry-resource-extractor`; `week-5-build` = Ever After Planner (title in `app/layout.tsx`); `week-7-build-HuntSomewhere`; `week-8-build-catering-concierge`.
+  - The other folders (`week-1-builld`, `week-4-build`, `seascape-whispering-wicks`) are not candidates.
+- **Read:** READMEs, plans, handoffs, agent files, prompt histories (treated as evidence of direction only), key source and schema files, and `git log`. Git was read with `--no-optional-locks`, so nothing was written to the repositories.
+- **Links:** the recorded GitHub remotes each returned HTTP 200 to an unauthenticated HEAD request. No repository records a deployed URL.
+- **README:** a new "Portfolio project planning (internal)" section with evidence labels (source / repo-recorded / unverified), a per-project inventory, the recommendation, and outstanding checks.
+
+**Key findings:**
+- **Ever After Planner:** tasks have no owner in the committed schema, and the page and actions don't check sign-in, so everyone shares one task list. Ownership exists only as an uncommitted draft.
+- **Catering Concierge:** has the most agent-observed live evidence (the idempotent Zapier import on the Railway demo). Its broader modules are planned only.
+- **Reentry Resource Extractor:** its source matches its planned launch scope, including evidence-checked AI extraction and human review. There's no deployment record and no tests.
+- **HuntSomewhere:** a small built flow (AI trip preferences, saved trips, 6 sourced public areas) set against a large plan. Its deployment and user testing are owner-reported.
+- **All projects:**
+  - No app screenshots. The Ever After PNG in `Projects/` is a design concept board.
+  - Amber's exact contribution and the role of AI coding agents need owner confirmation.
+  - The `week-N` repository names and in-repo docs need review before linking publicly.
+
+**Recommendation (proposed):**
+- Feature Reentry (AI integration), Catering Concierge (workflow automation), and HuntSomewhere (application development). Ever After is optional, after per-user tasks are verified.
+- Build Reentry's case study first: its scope is complete in source and it has no auth or database dependencies.
+
+**Verification:** documentation-only change. `git diff --check` was run, and the portfolio app was not changed. **Not verified:** any app at runtime, deployments, the contents of the GitHub pages, and the check counts recorded inside each project.
