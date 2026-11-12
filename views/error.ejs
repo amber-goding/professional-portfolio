@@ -1,8 +1,10 @@
 <%- include('partials/header') %>
-    <section class="intro" aria-labelledby="error-heading">
-      <p class="kicker">Error <%= status %></p>
-      <h1 id="error-heading"><%= heading %></h1>
-      <p class="lede"><%= message %></p>
-      <p><a class="text-link" href="/">Return to the homepage</a></p>
+    <section class="error-page" aria-labelledby="error-heading">
+      <div class="wrap">
+        <p class="section-label">Error <%= status %></p>
+        <h1 id="error-heading"><%= heading %></h1>
+        <p><%= message %></p>
+        <a class="button button-primary" href="/">Return to the homepage <span aria-hidden="true">→</span></a>
+      </div>
     </section>
 <%- include('partials/footer') %>

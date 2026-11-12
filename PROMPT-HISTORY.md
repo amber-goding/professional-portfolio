@@ -133,3 +133,131 @@ The email provider, accounts, paid plans, DNS, and deployment remain unapproved.
   - `server.js` honors an explicit `PORT`.
 - **Manual `npm start` runs** on the default port 3000 and on `PORT=4173`: `/` returned 200 with the correct title, `/healthz` returned 200 `{"status":"ok"}`, and `/AGENTS.md` returned 404. The log showed `Server listening on http://0.0.0.0:<port>`. Only the node PIDs listening on those ports, confirmed to be `node server.js`, were stopped, and both ports were released.
 - **Not verified:** graceful shutdown on a real signal (Windows can't send one to a child process; it will be checkable on Railway/Linux), browser rendering, responsiveness, accessibility and contrast in a browser, and any Railway build or deploy.
+
+**Outcome:** The user committed Milestone 1 as `f527181` ("Scaffold Railway-ready Express application"). It has not been pushed.
+
+### 5. Milestone 2: visual foundation and homepage
+
+**Asked:** Build the approved visual direction into a polished, responsive homepage:
+- Self-hosted Space Grotesk and DM Sans, plus italic serif accents.
+- Header with in-page nav and an accessible mobile menu that still works without JS.
+- Hero with ribbon art, service band, services overview, and staggered selected-work layout (clearly marked placeholders).
+- Cream About teaser and a `mailto:` contact invitation.
+- Reduced-motion support, and browser verification at 320, 375, 768, 1024, and 1440px.
+
+Excluded: other pages, case studies, email delivery, new dependencies, commits, and deploys. The prompt counted as approval for this scope.
+
+**Done:**
+- **Fonts:** variable woff2 files (latin and latin-ext) from Google Fonts' official CSS API, saved to `public/fonts/` (about 135 KB total). OFL texts copied verbatim from `google/fonts` (`ofl/spacegrotesk`, `ofl/dmsans`). Georgia (a system font) supplies the italic serif accents, as in the reference. Both woff2 files used above the fold are preloaded.
+- **`src/content/home.js`:** navigation, services, four project placeholders (`variant`: composition, workflow, signal, layers), and principles. `src/app.js` passes these to the views.
+- **Views:**
+  - Header partial: monogram, nav with `/#section` links (so the 404 page can link back), a `<button hidden>` menu toggle with `aria-expanded`/`aria-controls`, and the deferred `/js/site.js`.
+  - `index.ejs` sections: hero → service band → `#work` → `#services` → `#about` (cream) → `#contact`.
+  - Footer: © year, role, and "Back to top" (`#top`).
+  - `error.ejs` restyled.
+- **`public/js/site.js`:** reveals the toggle and adds `.has-menu`. The menu toggles on click, closes on Escape (returning focus to the button), on link selection, on outside clicks, on focus leaving, and when the window switches to the desktop breakpoint.
+- **`public/css/styles.css`, rewritten:**
+  - Tokens and type scale with readable label sizes (12px minimum).
+  - CSS-only ribbon sculpture (conic gradients and masks, with `-webkit-` prefixes), with `overflow: hidden` on the hero.
+  - Staggered 12-column project grid at ≥48rem.
+  - Deep teal for accents on cream.
+  - Reduced-motion block. No continuous animation.
+- **Tests:** replaced the frozen homepage-copy assertions with semantic checks:
+  - one h1, skip link target, and nav targets that exist as section ids;
+  - menu button attributes, and no empty, `#`, or broken fragment links;
+  - hero links, `aria-hidden` artwork, `mailto:` and no `<form>`;
+  - every placeholder labeled and unlinked, banned bootcamp/student terms absent, and only local assets;
+  - each font, script, and license served with the right type, and woff2 magic bytes checked.
+- **Docs:** README layout and status, an explicit "Temporary content" list, and "Remaining before launch". AGENTS.md status updated.
+
+**Browser verification:** No browser tools are connected to this session, so headless Chrome was driven over the DevTools protocol by a scratchpad script (`browser-check.mjs`, not added to the repo). It used Node's built-in WebSocket, started its own server on a random port, and stopped it and Chrome afterward. The first run found:
+- The workflow tile's "g" dropped below its box, because the grid layout made the `<span>` its own grid row. Switched to flex.
+- The second-row stagger was cramped. Removed the negative margin.
+- The service band wrapped on phones with a dangling separator. Separators are now hidden below 40rem.
+- The mobile headline felt small. Raised it to `16vw`.
+- The art caption was 11px. Raised it to 12px.
+
+After the fixes, the final run showed:
+- **Layout:** no horizontal overflow at any width, no text/art overlap, no headline line wrapping, no heading overflow, no text under 12px, and both fonts loaded.
+- **Keyboard:** skip link first, visible, and Enter moves focus to `main`. Every focused element shows the 2px turquoise outline and matches `:focus-visible`.
+- **Mobile menu:** a click opens it; Escape closes it and returns focus to the button; Enter opens it and Tab reaches "Work"; tabbing out, outside clicks, and link selection all close it (the link lands on `#about`). Closed-menu links are skipped by Tab.
+- **No-JS:** the toggle is hidden and all 4 links are visible with no overflow.
+- **Reduced motion:** transitions are 0.01ms and `scroll-behavior: auto`. No running animations in either mode.
+- **Contrast:** computed against the actual effective background for 113–119 text elements. No real text below 4.5:1; the lowest is 5.69:1 (muted text on cream). The only failures are decorative and `aria-hidden`: the faint "ag." watermark at 1.5:1 (intentional) and the gold ✳ on teal at 3.4:1, which is hidden on phones. The outline headline stroke is 15.9:1.
+- **Screenshots** were captured at all widths, plus the open menu, no-JS view, and focus states.
+
+**Decisions:**
+- Navigation uses `/#id`, not `#id`, so the same partial works on error pages. On the homepage it stays a same-document scroll.
+- The menu toggle uses the HTML `hidden` attribute and is revealed by JS, which keeps links usable if JS fails. The trade-off is a possible brief flash of the expanded nav on slow mobile loads.
+- The service band remains readable text (separators `aria-hidden`), not hidden decoration.
+- The OFL files keep their upstream trailing whitespace, because license texts are copied verbatim.
+- No new dependencies were added.
+
+**Verification:**
+- `npm test`: 62 tests, 61 passed, 0 failed, 1 skipped (the Windows SIGTERM test).
+- `git diff --check` is clean apart from LF→CRLF warnings. The untracked-file check flags only the verbatim OFL trailing whitespace.
+- A `node server.js` process on port 3000 (PID 54720, started by `npm start` at 12:52 AM, after the M1 commit) was not started by this session and was left running.
+- **Not verified:** real devices (only emulated widths in headless Chrome), screen reader output, Safari/Firefox rendering (Chrome only), and production deployment.
+
+### 6. Fix: terminal preview link
+
+**Asked:** The startup message printed `http://0.0.0.0:<port>`, which VS Code's terminal link can't open. Change it to `Local: http://localhost:<actual port>` while keeping the `0.0.0.0` bind and Railway's `PORT` handling. Update the startup test to check the usable URL, with a separate check that the server still binds to `0.0.0.0`. Change nothing else, and leave the uncommitted Milestone 2 work untouched.
+
+**Done:**
+- **`server.js`:** the listen callback now logs `Local: http://localhost:${server.address().port}`, using the port actually bound rather than the requested value. `HOST` (`0.0.0.0`) and `parsePort` are unchanged.
+- **`test/server.test.js`:**
+  - `waitForListening` now parses and returns the printed `Local:` URL.
+  - The first test checks the URL equals `http://localhost:<PORT>`, that stdout no longer shows `0.0.0.0`, and fetches `<printed URL>/healthz` (200).
+  - A new separate test checks the bind for real: the server must answer on both `127.0.0.1` and a non-loopback IPv4 address of this machine (from `os.networkInterfaces()`). A loopback-only bind would refuse the latter. The test is skipped only if no such interface exists.
+
+**Verification:**
+- `npm test`: 63 tests, 62 passed, 0 failed, 1 skipped (Windows SIGTERM). The bind test ran rather than being skipped.
+- **Manual runs:** `npm start` (PORT=4174) and `npm run dev` (PORT=4175) each printed `Local: http://localhost:<port>`, the printed URL returned HTTP 200 for `/`, and `netstat` showed `0.0.0.0:<port>`.
+- **Leftover process:** stopping the `npm run dev` check killed the listening child, but its `node --watch server.js` parent (PID 31976, under cmd PID 45896, started 1:01:50 AM by this session) stayed running and idle. Stopping it was blocked by the permission classifier, so the user was told how to stop it. The user's own server (PID 54720, port 3000) was not touched.
+- No other files reference the old message. Nothing was committed.
+
+### 7. Branding revision: uppercase AG monogram, logo, and favicon
+
+**Asked:** Replace the lowercase "ag" with the user's intended branding: an intertwined, high-contrast serif uppercase **A and G** with a sweeping flourish, a small sparkle, and a spacious editorial name. The source was a brand board PNG at `C:\Users\amber\AppData\Local\Temp\codex-clipboard-690df169-…png`. Keep the website palette and do **not** adopt the board's blush pink. Deliverables:
+- Reusable vector SVGs: a full monogram, a horizontal logo, and a simplified favicon (no cropping of the image, no runtime fonts).
+- Every existing placement updated, with accessible names on linked logos and decorative copies hidden.
+- AGENTS.md and the prompt history updated.
+
+No other features, no commits.
+
+**Done:**
+- **Reference read:** brand board "Blush Editorial Elegance" (Playfair Display + Montserrat, rose-gold). Only the logo character was taken.
+- **Generator** (scratchpad only, not in repo): `brandtools/generate.py`, run in an isolated venv with fontTools 4.68.
+  - Playfair Display variable TTF and OFL from `google/fonts`. Weights set with `instancer`, glyphs exported as paths with `SVGPathPen`.
+  - Monogram: A at weight 500, horizontally compressed to 0.84; G at 0.6 scale, overlapping the A's right leg.
+  - Flourish: a generated tapered elliptical-spiral swash, smoothed with Catmull-Rom into cubic Béziers, drawn behind the letters.
+  - Sparkle: a four-point star.
+  - Name: "AMBER GODING" outlined at weight 560 with 0.2em tracking, after a thin divider.
+  - Favicon: weight 900, a cream outline (stroke 1.8% of the tile) to thicken hairlines, only the upper sweep of the swash in gold, no sparkle, on a charcoal rounded square.
+- **Iterations:**
+  1. The viewBox was wrong because the naive number-pair parser broke on H/V commands. Switched to fontTools `parse_path` with `BoundsPen`.
+  2. Opened up the flourish and tilted it more to match the reference.
+  3. Ended the swash behind the letters; its hairline tail had been crossing the G.
+  4. The favicon's full loop was noise at 16px, so it was simplified.
+  5. Enlarged the name in the horizontal logo (cap height 0.24 → 0.27 of the monogram height) after seeing it too thin in the header.
+- **Files:** `public/brand/ag-monogram.svg` (charcoal, deep-teal flourish, gold sparkle), `ag-monogram-reversed.svg` (cream, gold), `ag-logo-horizontal.svg` and `ag-logo-horizontal-reversed.svg`, and `public/favicon.svg` (replaced). Paths only: no `<text>`, fonts, `<image>`, scripts, `href`, or `url()`.
+- **Placements:**
+  - Header: `<img class="brand-logo" alt="Amber Goding, home">`, reversed logo, height `clamp(1.875rem, 8vw, 3rem)`.
+  - Footer: `.footer-mark`, `alt=""`.
+  - Hero sculpture: centered reversed monogram, counter-rotated, `alt=""` inside the `aria-hidden` art.
+  - First project preview: watermark `.preview-stamp` at 0.16 opacity.
+  - Workflow tile: `.preview-core img`.
+  - Removed `.brand-mark`, `.brand-name`, `.brand-period`, and the text-based `.sculpture-mark` styles.
+  - Header column gap reduced from 1.5rem to 0.75rem so the menu button stays on the logo's row at 320px. The `space-between` layout is unchanged at wider sizes.
+- **Tests (`test/app.test.js`):** added header logo link with an accessible name; every `<img>` has `alt`, with decorative monograms `alt=""`; the retired `a<span>g</span>` markup is absent; the 4 brand SVGs are served as `image/svg+xml`; and each brand SVG and the favicon are pure vector with no font or external references. No existing assertion needed loosening.
+- **Docs:** AGENTS.md Branding section rewritten for the uppercase direction (brand-board path, palette mapping, asset locations, Playfair outline provenance, accessibility rule). The visual-reference line notes its lowercase "ag" is superseded, and a dated decision was added. README gained a layout table row for `public/brand/` and `favicon.svg`, plus a "Brand assets" note.
+
+**Verification:**
+- `npm test`: 75 tests, 74 passed, 0 failed, 1 skipped (Windows SIGTERM).
+- **Headless Chrome:**
+  - Preview sheet (project files at actual px on cream and charcoal): logo at 64/48/30, monogram at 160 down to 24, favicon at 16/32/48 actual plus pixelated enlargements.
+  - Full homepage inspection: no overflow at 320–1440, menu, keyboard, and no-JS checks still pass, no real-text contrast failures (lowest 5.69:1).
+  - Accessibility tree: link "Amber Goding, home"; the only exposed image is the logo; decorative monograms are ignored.
+  - Header geometry: logo and menu on one row at 320 (18px gap), 360, 375, and 768.
+- `git diff --check` clean, untracked text files clean. A user-started `npm start` server (PID 55808, port 3000) and the earlier leftover watcher (PID 31976) were left untouched.
+- **Not verified:** a real browser tab's favicon rendering (headless Chrome has no tab strip), Safari (historically limited SVG favicon support; no PNG/ICO fallback or `apple-touch-icon` was added), Firefox, real devices, and printing. The brand board lives in a Temp folder and may be cleaned up by the OS.

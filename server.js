@@ -24,7 +24,9 @@ server.on('error', (error) => {
 });
 
 server.listen(port, HOST, () => {
-  console.log(`Server listening on http://${HOST}:${port}`);
+  // The server binds to all interfaces (HOST) for Railway, but 0.0.0.0 is not
+  // a browsable address, so print a localhost URL that terminals can link.
+  console.log(`Local: http://localhost:${server.address().port}`);
 });
 
 let shuttingDown = false;

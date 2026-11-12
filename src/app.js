@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import express from 'express';
+import { contactEmail, navigation, principles, projectPlaceholders, services } from './content/home.js';
 
 const projectRoot = fileURLToPath(new URL('..', import.meta.url));
 
@@ -26,6 +27,8 @@ export function createApp({ extendRoutes } = {}) {
   app.set('views', path.join(projectRoot, 'views'));
 
   app.locals.site = site;
+  app.locals.navigation = navigation;
+  app.locals.contactEmail = contactEmail;
   app.locals.currentYear = new Date().getFullYear();
 
   // Only the public directory is served as static files. Dotfiles are ignored.
@@ -40,6 +43,9 @@ export function createApp({ extendRoutes } = {}) {
     res.render('index', {
       title: `${site.name} | ${site.role}`,
       description: site.description,
+      services,
+      projectPlaceholders,
+      principles,
     });
   });
 

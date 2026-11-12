@@ -6,7 +6,7 @@ Shared instructions for AI coding agents working in this repository. This file i
 
 Amber Goding’s professional portfolio and services website showcases her application development, AI integration, and workflow automation capabilities. It serves employers, prospective clients, and collaborators. It will be the long-term professional site at **ambergoding.com**.
 
-**Current status (2026-11-12):** Milestone 1, the application foundation, is implemented and not yet committed. It includes the Express + EJS server, a minimal homepage, `/healthz`, 404 and error handling, static files from `public/` only, and tests. Nothing has been deployed. The email provider, service accounts, paid plans, DNS, and deployment are **not approved**; see [Pending decisions](#pending-decisions).
+**Current status (2026-11-12):** Milestone 1, the application foundation, is committed (`f527181`). Milestone 2, the visual foundation and homepage, is implemented but not committed. It adds self-hosted fonts, the shared visual system, the header with mobile menu, the hero with the CSS ribbon art, the services overview, the selected-work layout (development placeholders only), the About teaser, and a `mailto:` contact invitation. Temporary content is listed in README.md under "Temporary content". Nothing has been deployed. The email provider, service accounts, paid plans, DNS, and deployment are **not approved**; see [Pending decisions](#pending-decisions).
 
 **Commands:** `npm ci` (install), `npm start` (run), `npm run dev` (watch mode), `npm test` (all tests), `node --test test/<file>.test.js` (one file). See [README.md](README.md) for setup and the project layout.
 
@@ -18,7 +18,11 @@ Amber Goding’s professional portfolio and services website showcases her appli
 
 **Pages:** Home/Portfolio, Services, About, Contact, and one case-study page per project.
 
-**Branding:** the AG monogram and the branding in the approved reference are approved.
+**Branding:** the website palette below is approved. The logo direction is the **uppercase AG monogram** (revised 2026-11-12; it replaces the earlier lowercase "ag"):
+- An elegant, intertwined uppercase A and G in high-contrast serif letterforms, with a refined sweeping flourish and a small, restrained four-point sparkle, plus a spacious, editorial uppercase name treatment ("AMBER GODING").
+- Character comes from the brand board at `C:\Users\amber\AppData\Local\Temp\codex-clipboard-690df169-133b-4aa3-8366-1b9a3d45c2b0.png`. Use only its logo character, **not** its blush-pink palette. Logo colors come from the website palette: cream or charcoal letters, a gold flourish on dark backgrounds or deep teal on light, and a gold sparkle.
+- Assets are pure vector paths in `public/brand/` (`ag-monogram.svg`, `ag-logo-horizontal.svg`, each with a `-reversed` version for dark backgrounds) and `public/favicon.svg`, which is simplified: heavier letters, a short gold swash, and no sparkle. Letterforms were converted from Playfair Display glyph outlines (SIL OFL 1.1), so no font loads at runtime. Use these files rather than re-creating the monogram in text.
+- A linked logo needs an accessible name, such as `alt="Amber Goding, home"`. Decorative monogram placements use `alt=""` inside `aria-hidden` artwork.
 
 | Token | Hex |
 | --- | --- |
@@ -28,7 +32,7 @@ Amber Goding’s professional portfolio and services website showcases her appli
 | Warm cream | `#FAF3E7` |
 | Amber-gold (restrained accents) | `#E5B869` |
 
-**Visual reference:** `C:\Users\amber\.codex\visualizations\2026\11\12\01a1cdb7-7b83-78b0-8957-5e063041aa15\teal-cream-gold-studio.html`. It is a visual concept, not production code. Keep its identity and bold direction: the lowercase "ag" monogram with a turquoise "g", the sculptural ribbon art in the hero, oversized Space Grotesk headlines with italic serif accents, a charcoal base, a deep-teal service band, a cream about section, and amber-gold details. Its wording and project illustrations are provisional. Its 6–9px label sizes are too small for production and must be raised to readable sizes.
+**Visual reference:** `C:\Users\amber\.codex\visualizations\2026\11\12\01a1cdb7-7b83-78b0-8957-5e063041aa15\teal-cream-gold-studio.html`. It is a visual concept, not production code. Keep its identity and bold direction (its lowercase "ag" monogram is superseded by the uppercase AG monogram above): the sculptural ribbon art in the hero, oversized Space Grotesk headlines with italic serif accents, a charcoal base, a deep-teal service band, a cream about section, and amber-gold details. Its wording and project illustrations are provisional. Its 6–9px label sizes are too small for production and must be raised to readable sizes.
 
 **Design expectations:**
 - Distinctive, polished, professional presentation with bold typography, strong visual focal points, and thoughtful layouts.
@@ -99,3 +103,4 @@ Approved decisions, dated. Add new entries at the end.
 - 2026-11-12: Website direction, audience, positioning, pages, branding colors, visual reference, and functional and launch requirements approved as recorded above.
 - 2026-11-12: Project description and content and communication rules approved as recorded above.
 - 2026-11-12: Architecture approved: a supported Node.js LTS release (`engines.node` is `24.x`), Express with server-rendered EJS templates, plain CSS and minimal vanilla JavaScript, no frontend compilation step, and Node's built-in test runner. The email provider, service accounts, paid plans, DNS changes, and deployment remain unapproved.
+- 2026-11-12: Branding revised: the uppercase, intertwined serif AG monogram with flourish and sparkle replaces the lowercase "ag". The website palette is unchanged, and the brand board's blush-pink palette is not adopted. See Branding above.

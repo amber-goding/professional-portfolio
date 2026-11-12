@@ -36,27 +36,125 @@ describe('application routes', () => {
 
   after(() => new Promise((resolve) => server.close(resolve)));
 
-  it('renders the homepage through EJS with metadata and shared partials', async () => {
-    const res = await fetch(`${baseUrl}/`);
-    assert.equal(res.status, 200);
-    assert.match(res.headers.get('content-type'), /^text\/html/);
+  describe('homepage', () => {
+    let html;
 
-    const html = await res.text();
-    assert.match(html, /^<!doctype html>/i);
-    assert.match(html, /<html lang="en">/);
-    assert.match(html, /<title>Amber Goding \| Application &amp; Automation Builder<\/title>/);
-    assert.match(html, /<meta name="description" content="Amber Goding builds practical applications/);
-    assert.match(html, /<meta name="viewport" content="width=device-width, initial-scale=1">/);
-    assert.match(html, /<a class="skip-link" href="#main">/);
-    assert.match(html, /<main id="main"/);
-    assert.match(html, /<h1 id="intro-heading">Amber Goding<\/h1>/);
-    assert.match(html, /practical application and automation builder/);
-    // Footer partial rendered with server-side data
-    assert.match(html, new RegExp(`&copy; ${new Date().getFullYear()} Amber Goding`));
-    // No raw EJS tags leaked
-    assert.doesNotMatch(html, /<%/);
-    // No navigation to pages that do not exist yet
-    assert.doesNotMatch(html, /<nav/);
+    before(async () => {
+      const res = await fetch(`${baseUrl}/`);
+      assert.equal(res.status, 200);
+      assert.match(res.headers.get('content-type'), /^text\/html/);
+      html = await res.text();
+    });
+
+    const ids = () => new Set([...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
+    const hrefs = () => [...html.matchAll(/\shref="([^"]*)"/g)].map((m) => m[1]);
+
+    it('renders through EJS with document metadata and shared partials', () => {
+      assert.match(html, /^<!doctype html>/i);
+      assert.match(html, /<html lang="en">/);
+      assert.match(html, /<title>[^<]*Amber Goding[^<]*<\/title>/);
+      assert.match(html, /<meta name="description" content="[^"]{50,}">/);
+      assert.match(html, /<meta name="viewport" content="width=device-width, initial-scale=1">/);
+      assert.match(html, new RegExp(`&copy; ${new Date().getFullYear()} Amber Goding`));
+      assert.doesNotMatch(html, /<%|%>/);
+    });
+
+    it('has one h1 and a skip link that targets main', () => {
+      assert.equal((html.match(/<h1[\s>]/g) ?? []).length, 1);
+      assert.match(html, /<a class="skip-link" href="#main">/);
+      assert.match(html, /<main id="main"/);
+    });
+
+    it('has main navigation whose links all reach sections on this page', () => {
+      const nav = html.match(/<nav[^>]*aria-label="Main"[^>]*>([\s\S]*?)<\/nav>/);
+      assert.ok(nav, 'main navigation landmark is present');
+      const navTargets = [...nav[1].matchAll(/href="\/#([^"]+)"/g)].map((m) => m[1]);
+      assert.deepEqual(navTargets, ['work', 'services', 'about', 'contact']);
+      for (const target of navTargets) {
+        assert.ok(ids().has(target), `section #${target} exists`);
+      }
+    });
+
+    it('has a real menu button wired to the navigation', () => {
+      const button = html.match(/<button class="nav-toggle"[^>]*>/);
+      assert.ok(button, 'menu button is present');
+      assert.match(button[0], /type="button"/);
+      assert.match(button[0], /aria-expanded="false"/);
+      assert.match(button[0], /aria-controls="site-nav"/);
+      // Hidden until JavaScript enhances it, so links stay usable without JS.
+      assert.match(button[0], /\shidden/);
+      assert.ok(ids().has('site-nav'));
+    });
+
+    it('has no empty, placeholder, or broken in-page links', () => {
+      const pageIds = ids();
+      for (const href of hrefs()) {
+        assert.ok(href !== '' && href !== '#', `link has a real destination: "${href}"`);
+        const fragment = href.match(/^\/?#(.+)$/);
+        if (fragment && fragment[1] !== 'top') {
+          assert.ok(pageIds.has(fragment[1]), `fragment target #${fragment[1]} exists`);
+        }
+      }
+    });
+
+    it('links the hero to the work and contact sections', () => {
+      const hero = html.match(/<section class="hero"[\s\S]*?<\/section>/)[0];
+      assert.match(hero, /href="#work"/);
+      assert.match(hero, /href="#contact"/);
+    });
+
+    it('gives the linked header logo an accessible name', () => {
+      const brand = html.match(/<a class="brand" href="\/">([\s\S]*?)<\/a>/);
+      assert.ok(brand, 'header logo links home');
+      assert.match(brand[1], /<img[^>]+src="\/brand\/ag-logo-horizontal-reversed\.svg"[^>]+alt="Amber Goding, home"/);
+    });
+
+    it('gives every image an alt attribute and hides decorative monograms', () => {
+      const images = [...html.matchAll(/<img\b[^>]*>/g)].map((m) => m[0]);
+      assert.ok(images.length > 0);
+      for (const img of images) {
+        assert.match(img, /\salt="[^"]*"/, `image has alt: ${img}`);
+      }
+      const decorative = images.filter((img) => /ag-monogram/.test(img));
+      assert.ok(decorative.length >= 1);
+      for (const img of decorative) {
+        assert.match(img, /\salt=""/, `decorative monogram is hidden: ${img}`);
+      }
+    });
+
+    it('no longer renders the retired lowercase text monogram', () => {
+      assert.doesNotMatch(html, /a<span>g<\/span>/);
+    });
+
+    it('keeps decorative hero artwork out of the accessibility tree', () => {
+      assert.match(html, /<div class="hero-art" aria-hidden="true">/);
+    });
+
+    it('offers a working email link and no simulated contact form', () => {
+      assert.match(html, /href="mailto:ambergoding@gmail\.com"/);
+      assert.doesNotMatch(html, /<form[\s>]/);
+    });
+
+    it('labels every project preview as a placeholder and gives none a link', () => {
+      const projects = [...html.matchAll(/<article class="project-card"[\s\S]*?<\/article>/g)].map((m) => m[0]);
+      assert.ok(projects.length >= 1);
+      for (const project of projects) {
+        assert.match(project, /Development placeholder/);
+        assert.match(project, /not an application screenshot/i);
+        assert.doesNotMatch(project, /<a[\s>]|<button[\s>]/);
+      }
+    });
+
+    it('does not mention a bootcamp, curriculum, or student status', () => {
+      assert.doesNotMatch(html, /bootcamp|curriculum|student|beginner|week 9/i);
+    });
+
+    it('loads only local stylesheets, scripts, and fonts', () => {
+      const assets = [...html.matchAll(/<(?:link|script)[^>]+(?:href|src)="([^"]+)"/g)].map((m) => m[1]);
+      for (const asset of assets) {
+        assert.match(asset, /^\//, `asset is local: ${asset}`);
+      }
+    });
   });
 
   it('returns a small JSON health response', async () => {
@@ -73,17 +171,59 @@ describe('application routes', () => {
     const html = await res.text();
     assert.match(html, /Page not found/);
     assert.match(html, /<a class="skip-link" href="#main">/);
+    // Shared navigation on other pages points back to homepage sections.
+    assert.match(html, /href="\/#work"/);
   });
 
-  it('serves real files from the public directory', async () => {
-    const css = await fetch(`${baseUrl}/css/styles.css`);
-    assert.equal(css.status, 200);
-    assert.match(css.headers.get('content-type'), /^text\/css/);
-    assert.match(await css.text(), /--color-charcoal: #151a1c;/);
+  const publicAssets = [
+    ['/css/styles.css', /^text\/css/, /--charcoal: #151a1c;/],
+    ['/js/site.js', /^(text|application)\/javascript/, /aria-expanded/],
+    ['/favicon.svg', /^image\/svg\+xml/],
+    ['/brand/ag-monogram.svg', /^image\/svg\+xml/],
+    ['/brand/ag-monogram-reversed.svg', /^image\/svg\+xml/],
+    ['/brand/ag-logo-horizontal.svg', /^image\/svg\+xml/],
+    ['/brand/ag-logo-horizontal-reversed.svg', /^image\/svg\+xml/],
+    ['/fonts/space-grotesk-latin.woff2', /^font\/woff2/],
+    ['/fonts/space-grotesk-latin-ext.woff2', /^font\/woff2/],
+    ['/fonts/dm-sans-latin.woff2', /^font\/woff2/],
+    ['/fonts/dm-sans-latin-ext.woff2', /^font\/woff2/],
+    ['/fonts/SpaceGrotesk-OFL.txt', /^text\/plain/, /SIL Open Font License/],
+    ['/fonts/DMSans-OFL.txt', /^text\/plain/, /SIL Open Font License/],
+  ];
 
-    const icon = await fetch(`${baseUrl}/favicon.svg`);
-    assert.equal(icon.status, 200);
-    assert.match(icon.headers.get('content-type'), /^image\/svg\+xml/);
+  for (const [assetPath, type, content] of publicAssets) {
+    it(`serves ${assetPath} from the public directory`, async () => {
+      const res = await fetch(`${baseUrl}${assetPath}`);
+      assert.equal(res.status, 200);
+      assert.match(res.headers.get('content-type'), type);
+      const body = Buffer.from(await res.arrayBuffer());
+      if (content) assert.match(body.toString('utf8'), content);
+      if (assetPath.endsWith('.woff2')) assert.equal(body.subarray(0, 4).toString('latin1'), 'wOF2');
+    });
+  }
+
+  for (const brandPath of [
+    '/favicon.svg',
+    '/brand/ag-monogram.svg',
+    '/brand/ag-monogram-reversed.svg',
+    '/brand/ag-logo-horizontal.svg',
+    '/brand/ag-logo-horizontal-reversed.svg',
+  ]) {
+    it(`${brandPath} is pure vector paths with no font or external dependency`, async () => {
+      const svg = await (await fetch(`${baseUrl}${brandPath}`)).text();
+      assert.match(svg, /^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" viewBox="[-\d. ]+"/);
+      assert.match(svg, /<path\b/);
+      assert.doesNotMatch(svg, /<text\b|font-family|@font-face|<image\b|<script\b|\shref=|url\(/);
+    });
+  }
+
+  it('references only font files that exist', async () => {
+    const css = await (await fetch(`${baseUrl}/css/styles.css`)).text();
+    const fontUrls = [...css.matchAll(/url\("([^"]+\.woff2)"\)/g)].map((m) => m[1]);
+    assert.equal(fontUrls.length, 4);
+    for (const url of fontUrls) {
+      assert.equal((await fetch(`${baseUrl}${url}`)).status, 200, url);
+    }
   });
 
   it('does not expose the X-Powered-By header', async () => {
