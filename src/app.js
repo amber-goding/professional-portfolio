@@ -1,7 +1,8 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import express from 'express';
-import { contactEmail, navigation, principles, projectPlaceholders, services } from './content/home.js';
+import { createContactRouter } from './contact/router.js';
+import { navigation, principles, projectPlaceholders, services } from './content/home.js';
 
 const projectRoot = fileURLToPath(new URL('..', import.meta.url));
 
@@ -16,10 +17,19 @@ export const site = {
  * Build the Express application without starting a network listener,
  * so tests can run it on a temporary port.
  *
- * `extendRoutes` lets tests mount extra routes before the 404 and error
- * handlers. Production code does not use it.
+ * Options exist so tests can substitute their own pieces:
+ * - `extendRoutes` mounts extra routes before the 404 and error handlers.
+ * - `env`, `fetchImpl`, `now`, `logger`, and `contactOptions` configure the
+ *   contact form (defaults: process.env, global fetch, Date.now, console).
  */
-export function createApp({ extendRoutes } = {}) {
+export function createApp({
+  extendRoutes,
+  env = process.env,
+  fetchImpl = globalThis.fetch,
+  now = Date.now,
+  logger = console,
+  contactOptions,
+} = {}) {
   const app = express();
 
   app.disable('x-powered-by');
@@ -28,8 +38,13 @@ export function createApp({ extendRoutes } = {}) {
 
   app.locals.site = site;
   app.locals.navigation = navigation;
-  app.locals.contactEmail = contactEmail;
   app.locals.currentYear = new Date().getFullYear();
+
+  // Lets the shared header mark the current page in the navigation.
+  app.use((req, res, next) => {
+    res.locals.currentPath = req.path;
+    next();
+  });
 
   // Only the public directory is served as static files. Dotfiles are ignored.
   app.use(
@@ -53,6 +68,8 @@ export function createApp({ extendRoutes } = {}) {
     res.set('Cache-Control', 'no-store');
     res.json({ status: 'ok' });
   });
+
+  app.use(createContactRouter({ env, fetchImpl, now, logger, options: contactOptions }));
 
   if (extendRoutes) {
     extendRoutes(app);

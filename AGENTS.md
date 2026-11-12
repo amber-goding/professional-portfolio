@@ -6,7 +6,12 @@ Shared instructions for AI coding agents working in this repository. This file i
 
 Amber Goding’s professional portfolio and services website showcases her application development, AI integration, and workflow automation capabilities. It serves employers, prospective clients, and collaborators. It will be the long-term professional site at **ambergoding.com**.
 
-**Current status (2026-11-12):** Milestone 1, the application foundation, is committed (`f527181`). Milestone 2, the visual foundation and homepage, is implemented but not committed. It adds self-hosted fonts, the shared visual system, the header with mobile menu, the hero with the CSS ribbon art, the services overview, the selected-work layout (development placeholders only), the About teaser, and a `mailto:` contact invitation. Temporary content is listed in README.md under "Temporary content". Nothing has been deployed. The email provider, service accounts, paid plans, DNS, and deployment are **not approved**; see [Pending decisions](#pending-decisions).
+**Current status (2026-11-12):**
+- **Committed:** Milestone 1, the foundation (`f527181`), and Milestone 2, the homepage, visual system, and AG branding (`c305a46`).
+- **Implemented, not committed:** the contact feature. It includes the `/contact` page and Resend delivery, but is **not launch-ready** until a real test inquiry has been confirmed in the owner's inbox.
+- Temporary content is listed in README.md under "Temporary content". Nothing has been deployed. Service accounts, paid plans, DNS, and deployment are **not approved**; see [Pending decisions](#pending-decisions).
+
+**Visual presentation is provisional.** The current website styling has **not** received the owner's final approval. The approved palette and the AG branding direction stand, but the overall visual presentation needs another dedicated design review before launch. Until then, don't make unrelated visual changes while working on other tasks.
 
 **Commands:** `npm ci` (install), `npm start` (run), `npm run dev` (watch mode), `npm test` (all tests), `node --test test/<file>.test.js` (one file). See [README.md](README.md) for setup and the project layout.
 
@@ -44,11 +49,13 @@ Amber Goding’s professional portfolio and services website showcases her appli
 ## Functional requirements
 
 **Contact form:**
-- Delivers inquiries to the owner's inbox (ambergoding@gmail.com), configured through an environment variable.
+- Delivers inquiries to the owner's inbox, set only through the server-side `CONTACT_TO_EMAIL` variable.
 - Server-side validation, practical spam protection, and duplicate-submission prevention.
 - Clear pending, success, and error states. Entered information is kept when a submission fails.
 - Success is shown only after the server confirms the email provider accepted the message. Actual inbox delivery is verified separately before launch.
 - Credentials stay server-side. The visitor's address goes in Reply-To, and mail is sent from a properly verified sender identity.
+
+**Privacy (required):** the owner's receiving address must **never** appear in public-facing content or browser-delivered data. That rules out HTML, JavaScript, CSS, form fields, metadata, JSON responses, error messages, browser logs, and `mailto:` links. The recipient (`CONTACT_TO_EMAIL`), the verified sender (`CONTACT_FROM_EMAIL`), and `RESEND_API_KEY` live only in server-side environment configuration: Railway variables, or an untracked local `.env`. Tracked files such as `.env.example`, docs, and tests use example addresses only (`example.com`, `example.test`). Server logs must not include these values or visitors' addresses or message content. `test/contact.test.js` checks every public page, asset, and response for leaks.
 
 **Deployment:**
 - Built for Railway, with reproducible build and start commands. The server listens on Railway's `PORT` and binds to all interfaces.
@@ -90,7 +97,8 @@ Amber Goding’s professional portfolio and services website showcases her appli
 
 These are proposed or open items. They are **not approved** until they are recorded under Decisions.
 
-- Email delivery provider and sender address. *Proposed:* Resend's HTTPS API, because Railway's Hobby plan blocks outbound SMTP, sending from a verified subdomain such as `mail.ambergoding.com`.
+- Sender address and Resend account/domain setup. *Proposed:* a verified subdomain such as `mail.ambergoding.com`. Creating accounts and changing DNS need the owner's approval.
+- Final visual presentation (dedicated design review required before launch).
 - DNS host for `ambergoding.com`, and which host is canonical (apex or `www`).
 - Railway plan.
 - Which 3–4 projects to feature.
@@ -104,3 +112,5 @@ Approved decisions, dated. Add new entries at the end.
 - 2026-11-12: Project description and content and communication rules approved as recorded above.
 - 2026-11-12: Architecture approved: a supported Node.js LTS release (`engines.node` is `24.x`), Express with server-rendered EJS templates, plain CSS and minimal vanilla JavaScript, no frontend compilation step, and Node's built-in test runner. The email provider, service accounts, paid plans, DNS changes, and deployment remain unapproved.
 - 2026-11-12: Branding revised: the uppercase, intertwined serif AG monogram with flourish and sparkle replaces the lowercase "ag". The website palette is unchanged, and the brand board's blush-pink palette is not adopted. See Branding above.
+- 2026-11-12: The current visual presentation is **provisional**, not final. The palette and branding direction remain approved, and a dedicated design review is required before launch.
+- 2026-11-12: Contact delivery uses **Resend's HTTPS API**, approved for implementation. The recipient is configured only via `CONTACT_TO_EMAIL` and must never reach the browser (see Privacy). Creating a Resend account, verifying a sender domain, and changing DNS still need explicit approval.

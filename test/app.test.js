@@ -65,14 +65,15 @@ describe('application routes', () => {
       assert.match(html, /<main id="main"/);
     });
 
-    it('has main navigation whose links all reach sections on this page', () => {
+    it('has main navigation to homepage sections and the contact page', async () => {
       const nav = html.match(/<nav[^>]*aria-label="Main"[^>]*>([\s\S]*?)<\/nav>/);
       assert.ok(nav, 'main navigation landmark is present');
-      const navTargets = [...nav[1].matchAll(/href="\/#([^"]+)"/g)].map((m) => m[1]);
-      assert.deepEqual(navTargets, ['work', 'services', 'about', 'contact']);
-      for (const target of navTargets) {
-        assert.ok(ids().has(target), `section #${target} exists`);
+      const navLinks = [...nav[1].matchAll(/href="([^"]+)"/g)].map((m) => m[1]);
+      assert.deepEqual(navLinks, ['/#work', '/#services', '/#about', '/contact']);
+      for (const link of navLinks.filter((l) => l.startsWith('/#'))) {
+        assert.ok(ids().has(link.slice(2)), `section ${link} exists`);
       }
+      assert.equal((await fetch(`${baseUrl}/contact`)).status, 200);
     });
 
     it('has a real menu button wired to the navigation', () => {
@@ -97,10 +98,10 @@ describe('application routes', () => {
       }
     });
 
-    it('links the hero to the work and contact sections', () => {
+    it('links the hero to the work section and the contact page', () => {
       const hero = html.match(/<section class="hero"[\s\S]*?<\/section>/)[0];
       assert.match(hero, /href="#work"/);
-      assert.match(hero, /href="#contact"/);
+      assert.match(hero, /href="\/contact"/);
     });
 
     it('gives the linked header logo an accessible name', () => {
@@ -130,9 +131,11 @@ describe('application routes', () => {
       assert.match(html, /<div class="hero-art" aria-hidden="true">/);
     });
 
-    it('offers a working email link and no simulated contact form', () => {
-      assert.match(html, /href="mailto:ambergoding@gmail\.com"/);
-      assert.doesNotMatch(html, /<form[\s>]/);
+    it('invites contact through the contact page without exposing any email address', () => {
+      const contact = html.match(/<section class="section contact"[\s\S]*?<\/section>/)[0];
+      assert.match(contact, /href="\/contact"/);
+      assert.doesNotMatch(html, /mailto:/i);
+      assert.doesNotMatch(html, /[\w.+-]+@[\w-]+\.[\w.]+/, 'no email address appears in the page');
     });
 
     it('labels every project preview as a placeholder and gives none a link', () => {

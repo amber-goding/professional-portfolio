@@ -261,3 +261,89 @@ No other features, no commits.
   - Header geometry: logo and menu on one row at 320 (18px gap), 360, 375, and 768.
 - `git diff --check` clean, untracked text files clean. A user-started `npm start` server (PID 55808, port 3000) and the earlier leftover watcher (PID 31976) were left untouched.
 - **Not verified:** a real browser tab's favicon rendering (headless Chrome has no tab strip), Safari (historically limited SVG favicon support; no PNG/ICO fallback or `apple-touch-icon` was added), Firefox, real devices, and printing. The brand board lives in a Temp folder and may be cleaned up by the OS.
+
+**Outcome:** The user committed Milestone 2 and the branding as `c305a46` ("Build branded homepage and improve local preview"). It has not been pushed.
+
+### 8. Contact form with Resend, privacy correction, and provisional-styling note
+
+**Asked:**
+- **Styling:** record in AGENTS.md that the current visual styling is **provisional** (palette and branding stay approved; a dedicated design review is needed before launch) and avoid unrelated visual changes.
+- **Contact feature:** implement the full contact form using Resend's HTTPS API (implementation approved; accounts, DNS, charges, commits, and deploys not approved). The recipient comes only from `CONTACT_TO_EMAIL`.
+- **Privacy correction:** remove the visible address and every `mailto:`; the receiving address must never reach the browser.
+- **Required behavior:**
+  - A `/contact` page whose form works without JavaScript and is enhanced with it.
+  - Validation, honeypot, server-verifiable minimum time, Railway-aware rate limits, and CSRF/origin checks.
+  - Duplicate prevention plus Resend idempotency, and a bounded timeout.
+  - Every state shown accessibly: honest "unavailable" when unconfigured, success only after provider acceptance, worded as "submitted".
+- **Tests:** mocked provider only, plus browser checks. Then guide the user through Resend setup, with approval before account or DNS changes.
+
+**Research (official docs):**
+- **Resend:** `POST https://api.resend.com/emails`, Bearer auth, `reply_to` (snake_case), and a required `User-Agent`.
+- **Idempotency:** `Idempotency-Key` lasts 24h (max 256 chars). Reusing it with the same payload replays the original response; a different payload returns `409 invalid_idempotent_request`; a request still in progress returns `409 concurrent_idempotent_requests`.
+- **Railway:** the edge sets **`X-Real-IP`**, `X-Forwarded-Proto`, and `X-Forwarded-Host`. `X-Forwarded-For` behavior is undocumented, so it is not relied on. Railway provides `RAILWAY_ENVIRONMENT_ID` and related variables (`RAILWAY_ENVIRONMENT` is *not* documented).
+
+**Done:**
+- **`src/contact/`:**
+  - `config.js`: reads the three required variables, validates the recipient/sender format, and reports missing ones by name only. It also handles the optional `CONTACT_FORM_SECRET` (random per process if unset), `CONTACT_ALLOWED_ORIGINS`, and `CLIENT_IP_HEADER` (defaults to `x-real-ip` when `RAILWAY_ENVIRONMENT_ID` is set, otherwise the socket address; `none` disables it).
+  - `validation.js`: name 1–100 with no CR/LF or control characters; email format and ≤254; message 10–5000; repeated or non-string fields rejected.
+  - `form-token.js`: HMAC-signed `issuedAt.nonce.sig`. It enforces at least 3s and at most 2h, and the nonce is the submission id.
+  - `rate-limit.js`: fixed-window, in memory.
+  - `resend.js`: fetch with `AbortSignal.timeout`. It never throws, and it keeps Resend's error `name` but drops `message` (which can echo addresses).
+  - `router.js`: GET/POST `/contact`. The POST pipeline, in order:
+    1. Form-encoded content only (415); 64 KB cap (413); at most 10 fields.
+    2. Origin or Referer must match Host, `X-Forwarded-Host`, or the allowed origins (403).
+    3. Configured? Otherwise 503 unavailable.
+    4. Attempts limit: 20 per 10 min per client (429 + Retry-After).
+    5. Field types; honeypot `contact_url` (400 rejected, never fake success).
+    6. Token: expired or invalid returns a fresh token; too fast keeps the same token.
+    7. Validation.
+    8. Idempotency key `contact-` + sha256(nonce, name, email, message). In-memory single-flight: pending waits on the same promise, sent is remembered for 24h, failures are cleared.
+    9. Send limits: 5/h per client and 30/h globally.
+    10. Plain-text payload `{from, to:[to], reply_to, subject, text}` with no timestamp, so retries are byte-identical.
+    11. Outcome mapping: timeout 504, failure 502, quota 503, concurrent 409 busy.
+  - Responses are JSON when `Accept: application/json`, otherwise the rendered page. `Cache-Control: no-store`.
+- **Templates:**
+  - `views/contact.ejs`: labeled fields, error summary (focusable), `role="alert"` alert, `role="status"` region, an `aria-hidden` honeypot with `tabindex="-1"`, a hidden token, and success and unavailable panels.
+  - Header nav gets `aria-current="page"`.
+- **`public/js/contact.js`:** fetch submit with a pending state (`aria-disabled`, `aria-busy`, read-only fields, "Sending…"), field errors with `aria-invalid`/`aria-describedby` and summary focus, an alert on failure, focus on the success heading, and a 20s client timeout with honest copy.
+- **Homepage:** removed `contactEmail` (from `home.js` and `app.locals`) and the `mailto:` link. Nav Contact, the hero "Start a conversation", and the contact section CTA now go to `/contact`. `.contact-email` was renamed `.contact-cta` with the same look.
+- **Form CSS:** added using existing tokens only, plus a global `[hidden]{display:none!important}` because class `display` rules were overriding `hidden`.
+- **Startup and scripts:**
+  - `server.js` logs contact readiness by variable name only.
+  - `npm run dev` now uses `--env-file-if-exists=.env`; `npm start` is unchanged for Railway.
+- **Docs:**
+  - `.env.example` rewritten with example addresses.
+  - README: contact section, env table, local `.env` steps, single-instance limitations, status.
+  - AGENTS.md: provisional-styling notice, explicit **Privacy** requirement, recipient via env only, Pending decisions updated, two dated decisions.
+
+**Redirections and fixes during the work:**
+- The first browser run showed that disabling the submit button during pending dropped keyboard focus to `<body>`, so a user lost their place after a failure. Switched to `aria-disabled` plus the pending guard; focus now stays on the button.
+- No-JS failure pages now get an "Error:" title prefix for any failure, not only field errors.
+- The leak-check test first hard-coded the real address as a forbidden string, which would have put it in a tracked file. Replaced it with a generic rule: the only email-like text allowed in delivered content is `name@example.com`. The real address is now absent from every working-tree file.
+
+**Verification:**
+- `npm test`: 114 tests, 113 passed, 0 failed, 1 skipped (Windows SIGTERM). `test/contact.test.js` uses a mocked fetch and an injected clock, so it sends no real email. It covers:
+  - form semantics, honeypot, and that only name/email/message are collected;
+  - the privacy crawl of every public page and asset, and of POST responses;
+  - payload shape, headers, and From/To immune to visitor input;
+  - no-JS success; validation with escaping, lengths, CR/LF, and repeated fields;
+  - 413, 415, honeypot, too fast, forged/tampered/expired tokens, and CSRF (cross-site, `null`, missing);
+  - allowed Referer, `X-Forwarded-Host`, and configured origins;
+  - attempt, per-client, and global limits, and spoofed `X-Forwarded-For`/`X-Real-IP` ignored unless on Railway;
+  - sequential and concurrent duplicates (one provider call), stable versus changed idempotency keys with byte-identical retries;
+  - 500, 403 validation, 429 quota, 409 concurrent, malformed success, and network error, each keeping values with logs free of secrets and provider messages;
+  - a 100ms timeout; missing or invalid configuration (unavailable, no provider call, `/healthz` OK).
+- **Headless Chrome, in-process app with a mocked provider** (scratchpad `contact-browser.mjs`):
+  - 375/1440 layouts with no overflow; tab order skip → logo → nav → name → email → message → submit (honeypot skipped).
+  - An empty submit is blocked natively with focus on Name and no request.
+  - A server-side email error focuses the summary with `aria-invalid` and `describedby`.
+  - A failure shows the `role="alert"` message, keeps values, and keeps focus on the button.
+  - The pending state is announced, and a second Enter while pending did not resubmit (provider calls = 2: one failure, one success).
+  - Success focuses the confirmation heading.
+  - Phone failure state; no-JS failure re-render with values and an "Error:" title; no-JS success page.
+  - The delivered page and the browser console contain no recipient, sender, or key.
+- Homepage regression run: no overflow at 320–1440, menu/no-JS OK, no real-text contrast failures.
+- **Not verified:**
+  - **Live delivery.** No Resend account or verified domain exists yet, so no real email was sent or received. The feature is **not launch-ready**.
+  - Railway behavior (`X-Real-IP`, Host/`X-Forwarded-Host`) in a real deployment; Safari/Firefox; real screen readers.
+- **Privacy note:** the real address remains in the local commits `f527181` (AGENTS.md) and `c305a46` (`src/content/home.js`). They have not been pushed. Removing it from history before the first push would require rewriting history, which is the user's decision.

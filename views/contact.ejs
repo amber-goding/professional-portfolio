@@ -1,0 +1,73 @@
+<%- include('partials/header') %>
+    <section class="contact-page" aria-labelledby="contact-page-heading">
+      <div class="wrap contact-page-layout">
+        <div class="contact-page-intro">
+          <p class="section-label"><span>Contact /</span> Have something in mind?</p>
+          <h1 class="contact-page-title" id="contact-page-heading">Let’s make it <em>happen.</em></h1>
+          <p class="contact-page-lede">Tell me about the problem you’re trying to solve, the workflow you want to simplify, or the idea you want to build.</p>
+          <p class="contact-page-note">Your name, email address, and message are used only to reply to your inquiry.</p>
+        </div>
+
+        <div class="contact-panel">
+          <div class="form-success" data-contact-success<% if (status !== 'sent') { %> hidden<% } %>>
+            <h2 tabindex="-1" data-success-heading>Thank you. Your message was submitted.</h2>
+            <p>Replies are sent to the email address you entered.</p>
+            <a class="button-text" href="/contact">Send another message <span aria-hidden="true">→</span></a>
+          </div>
+
+          <% if (!configured) { %>
+          <div class="form-unavailable">
+            <h2>The contact form is temporarily unavailable.</h2>
+            <p>Messages can’t be sent right now. Please check back later.</p>
+          </div>
+          <% } else { %>
+          <form class="contact-form" method="post" action="/contact" data-contact-form<% if (status === 'sent') { %> hidden<% } %>>
+            <% const errorFields = fields.filter((f) => errors[f]); %>
+            <div class="form-errors" id="form-errors" tabindex="-1" aria-labelledby="form-errors-heading" data-error-summary<% if (!errorFields.length) { %> hidden<% } %>>
+              <h2 id="form-errors-heading">There is a problem</h2>
+              <ul data-error-list>
+                <% errorFields.forEach((f) => { %><li><a href="#field-<%= f %>"><%= errors[f] %></a></li><% }) %>
+              </ul>
+            </div>
+
+            <div class="form-alert" role="alert" data-form-alert<% if (!alertMessage) { %> hidden<% } %>><%= alertMessage %></div>
+
+            <div class="field<%= errors.name ? ' field--error' : '' %>">
+              <label for="field-name">Name</label>
+              <p class="field-error" id="field-name-error"<% if (!errors.name) { %> hidden<% } %>><span class="visually-hidden">Error: </span><span data-error-text><%= errors.name || '' %></span></p>
+              <input id="field-name" name="name" type="text" autocomplete="name" required maxlength="<%= limits.name.max %>" value="<%= values.name %>"<% if (errors.name) { %> aria-invalid="true" aria-describedby="field-name-error"<% } %>>
+            </div>
+
+            <div class="field<%= errors.email ? ' field--error' : '' %>">
+              <label for="field-email">Email address</label>
+              <p class="field-error" id="field-email-error"<% if (!errors.email) { %> hidden<% } %>><span class="visually-hidden">Error: </span><span data-error-text><%= errors.email || '' %></span></p>
+              <input id="field-email" name="email" type="email" autocomplete="email" spellcheck="false" required maxlength="<%= limits.email.max %>" value="<%= values.email %>"<% if (errors.email) { %> aria-invalid="true" aria-describedby="field-email-error"<% } %>>
+            </div>
+
+            <div class="field<%= errors.message ? ' field--error' : '' %>">
+              <label for="field-message">Message</label>
+              <p class="field-hint" id="field-message-hint">At least <%= limits.message.min %> characters, up to <%= limits.message.max.toLocaleString('en-US') %>.</p>
+              <p class="field-error" id="field-message-error"<% if (!errors.message) { %> hidden<% } %>><span class="visually-hidden">Error: </span><span data-error-text><%= errors.message || '' %></span></p>
+              <textarea id="field-message" name="message" rows="7" required minlength="<%= limits.message.min %>" maxlength="<%= limits.message.max %>" aria-describedby="field-message-hint<%= errors.message ? ' field-message-error' : '' %>"<% if (errors.message) { %> aria-invalid="true"<% } %>><%= values.message %></textarea>
+            </div>
+
+            <div class="form-trap" aria-hidden="true">
+              <label for="field-contact-url">Leave this field empty</label>
+              <input id="field-contact-url" name="contact_url" type="text" tabindex="-1" autocomplete="off" value="">
+            </div>
+            <input type="hidden" name="form_token" value="<%= formToken %>" data-form-token>
+
+            <div class="form-actions">
+              <button class="button button-primary" type="submit" data-submit>
+                <span data-submit-label>Send message</span> <span aria-hidden="true">→</span>
+              </button>
+              <p class="form-status" role="status" data-form-status></p>
+            </div>
+            <p class="form-privacy">Your message is sent by email. Nothing you enter is stored on this website.</p>
+          </form>
+          <% } %>
+        </div>
+      </div>
+    </section>
+    <script src="/js/contact.js" defer></script>
+<%- include('partials/footer') %>

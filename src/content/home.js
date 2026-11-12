@@ -5,10 +5,8 @@ export const navigation = [
   { href: '/#work', label: 'Work' },
   { href: '/#services', label: 'Services' },
   { href: '/#about', label: 'About' },
-  { href: '/#contact', label: 'Contact', cta: true },
+  { href: '/contact', label: 'Contact', cta: true },
 ];
-
-export const contactEmail = 'ambergoding@gmail.com';
 
 // Capability descriptions only, with no client results or claimed experience.
 export const services = [

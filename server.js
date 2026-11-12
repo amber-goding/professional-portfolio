@@ -1,6 +1,7 @@
 import http from 'node:http';
 import { createApp } from './src/app.js';
 import { HOST, parsePort } from './src/config.js';
+import { readContactConfig } from './src/contact/config.js';
 
 const SHUTDOWN_TIMEOUT_MS = 10_000;
 
@@ -10,6 +11,17 @@ try {
 } catch (error) {
   console.error(error.message);
   process.exit(1);
+}
+
+// Report contact-form readiness by variable name only, never by value.
+const contact = readContactConfig(process.env);
+if (contact.configured) {
+  console.log('Contact form: email delivery configured.');
+  if (contact.secretIsEphemeral) {
+    console.log('Contact form: CONTACT_FORM_SECRET not set; open forms must be resubmitted after a restart.');
+  }
+} else {
+  console.log(`Contact form: unavailable until these are set: ${contact.missing.join(', ')}.`);
 }
 
 const server = http.createServer(createApp());
